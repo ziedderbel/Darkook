@@ -1257,11 +1257,11 @@ function SearchResultsContent() {
                 )}
               </button>
 
-              {/* Map View Toggle Button */}
+              {/* Map View Toggle Button (Desktop Only) */}
               <button
                 type="button"
                 onClick={() => setIsMapView(!isMapView)}
-                className={`h-8 px-4 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border-none shadow-xs ${
+                className={`hidden lg:flex h-8 px-4 rounded-full text-xs font-bold items-center gap-1.5 transition-all cursor-pointer border-none shadow-xs ${
                   isMapView
                     ? "bg-slate-900 text-white hover:bg-black"
                     : "bg-[#4a77ec] hover:bg-[#3a67dc] text-white"
@@ -1361,17 +1361,6 @@ function SearchResultsContent() {
                 hoveredId={hoveredPropId}
                 onHover={setHoveredPropId}
               />
-            </div>
-
-            {/* Mobile/Tablet Inline View (< lg) */}
-            <div className="block lg:hidden px-4 sm:px-6 mb-6">
-              <div className="w-full h-[350px] rounded-2xl overflow-hidden shadow-md border border-gray-200">
-                <MapView
-                  properties={mapProperties}
-                  hoveredId={hoveredPropId}
-                  onHover={setHoveredPropId}
-                />
-              </div>
             </div>
           </div>
         ) : (
