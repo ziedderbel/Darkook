@@ -662,14 +662,15 @@ function SearchResultsContent() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans">
-      {/* ── 1. TOP NAVBAR CONTAINER (Unified Solid White Header Block at z-[600]) ── */}
+      {/* ── 1. UNIFIED NAVBAR CONTAINER (Header + Search Widget + Categories + Filter Bar at z-[600]) ── */}
       <header
+        ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-[600] bg-white border-b border-gray-200/90 transition-all duration-300 ${
           isSearchExpanded ? "shadow-xl" : "shadow-xs"
         }`}
       >
         {/* Row 1: Logo + Centered Search Pill + Actions */}
-        <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-100">
           {/* Logo */}
           <div className="flex items-center shrink-0">
             <BrandLogo />
@@ -762,7 +763,7 @@ function SearchResultsContent() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full px-4 sm:px-6 lg:px-8 pb-6 pt-1 flex justify-center overflow-visible"
+              className="w-full px-4 sm:px-6 lg:px-8 pb-6 pt-1 flex justify-center overflow-visible border-b border-gray-100"
             >
               <NavbarSearchWidget
                 isExpanded={true}
@@ -775,29 +776,8 @@ function SearchResultsContent() {
             </motion.div>
           )}
         </AnimatePresence>
-      </header>
 
-      {/* ── BACKDROP OVERLAY WHEN EXPANDED (Dims everything below the top white header at z-[80]) ── */}
-      <AnimatePresence>
-        {isSearchExpanded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={() => setIsSearchExpanded(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[80] pointer-events-auto"
-          />
-        )}
-      </AnimatePresence>
-
-      {/* ── LOWER HEADER STACK (Experience Categories + Filter Bar - z-[500] above Map in both view modes) ── */}
-      <div
-        ref={headerRef}
-        style={{ top: `${isSearchExpanded ? 180 : 80}px` }}
-        className="fixed left-0 right-0 z-[500] bg-white border-b border-gray-200/80 shadow-2xs transition-all duration-300"
-      >
-        {/* 2. EXPERIENCE CATEGORY ICONS BAR */}
+        {/* Row 3: EXPERIENCE CATEGORY ICONS BAR */}
         <div className="bg-white border-b border-gray-100 py-2">
           <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-6 overflow-x-auto no-scrollbar py-1">
             {CATEGORIES.map((cat) => {
@@ -1274,7 +1254,21 @@ function SearchResultsContent() {
             </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* ── BACKDROP OVERLAY WHEN EXPANDED (Dims everything below the unified navbar at z-[550]) ── */}
+      <AnimatePresence>
+        {isSearchExpanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => setIsSearchExpanded(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[550] pointer-events-auto"
+          />
+        )}
+      </AnimatePresence>
 
       {/* ── 4. RESULTS SUB-HEADER (Grid View Only) ────────────────────────────── */}
       {!isMapView && (
@@ -1288,7 +1282,7 @@ function SearchResultsContent() {
 
       {/* ── 5. PROPERTY GRID / MAP AREA ───────────────────────────────────────── */}
       <main
-        style={{ paddingTop: `${(isSearchExpanded ? 180 : 80) + (headerHeight || 114)}px` }}
+        style={{ paddingTop: `${headerHeight || 185}px` }}
         className="w-full max-w-none transition-all duration-300"
       >
         {filteredProperties.length === 0 ? (
@@ -1330,7 +1324,7 @@ function SearchResultsContent() {
             {mobileViewMode === "map" && (
               <div
                 style={{
-                  top: `${(isSearchExpanded ? 180 : 80) + (headerHeight || 135)}px`,
+                  top: `${headerHeight || 185}px`,
                 }}
                 className="block lg:hidden fixed left-0 right-0 bottom-0 z-10 overflow-hidden bg-slate-100"
               >
@@ -1374,7 +1368,7 @@ function SearchResultsContent() {
             {/* Right Map Column (100% Fixed to viewport, closing edges at TOP, BOTTOM, and RIGHT) */}
             {/* Desktop Fixed View */}
             <div
-              style={{ top: `${(isSearchExpanded ? 180 : 80) + (headerHeight || 114)}px` }}
+              style={{ top: `${headerHeight || 185}px` }}
               className="hidden lg:block fixed right-0 bottom-0 w-[42%] xl:w-[40%] bg-slate-100 border-l border-gray-200 z-20 rounded-none overflow-hidden transition-all duration-300"
             >
               <MapView
