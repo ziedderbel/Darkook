@@ -791,11 +791,11 @@ function SearchResultsContent() {
         )}
       </AnimatePresence>
 
-      {/* ── LOWER HEADER STACK (Experience Categories + Filter Bar) ── */}
+      {/* ── LOWER HEADER STACK (Experience Categories + Filter Bar - z-[80] above Map in both view modes) ── */}
       <div
         ref={headerRef}
         style={{ top: `${isSearchExpanded ? 180 : 80}px` }}
-        className="fixed left-0 right-0 z-20 bg-white border-b border-gray-200/80 shadow-2xs transition-all duration-300"
+        className="fixed left-0 right-0 z-[80] bg-white border-b border-gray-200/80 shadow-2xs transition-all duration-300"
       >
         {/* 2. EXPERIENCE CATEGORY ICONS BAR */}
         <div className="bg-white border-b border-gray-100 py-2">
