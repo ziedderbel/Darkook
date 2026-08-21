@@ -1187,7 +1187,7 @@ function AppCTA() {
 
           {/* Card 2: List Your Property Panel */}
           <div
-            className="text-[#181743] p-7 sm:p-9 lg:p-10 rounded-[20px] sm:rounded-[24px] h-[390px] sm:h-[410px] lg:h-[422px] relative overflow-hidden flex flex-col justify-between shadow-xs border border-blue-100/50"
+            className="text-[#181743] p-7 sm:p-9 lg:p-10 rounded-[20px] sm:rounded-[24px] min-h-[400px] sm:min-h-[440px] lg:h-[422px] relative overflow-hidden flex flex-col justify-between shadow-xs border border-blue-100/50"
             style={{
               backgroundImage:
                 "linear-gradient(219.74deg, rgb(182, 204, 252) 0%, rgb(215, 230, 255) 45%, rgb(246, 249, 255) 100%)",
@@ -1209,12 +1209,12 @@ function AppCTA() {
               </Link>
             </div>
 
-            {/* Bottom Graphic: Full-Width Host Villa Resort Pool covering all width */}
-            <div className="absolute inset-x-0 bottom-0 w-full h-[215px] sm:h-[235px] lg:h-[255px] pointer-events-none select-none z-0 overflow-hidden">
+            {/* Bottom Graphic: Host Villa Resort Pool (Contained & scaled to cover full width on tablet) */}
+            <div className="absolute inset-x-0 bottom-0 w-full h-[205px] sm:h-[225px] lg:h-[250px] pointer-events-none select-none z-0 overflow-hidden flex items-end justify-center">
               <img
                 src={toImgSrc(imgVillaHostPool)}
                 alt="List Your Property Villa & Pool"
-                className="w-full h-full object-cover object-bottom"
+                className="w-full h-full object-cover sm:object-contain lg:object-cover object-bottom sm:scale-105 lg:scale-100 min-w-full transition-transform"
               />
             </div>
           </div>
