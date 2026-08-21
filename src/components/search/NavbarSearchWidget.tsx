@@ -323,32 +323,32 @@ export default function NavbarSearchWidget({
                 setIsExpanded(true);
                 setActiveTab("location");
               }}
-              className="flex items-center bg-white hover:bg-slate-50 border border-slate-200/90 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 cursor-pointer shadow-xs hover:shadow-md transition-all gap-2 sm:gap-3 select-none min-w-0 max-w-full"
+              className="flex items-center bg-white hover:bg-slate-50 border border-slate-200/90 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 cursor-pointer shadow-2xs hover:shadow-xs transition-all gap-1.5 sm:gap-2.5 select-none min-w-0 max-w-full"
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
             >
               {/* Location */}
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 min-w-0 shrink">
-                <HugeiconsIcon icon={SwimmingIcon} size={15} className="text-[#3B68EC] shrink-0" />
-                <span className="truncate max-w-[90px] sm:max-w-[120px] lg:max-w-[160px] whitespace-nowrap">
+              <div className="flex items-center gap-1 sm:gap-1.5 text-[11.5px] sm:text-xs font-bold text-slate-900 min-w-0 shrink">
+                <HugeiconsIcon icon={SwimmingIcon} size={14} className="text-[#3B68EC] shrink-0" />
+                <span className="truncate max-w-[95px] sm:max-w-[130px] lg:max-w-[160px] whitespace-nowrap">
                   {location === "Choose the city" ? "Where to ?" : location}
-                </span>
-              </div>
-
-              <div className="h-3.5 w-px bg-slate-200 shrink-0" />
-
-              {/* Dates */}
-              <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-700 min-w-0 shrink">
-                <HugeiconsIcon icon={Calendar03Icon} size={14} className="text-slate-400 shrink-0" />
-                <span className="truncate max-w-[90px] lg:max-w-[130px] whitespace-nowrap">
-                  {checkIn !== "03/21/2019" ? `${checkIn} - ${checkOut}` : "Any dates"}
                 </span>
               </div>
 
               <div className="hidden sm:block h-3.5 w-px bg-slate-200 shrink-0" />
 
-              {/* Guests */}
-              <div className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-slate-700 min-w-0 shrink">
-                <HugeiconsIcon icon={UserGroupIcon} size={14} className="text-slate-400 shrink-0" />
+              {/* Dates (Visible on Tablet & Desktop) */}
+              <div className="hidden sm:flex items-center gap-1 sm:gap-1.5 text-[11.5px] sm:text-xs font-semibold text-slate-700 min-w-0 shrink">
+                <HugeiconsIcon icon={Calendar03Icon} size={13} className="text-slate-400 shrink-0" />
+                <span className="truncate max-w-[90px] lg:max-w-[130px] whitespace-nowrap">
+                  {checkIn !== "03/21/2019" ? `${checkIn} - ${checkOut}` : "Any dates"}
+                </span>
+              </div>
+
+              <div className="hidden lg:block h-3.5 w-px bg-slate-200 shrink-0" />
+
+              {/* Guests (Visible on Desktop only to prevent tablet squishing) */}
+              <div className="hidden lg:flex items-center gap-1.5 text-[11.5px] sm:text-xs font-semibold text-slate-700 min-w-0 shrink">
+                <HugeiconsIcon icon={UserGroupIcon} size={13} className="text-slate-400 shrink-0" />
                 <span className="truncate max-w-[80px] lg:max-w-[100px] whitespace-nowrap">
                   {guests}
                 </span>
@@ -357,10 +357,10 @@ export default function NavbarSearchWidget({
               {/* Search Circle */}
               <motion.div
                 layoutId="search-submit-icon-circle"
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#3B68EC] text-white flex items-center justify-center shrink-0 ml-0.5 shadow-xs hover:bg-[#254EDB]"
+                className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 rounded-full bg-[#3B68EC] text-white flex items-center justify-center shrink-0 ml-0.5 shadow-xs hover:bg-[#254EDB]"
                 transition={{ type: "spring", stiffness: 350, damping: 26 }}
               >
-                <HugeiconsIcon icon={Search01Icon} size={14} className="shrink-0" />
+                <HugeiconsIcon icon={Search01Icon} size={13} className="shrink-0" />
               </motion.div>
             </motion.div>
           ) : (

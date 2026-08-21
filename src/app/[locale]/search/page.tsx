@@ -670,7 +670,7 @@ function SearchResultsContent() {
         }`}
       >
         {/* Row 1: Logo + Centered Search Pill + Actions */}
-        <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-100">
+        <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-18 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-100">
           {/* Logo */}
           <div className="flex items-center shrink-0">
             <BrandLogo />
@@ -704,23 +704,23 @@ function SearchResultsContent() {
             <button
               type="button"
               onClick={() => setIsLangModalOpen(true)}
-              className="h-9 sm:h-10 px-2 sm:px-3 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center gap-1 text-xs font-bold text-slate-800 border border-slate-200/80 cursor-pointer"
+              className="hidden sm:flex h-8 sm:h-9 px-2 sm:px-2.5 bg-slate-50 hover:bg-slate-100 rounded-full items-center gap-1 text-xs font-bold text-slate-800 border border-slate-200/80 cursor-pointer"
             >
               <img
                 src={`https://flagcdn.com/w40/${selectedLang === "FRA" ? "fr" : "gb"}.png`}
                 alt="flag"
                 className="w-4 h-4 rounded-full object-cover shrink-0"
               />
-              <HugeiconsIcon icon={ArrowDown01Icon} size={12} className="hidden sm:block text-slate-400" />
+              <HugeiconsIcon icon={ArrowDown01Icon} size={12} className="hidden md:block text-slate-400" />
             </button>
 
             {/* Favorites */}
             <Link
               href="/favorites"
               aria-label="Favorites"
-              className="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-50 hover:bg-red-50 items-center justify-center text-slate-700 hover:text-red-500 transition-colors border border-slate-200/80 no-underline relative"
+              className="hidden md:flex w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-full bg-slate-50 hover:bg-red-50 items-center justify-center text-slate-700 hover:text-red-500 transition-colors border border-slate-200/80 no-underline relative"
             >
-              <HugeiconsIcon icon={FavouriteIcon} size={18} />
+              <HugeiconsIcon icon={FavouriteIcon} size={17} />
               {favorites.size > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#3B68EC] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                   {favorites.size}
@@ -732,10 +732,10 @@ function SearchResultsContent() {
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="hidden xl:flex h-10 px-3.5 bg-slate-50 hover:bg-slate-100 text-slate-800 font-bold text-xs rounded-full items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80"
+              className="hidden xl:flex h-9 px-3.5 bg-slate-50 hover:bg-slate-100 text-slate-800 font-bold text-xs rounded-full items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80"
             >
-              <div className="w-5 h-5 rounded-full bg-[#3B68EC]/10 text-[#3B68EC] flex items-center justify-center">
-                <HugeiconsIcon icon={UserIcon} size={13} />
+              <div className="w-4.5 h-4.5 rounded-full bg-[#3B68EC]/10 text-[#3B68EC] flex items-center justify-center">
+                <HugeiconsIcon icon={UserIcon} size={12} />
               </div>
               <span>Sign In</span>
             </button>
@@ -745,11 +745,11 @@ function SearchResultsContent() {
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Menu"
-              className="h-9 sm:h-10 px-2.5 sm:px-3 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-800 flex items-center gap-2 cursor-pointer border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all"
+              className="h-8.5 sm:h-9 px-2 sm:px-2.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-800 flex items-center gap-1.5 cursor-pointer border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all"
             >
-              <HugeiconsIcon icon={Menu01Icon} size={16} />
-              <div className="w-6 h-6 rounded-full bg-[#3B68EC] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">
-                <HugeiconsIcon icon={UserIcon} size={13} />
+              <HugeiconsIcon icon={Menu01Icon} size={15} />
+              <div className="w-5.5 h-5.5 rounded-full bg-[#3B68EC] text-white flex items-center justify-center text-[9px] font-bold shadow-xs">
+                <HugeiconsIcon icon={UserIcon} size={12} />
               </div>
             </button>
           </div>
@@ -763,7 +763,7 @@ function SearchResultsContent() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full px-4 sm:px-6 lg:px-8 pb-6 pt-1 flex justify-center overflow-visible border-b border-gray-100"
+              className="w-full px-4 sm:px-6 lg:px-8 pb-5 pt-1 flex justify-center overflow-visible border-b border-gray-100"
             >
               <NavbarSearchWidget
                 isExpanded={true}
@@ -778,8 +778,8 @@ function SearchResultsContent() {
         </AnimatePresence>
 
         {/* Row 3: EXPERIENCE CATEGORY ICONS BAR */}
-        <div className="bg-white border-b border-gray-100 py-2">
-          <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-6 overflow-x-auto no-scrollbar py-1">
+        <div className="bg-white border-b border-gray-100 py-1 sm:py-1.5">
+          <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 flex items-center justify-start sm:justify-center gap-3.5 sm:gap-6 overflow-x-auto no-scrollbar py-0.5">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.id;
               return (
@@ -787,19 +787,19 @@ function SearchResultsContent() {
                   key={cat.id}
                   type="button"
                   onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
-                  className="group flex flex-col items-center gap-1.5 cursor-pointer border-none bg-transparent shrink-0 p-1"
+                  className="group flex flex-col items-center gap-1 cursor-pointer border-none bg-transparent shrink-0 p-0.5"
                 >
                   <div
-                    className={`w-11 h-11 rounded-full flex items-center justify-center text-lg transition-all duration-200 ${
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
                       isActive
                         ? "bg-blue-50/90 ring-2 ring-inset ring-[#4a77ec] text-[#4a77ec] shadow-xs scale-105"
                         : "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 hover:scale-105"
                     }`}
                   >
-                    <HugeiconsIcon icon={cat.icon} size={19} />
+                    <HugeiconsIcon icon={cat.icon} size={17} />
                   </div>
                   <span
-                    className={`text-[11px] font-semibold transition-colors ${
+                    className={`text-[10.5px] sm:text-[11px] font-semibold transition-colors leading-tight whitespace-nowrap ${
                       isActive ? "text-[#4a77ec] font-bold" : "text-gray-600 group-hover:text-gray-900"
                     }`}
                   >
@@ -812,8 +812,8 @@ function SearchResultsContent() {
         </div>
 
         {/* 3. FILTER BAR ROW WITH DESIGN SYSTEM DROPDOWNS */}
-        <div className="bg-white py-2.5 overflow-x-auto no-scrollbar">
-          <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 min-w-max">
+        <div className="bg-white py-1.5 sm:py-2 overflow-x-auto no-scrollbar">
+          <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2.5 min-w-max">
             {/* Left Dropdown Filters */}
             <div className="flex items-center gap-2 shrink-0">
               {/* 1. Bed and room Dropdown */}
