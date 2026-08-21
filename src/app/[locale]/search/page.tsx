@@ -477,6 +477,7 @@ function SearchResultsContent() {
 
   // Map view toggle (split / modal map) - Defaults to TRUE
   const [isMapView, setIsMapView] = useState(true);
+  const [mobileViewMode, setMobileViewMode] = useState<"list" | "map">("list");
   const [hoveredPropId, setHoveredPropId] = useState<string | null>(null);
 
   // Filter State
@@ -1325,8 +1326,28 @@ function SearchResultsContent() {
         ) : isMapView ? (
           /* Split View: Left Scrollable Listings + Right 100% Fixed Edge-to-Edge Map */
           <div className="w-full relative min-h-[calc(100vh-190px)]">
-            {/* Left Listings Column (takes 58% on desktop, with standard start padding) */}
-            <div className="w-full lg:w-[58%] xl:w-[60%] pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-6 pb-20 pt-4">
+            {/* ── Mobile Map View Only (Screens < lg when mobileViewMode === "map") ── */}
+            {mobileViewMode === "map" && (
+              <div
+                style={{
+                  height: `calc(100dvh - ${(isSearchExpanded ? 180 : 80) + (headerHeight || 114)}px)`,
+                }}
+                className="block lg:hidden w-full relative overflow-hidden bg-slate-100"
+              >
+                <MapView
+                  properties={mapProperties}
+                  hoveredId={hoveredPropId}
+                  onHover={setHoveredPropId}
+                />
+              </div>
+            )}
+
+            {/* Left Listings Column (takes 58% on desktop, with standard start padding; on mobile only shown when mobileViewMode === "list") */}
+            <div
+              className={`w-full lg:w-[58%] xl:w-[60%] pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-6 pb-20 pt-4 ${
+                mobileViewMode === "map" ? "hidden lg:block" : "block"
+              }`}
+            >
               {/* Sub-header inside listings column */}
               <div className="pb-3.5 flex items-center justify-between text-xs text-gray-500 font-semibold">
                 <span>{filteredProperties.length} homes available</span>
@@ -1387,6 +1408,24 @@ function SearchResultsContent() {
           </div>
         )}
       </main>
+
+      {/* ── Floating Mobile Map / List Switcher Button (Exact Match to User UI Design) ── */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <button
+          type="button"
+          onClick={() => setMobileViewMode(mobileViewMode === "list" ? "map" : "list")}
+          className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#222222] hover:bg-black text-white text-sm font-bold shadow-[0_8px_30px_rgba(0,0,0,0.35)] active:scale-95 transition-all cursor-pointer border border-white/15 backdrop-blur-md"
+        >
+          <span className="tracking-tight">
+            {mobileViewMode === "list" ? "Afficher la carte" : "Afficher la liste"}
+          </span>
+          <HugeiconsIcon
+            icon={mobileViewMode === "list" ? MapsIcon : Menu01Icon}
+            size={18}
+            className="shrink-0 text-white"
+          />
+        </button>
+      </div>
 
       {/* Filter Modal */}
       <FilterModal
