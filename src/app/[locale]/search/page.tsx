@@ -662,9 +662,9 @@ function SearchResultsContent() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans">
-      {/* ── 1. TOP NAVBAR CONTAINER (Unified Solid White Header Block at z-[100]) ── */}
+      {/* ── 1. TOP NAVBAR CONTAINER (Unified Solid White Header Block at z-[600]) ── */}
       <header
-        className={`fixed top-0 left-0 right-0 z-[100] bg-white border-b border-gray-200/90 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-[600] bg-white border-b border-gray-200/90 transition-all duration-300 ${
           isSearchExpanded ? "shadow-xl" : "shadow-xs"
         }`}
       >
@@ -791,11 +791,11 @@ function SearchResultsContent() {
         )}
       </AnimatePresence>
 
-      {/* ── LOWER HEADER STACK (Experience Categories + Filter Bar - z-[80] above Map in both view modes) ── */}
+      {/* ── LOWER HEADER STACK (Experience Categories + Filter Bar - z-[500] above Map in both view modes) ── */}
       <div
         ref={headerRef}
         style={{ top: `${isSearchExpanded ? 180 : 80}px` }}
-        className="fixed left-0 right-0 z-[80] bg-white border-b border-gray-200/80 shadow-2xs transition-all duration-300"
+        className="fixed left-0 right-0 z-[500] bg-white border-b border-gray-200/80 shadow-2xs transition-all duration-300"
       >
         {/* 2. EXPERIENCE CATEGORY ICONS BAR */}
         <div className="bg-white border-b border-gray-100 py-2">
@@ -832,10 +832,10 @@ function SearchResultsContent() {
         </div>
 
         {/* 3. FILTER BAR ROW WITH DESIGN SYSTEM DROPDOWNS */}
-        <div className="bg-white py-2.5 overflow-visible">
-          <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 overflow-visible">
+        <div className="bg-white py-2.5 overflow-x-auto no-scrollbar">
+          <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 min-w-max">
             {/* Left Dropdown Filters */}
-            <div className="flex items-center gap-2 shrink-0 overflow-visible">
+            <div className="flex items-center gap-2 shrink-0">
               {/* 1. Bed and room Dropdown */}
               <div
                 className={`relative shrink-0 ${
@@ -1326,13 +1326,13 @@ function SearchResultsContent() {
         ) : isMapView ? (
           /* Split View: Left Scrollable Listings + Right 100% Fixed Edge-to-Edge Map */
           <div className="w-full relative min-h-[calc(100vh-190px)]">
-            {/* ── Mobile Map View Only (Screens < lg when mobileViewMode === "map") ── */}
+            {/* ── Mobile & Tablet Map View Only (Screens < lg when mobileViewMode === "map") ── */}
             {mobileViewMode === "map" && (
               <div
                 style={{
-                  height: `calc(100dvh - ${(isSearchExpanded ? 180 : 80) + (headerHeight || 114)}px)`,
+                  top: `${(isSearchExpanded ? 180 : 80) + (headerHeight || 135)}px`,
                 }}
-                className="block lg:hidden w-full relative overflow-hidden bg-slate-100"
+                className="block lg:hidden fixed left-0 right-0 bottom-0 z-10 overflow-hidden bg-slate-100"
               >
                 <MapView
                   properties={mapProperties}
