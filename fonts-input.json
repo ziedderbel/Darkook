@@ -1,0 +1,18 @@
+{
+  "fonts": [
+    {"family":"Ubuntu","style":"Light","fontId":"Ubuntu-Light_1","source":"GOOGLE","cssFamily":"Ubuntu:Light"},
+    {"family":"Ubuntu","style":"Regular","fontId":"Ubuntu-Regular_1","source":"GOOGLE","cssFamily":"Ubuntu:Regular"},
+    {"family":"Montserrat","style":"Bold","fontId":"Montserrat_wght__2","source":"GOOGLE","cssFamily":"Montserrat:Bold"},
+    {"family":"Ubuntu","style":"Light Italic","fontId":"Ubuntu-LightItalic_1","source":"GOOGLE","cssFamily":"Ubuntu:Light Italic"},
+    {"family":"Montserrat","style":"Regular","fontId":"Montserrat_wght__2","source":"GOOGLE","cssFamily":"Montserrat:Regular"},
+    {"family":"Montserrat","style":"SemiBold","fontId":"Montserrat_wght__2","source":"GOOGLE","cssFamily":"Montserrat:SemiBold"},
+    {"family":"Montserrat","style":"Medium","fontId":"Montserrat_wght__2","source":"GOOGLE","cssFamily":"Montserrat:Medium"},
+    {"family":"Montserrat","style":"Light","fontId":"Montserrat_wght__2","source":"GOOGLE","cssFamily":"Montserrat:Light"},
+    {"family":"Inter Tight","style":"Regular","cssFamily":"Inter Tight:Regular"},
+    {"family":"Figtree","style":"Regular","fontId":"Figtree_wght__2","source":"GOOGLE","cssFamily":"Figtree:Regular"},
+    {"family":"Inter Tight","style":"Medium","cssFamily":"Inter Tight:Medium"},
+    {"family":"Inter Tight","style":"SemiBold","cssFamily":"Inter Tight:SemiBold"},
+    {"family":"Inter","style":"Regular","fontId":"Inter_1","source":"GOOGLE","cssFamily":"Inter:Regular"},
+    {"family":"Inter","style":"Medium","fontId":"Inter_1","source":"GOOGLE","cssFamily":"Inter:Medium"}
+  ]
+}

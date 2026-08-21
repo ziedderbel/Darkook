@@ -1,0 +1,23 @@
+{
+  "Header": {
+    "nav": {
+      "destinations": "Destinations",
+      "experiences": "Experiences",
+      "about": "About",
+      "contact": "Contact"
+    },
+    "searchPlaceholder": "Search destination...",
+    "signIn": "Sign In",
+    "becomeHost": "Become a Host"
+  },
+  "Footer": {
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "Hero": {
+    "title": "Find exceptional places for your stays",
+    "subtitle": "Book luxury villas, apartments, and guest houses across North Africa.",
+    "search": "Search"
+  }
+}

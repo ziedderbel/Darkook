@@ -1,0 +1,23 @@
+{
+  "Header": {
+    "nav": {
+      "destinations": "Destinations",
+      "experiences": "Expériences",
+      "about": "À propos",
+      "contact": "Contact"
+    },
+    "searchPlaceholder": "Rechercher une destination...",
+    "signIn": "Se connecter",
+    "becomeHost": "Mettre mon bien"
+  },
+  "Footer": {
+    "rights": "Tous droits réservés.",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
+  "Hero": {
+    "title": "Trouvez des lieux d'exception pour vos séjours",
+    "subtitle": "Réservation de villas, appartements de luxe et maisons d'hôtes en Afrique du Nord.",
+    "search": "Rechercher"
+  }
+}

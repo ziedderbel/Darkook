@@ -1,0 +1,82 @@
+@import 'https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Figtree:wght@300..900&family=Ubuntu:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap';
+@import 'tailwindcss';
+
+html, body, #root {
+  width: 100%;
+  min-height: 100%;
+}
+
+@layer utilities {
+  .mask-alpha {
+    mask-mode: alpha;
+    -webkit-mask-mode: alpha;
+  }
+  .mask-intersect {
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+  .mask-no-clip {
+    mask-clip: no-clip;
+    -webkit-mask-clip: no-clip;
+  }
+  .mask-no-repeat {
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+  }
+}
+
+/* Propagate webkit-mask-* for arbitrary mask-position and mask-size values */
+[class*="mask-position-"] {
+  -webkit-mask-position: var(--tw-mask-position);
+}
+[class*="mask-size-"] {
+  -webkit-mask-size: var(--tw-mask-size);
+}
+
+/* Ensure mask-image style prop works cross-browser */
+[style*="maskImage"] {
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-mode: alpha;
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  font-style: normal;
+  font-weight: 300;
+  src: url("https://static.figma.com/font/Ubuntu-Light_1") format("woff2");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/Ubuntu-Regular_1") format("woff2");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  font-style: italic;
+  font-weight: 300;
+  src: url("https://static.figma.com/font/Ubuntu-LightItalic_1") format("woff2");
+}
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 300 700;
+  src: url("https://static.figma.com/font/Montserrat_wght__2") format("woff2");
+}
+
+@font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://static.figma.com/font/Figtree_wght__2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400 500;
+  src: url("https://static.figma.com/font/Inter_1") format("woff2");
+}
