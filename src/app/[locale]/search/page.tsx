@@ -1409,12 +1409,12 @@ function SearchResultsContent() {
         )}
       </main>
 
-      {/* ── Floating Mobile Map / List Switcher Button (Exact Match to User UI Design) ── */}
-      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+      {/* ── Floating Mobile Map / List Switcher Button (Exact Match to User UI Design - Elevated z-index) ── */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-auto">
         <button
           type="button"
           onClick={() => setMobileViewMode(mobileViewMode === "list" ? "map" : "list")}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#222222] hover:bg-black text-white text-sm font-bold shadow-[0_8px_30px_rgba(0,0,0,0.35)] active:scale-95 transition-all cursor-pointer border border-white/15 backdrop-blur-md"
+          className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#222222] hover:bg-black text-white text-sm font-bold shadow-[0_8px_30px_rgba(0,0,0,0.45)] active:scale-95 transition-all cursor-pointer border border-white/20 backdrop-blur-md"
         >
           <span className="tracking-tight">
             {mobileViewMode === "list" ? "Afficher la carte" : "Afficher la liste"}
