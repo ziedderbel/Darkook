@@ -61,6 +61,7 @@ export function DropdownContainer({
   children: ReactNode;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -70,7 +71,9 @@ export function DropdownContainer({
   // Lock body scroll on mobile when sheet is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      if (typeof window !== "undefined" && window.innerWidth < 1024) {
+        document.body.style.overflow = "hidden";
+      }
     } else {
       document.body.style.overflow = "";
     }
@@ -89,10 +92,14 @@ export function DropdownContainer({
 
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-      // If click is outside the popover and not on the trigger button parent
-      if (containerRef.current && !containerRef.current.contains(target)) {
-        onClose();
+      // If click is inside desktop popover or inside mobile bottom sheet, do not close
+      if (containerRef.current && containerRef.current.contains(target)) {
+        return;
       }
+      if (sheetRef.current && sheetRef.current.contains(target)) {
+        return;
+      }
+      onClose();
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -111,28 +118,33 @@ export function DropdownContainer({
 
   return (
     <>
-      {/* ── MOBILE: Native Bottom Sheet Portaled to document.body (Screens < 768px) ── */}
+      {/* ── MOBILE & RESPONSIVE: Native Bottom Sheet Portaled to document.body (Screens < 1024px) ── */}
       {mounted &&
         createPortal(
           <AnimatePresence>
             {isOpen && (
-              <div className="md:hidden fixed inset-0 z-[99999] flex items-end justify-center">
+              <div className="lg:hidden fixed inset-0 z-[99999] flex items-end justify-center">
                 {/* Backdrop */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  onClick={onClose}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClose();
+                  }}
                   className="fixed inset-0 bg-black/60 backdrop-blur-xs z-[190]"
                 />
 
                 {/* Sheet */}
                 <motion.div
+                  ref={sheetRef}
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
                   exit={{ y: "100%" }}
                   transition={{ type: "spring", damping: 28, stiffness: 300 }}
                   className="relative w-full max-h-[85vh] bg-white rounded-t-[28px] p-5 shadow-2xl z-[200] overflow-y-auto"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   {/* Drag handle pill */}
                   <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4" />
@@ -142,7 +154,10 @@ export function DropdownContainer({
                     <h3 className="font-bold text-base text-gray-900">{title}</h3>
                     <button
                       type="button"
-                      onClick={onClose}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClose();
+                      }}
                       className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center border-none cursor-pointer"
                     >
                       <HugeiconsIcon icon={Cancel01Icon} size={16} />
@@ -158,16 +173,17 @@ export function DropdownContainer({
           document.body
         )}
 
-      {/* ── DESKTOP: Floating Popover (Screens >= 768px) ── */}
+      {/* ── DESKTOP: Floating Popover (Screens >= 1024px) ── */}
       <motion.div
         ref={containerRef}
         initial={{ opacity: 0, y: 6, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 6, scale: 0.98 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
-        className={`hidden md:block absolute top-[calc(100%+8px)] ${
+        className={`hidden lg:block absolute top-[calc(100%+8px)] ${
           align === "right" ? "right-0" : "left-0"
         } z-[120] bg-white rounded-2xl shadow-2xl border border-gray-200/90 p-4 min-w-[260px] max-w-[380px] text-gray-900`}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="space-y-3">{children}</div>
       </motion.div>
