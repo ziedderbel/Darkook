@@ -665,9 +665,7 @@ function SearchResultsContent() {
       {/* ── 1. UNIFIED NAVBAR CONTAINER (Header + Search Widget + Categories + Filter Bar at z-[600]) ── */}
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-[600] bg-white border-b border-gray-200/90 transition-all duration-300 ${
-          isSearchExpanded ? "shadow-xl" : "shadow-xs"
-        }`}
+        className="fixed top-0 left-0 right-0 z-[600] bg-white border-b border-gray-200/90 shadow-xs transition-all duration-300"
       >
         {/* Row 1: Logo + Centered Search Pill + Actions */}
         <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-18 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-100">
@@ -676,19 +674,20 @@ function SearchResultsContent() {
             <BrandLogo />
           </div>
 
-          {/* Centered Morphing Search Widget (Compact Single-Row State only) */}
-          {!isSearchExpanded && (
-            <div className="flex-1 flex justify-center min-w-0 max-w-[580px] px-1 sm:px-2">
-              <NavbarSearchWidget
-                isExpanded={false}
-                onExpandedChange={setIsSearchExpanded}
-                initialLocation={initialQuery || "Choose the city"}
-                initialCheckIn="03/21/2019"
-                initialCheckOut="03/21/2019"
-                initialGuests="2 adults"
-              />
-            </div>
-          )}
+          {/* Centered Search Widget */}
+          <div className="flex-1 flex justify-center min-w-0 max-w-[580px] px-1 sm:px-2">
+            <NavbarSearchWidget
+              initialLocation={initialQuery || "Choose the city"}
+              initialCheckIn="03/21/2019"
+              initialCheckOut="03/21/2019"
+              initialGuests="2 adults"
+              onSearch={(params) => {
+                if (params.location && params.location !== "Choose the city") {
+                  router.push(`/search?q=${encodeURIComponent(params.location)}`);
+                }
+              }}
+            />
+          </div>
 
           {/* Right Header Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -754,28 +753,6 @@ function SearchResultsContent() {
             </button>
           </div>
         </div>
-
-        {/* Row 2: Expanded Large Search Bar Linked Inside the Same Header Container */}
-        <AnimatePresence>
-          {isSearchExpanded && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full px-4 sm:px-6 lg:px-8 pb-5 pt-1 flex justify-center overflow-visible border-b border-gray-100"
-            >
-              <NavbarSearchWidget
-                isExpanded={true}
-                onExpandedChange={setIsSearchExpanded}
-                initialLocation={initialQuery || "Choose the city"}
-                initialCheckIn="03/21/2019"
-                initialCheckOut="03/21/2019"
-                initialGuests="2 adults"
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Row 3: EXPERIENCE CATEGORY ICONS BAR */}
         <div className="bg-white border-b border-gray-100 py-1 sm:py-1.5">
@@ -1255,20 +1232,6 @@ function SearchResultsContent() {
           </div>
         </div>
       </header>
-
-      {/* ── BACKDROP OVERLAY WHEN EXPANDED (Dims everything below the unified navbar at z-[550]) ── */}
-      <AnimatePresence>
-        {isSearchExpanded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={() => setIsSearchExpanded(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[550] pointer-events-auto"
-          />
-        )}
-      </AnimatePresence>
 
       {/* ── 4. RESULTS SUB-HEADER (Grid View Only) ────────────────────────────── */}
       {!isMapView && (
