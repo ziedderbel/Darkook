@@ -451,7 +451,7 @@ function SearchResultsContent() {
   const categoryParam = searchParams.get("category");
   const experienceParam = searchParams.get("experience");
 
-  const resolveInitialCategory = (): string => {
+  const resolveInitialCategory = (): string | null => {
     if (categoryParam) {
       const normalized = normalizeExperienceToCategory(categoryParam);
       if (VALID_CATEGORY_IDS.has(normalized)) return normalized;
@@ -464,11 +464,7 @@ function SearchResultsContent() {
       const normalized = normalizeExperienceToCategory(initialQuery);
       if (VALID_CATEGORY_IDS.has(normalized)) return normalized;
     }
-    if (initialQuery) {
-      const normalized = normalizeExperienceToCategory(initialQuery);
-      if (VALID_CATEGORY_IDS.has(normalized)) return normalized;
-    }
-    return "pool";
+    return null;
   };
 
   // Active Category State (reads from URL query params ?category=... or ?experience=... if provided)
@@ -476,9 +472,7 @@ function SearchResultsContent() {
 
   useEffect(() => {
     const resolved = resolveInitialCategory();
-    if (resolved) {
-      setActiveCategory(resolved);
-    }
+    setActiveCategory(resolved);
   }, [searchParams]);
 
   // Map view toggle (split / modal map) - Defaults to TRUE

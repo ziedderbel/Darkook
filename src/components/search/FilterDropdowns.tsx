@@ -34,10 +34,10 @@ export interface FilterState {
 }
 
 export const INITIAL_FILTERS: FilterState = {
-  bedrooms: 1,
-  beds: 1,
+  bedrooms: 0,
+  beds: 0,
   bathrooms: 0,
-  roomTypes: ["Appartement", "Maison d'hôte"],
+  roomTypes: [],
   minPrice: 0,
   maxPrice: 1000,
   equipment: [],
