@@ -1209,12 +1209,12 @@ function AppCTA() {
               </Link>
             </div>
 
-            {/* Bottom Graphic: Full-Width Uncropped Host Villa Resort Pool */}
-            <div className="absolute inset-x-0 bottom-0 w-full flex items-end justify-center pointer-events-none select-none z-0">
+            {/* Bottom Graphic: Full-Width Host Villa Resort Pool covering all width */}
+            <div className="absolute inset-x-0 bottom-0 w-full h-[215px] sm:h-[235px] lg:h-[255px] pointer-events-none select-none z-0 overflow-hidden">
               <img
                 src={toImgSrc(imgVillaHostPool)}
                 alt="List Your Property Villa & Pool"
-                className="w-full h-auto object-contain object-bottom max-h-[290px] sm:max-h-[310px] lg:max-h-[330px]"
+                className="w-full h-full object-cover object-bottom"
               />
             </div>
           </div>
