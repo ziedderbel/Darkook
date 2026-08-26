@@ -1007,11 +1007,22 @@ export default function ListYourPropertyContent() {
                 Company
               </p>
               <ul className="list-none m-0 p-0 flex flex-col gap-2.5 text-sm">
-                {["About us", "Catalog", "Terms & Conditions", "Cancelation Policy", "Privacy Policy", "FAQ", "Contact us"].map((link) => (
-                  <li key={link}>
-                    <a href="#" className="font-['Inter_Tight:Regular',sans-serif] text-white/90 hover:text-white hover:underline transition-colors no-underline">
-                      {link}
-                    </a>
+                {[
+                  { label: "About us", href: "/about" },
+                  { label: "Catalog", href: "/search" },
+                  { label: "Terms & Conditions", href: "/terms" },
+                  { label: "Cancelation Policy", href: "/cancelation" },
+                  { label: "Privacy Policy", href: "/privacy" },
+                  { label: "FAQ", href: "/faq" },
+                  { label: "Contact us", href: "/contact" },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className="font-['Inter_Tight:Regular',sans-serif] text-white/90 hover:text-white hover:underline transition-colors no-underline"
+                    >
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

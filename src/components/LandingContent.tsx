@@ -1545,10 +1545,11 @@ function Footer() {
             <p className="font-['Inter_Tight:Regular',sans-serif] text-xs sm:text-sm leading-relaxed text-slate-300 max-w-xs m-0">
               Darbook is a platform for renting holiday homes in Tunisia. Book in just a few clicks and enjoy an unforgettable stay.
             </p>
-            <Link href="/list-your-property" className="no-underline mt-2">
-              <button className="bg-[#547fee] hover:bg-[#436cd9] transition-all text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full border-none cursor-pointer shadow-md hover:shadow-lg hover:scale-102">
-                List your property
-              </button>
+            <Link
+              href="/list-your-property"
+              className="bg-[#547fee] hover:bg-[#436cd9] transition-all text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full border-none cursor-pointer shadow-md hover:shadow-lg hover:scale-102 no-underline inline-flex items-center justify-center w-fit mt-2"
+            >
+              List your property
             </Link>
           </div>
 
@@ -1559,21 +1560,21 @@ function Footer() {
             </h4>
             <ul className="list-none m-0 p-0 flex flex-col gap-2 text-xs sm:text-sm text-slate-300">
               {[
-                "About us",
-                "Catalog",
-                "Terms & Conditions",
-                "Cancelation Policy",
-                "Privacy Policy",
-                "FAQ",
-                "Contact us",
-              ].map((link) => (
-                <li key={link}>
-                  <a
-                    href="#"
+                { label: "About us", href: "/about" },
+                { label: "Catalog", href: "/search" },
+                { label: "Terms & Conditions", href: "/terms" },
+                { label: "Cancelation Policy", href: "/cancelation" },
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "FAQ", href: "/faq" },
+                { label: "Contact us", href: "/contact" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
                     className="text-slate-300 hover:text-white transition-colors no-underline font-normal"
                   >
-                    {link}
-                  </a>
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -1684,6 +1685,7 @@ function Footer() {
                   <a
                     key={item.label}
                     href="#"
+                    onClick={(e) => e.preventDefault()}
                     aria-label={item.label}
                     className="size-8 rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
                   >
