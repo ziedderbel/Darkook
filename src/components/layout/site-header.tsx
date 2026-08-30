@@ -26,13 +26,13 @@ export function SiteHeader() {
             <g id="Group 2087325898">
               <path d={svgPaths.p2bca0c0} fill="#547FEE" id="Union" />
               <g id="Darbook">
-                <path d={svgPaths.p3d515900} fill="#0F172A" />
-                <path d={svgPaths.p1e1c2e00} fill="#0F172A" />
-                <path d={svgPaths.p3dbae00} fill="#0F172A" />
-                <path d={svgPaths.p1c8f0b80} fill="#0F172A" />
-                <path d={svgPaths.p2f5e4000} fill="#0F172A" />
-                <path d={svgPaths.p25a54cf0} fill="#0F172A" />
-                <path d={svgPaths.p8920900} fill="#0F172A" />
+                <path d={svgPaths.p3d515900} className="fill-[#0F172A] dark:fill-white transition-colors" />
+                <path d={svgPaths.p1e1c2e00} className="fill-[#0F172A] dark:fill-white transition-colors" />
+                <path d={svgPaths.p3dbae00} className="fill-[#0F172A] dark:fill-white transition-colors" />
+                <path d={svgPaths.p1c8f0b80} className="fill-[#0F172A] dark:fill-white transition-colors" />
+                <path d={svgPaths.p2f5e4000} className="fill-[#0F172A] dark:fill-white transition-colors" />
+                <path d={svgPaths.p25a54cf0} className="fill-[#0F172A] dark:fill-white transition-colors" />
+                <path d={svgPaths.p8920900} className="fill-[#0F172A] dark:fill-white transition-colors" />
               </g>
             </g>
           </svg>

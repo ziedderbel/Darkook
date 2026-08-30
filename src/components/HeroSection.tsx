@@ -3,9 +3,12 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link, useRouter } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "motion/react";
+import { useTheme } from "next-themes";
 import AuthModal from "./AuthModal";
 import LanguageCurrencyModal from "./LanguageCurrencyModal";
 import FullPageMobileMenu from "@/components/layout/FullPageMobileMenu";
+import DarkModeToggle from "@/components/theme/dark-mode-toggle";
+import NavbarSearchWidget from "@/components/search/NavbarSearchWidget";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Menu01Icon,
@@ -98,25 +101,6 @@ function Logo() {
 }
 
 // ─── Navbar actions ───────────────────────────────────────────────────────────
-
-function DarkModeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  return (
-    <button
-      type="button"
-      onClick={() => setIsDark(!isDark)}
-      aria-label="Toggle dark mode"
-      className="h-[44px] w-[44px] bg-white hover:bg-slate-100 active:scale-95 transition-all duration-200 rounded-full flex items-center justify-center cursor-pointer border-none shadow-sm text-[#556080] hover:text-[#547fee] shrink-0"
-    >
-      {isDark ? (
-        <HugeiconsIcon icon={Sun01Icon} size={20} className="transition-transform duration-200 hover:rotate-12" />
-      ) : (
-        <HugeiconsIcon icon={Moon02Icon} size={20} className="transition-transform duration-200 hover:-rotate-12 text-[#556080]" />
-      )}
-    </button>
-  );
-}
 
 function LanguageSelector({
   selectedLang,
@@ -492,17 +476,62 @@ function SignInButton({ onClick }: { onClick: () => void }) {
   );
 }
 
+function StickyBrandLogo() {
+  return (
+    <Link href="/" className="flex items-center shrink-0 no-underline select-none">
+      {/* Full Logo on sm+ */}
+      <div className="hidden sm:block h-[34px] sm:h-[38px] w-auto aspect-[224/44.57] relative">
+        <svg className="w-full h-full block" fill="none" viewBox="0 0 224 44.5742">
+          <g id="Group 2087325898">
+            <path d={svgPaths.p2bca0c0} fill="#547FEE" id="Union" />
+            <g id="Darbook">
+              <path d={svgPaths.p3d515900} className="fill-[#0F172A] dark:fill-white transition-colors" />
+              <path d={svgPaths.p1e1c2e00} className="fill-[#0F172A] dark:fill-white transition-colors" />
+              <path d={svgPaths.p3dbae00} className="fill-[#0F172A] dark:fill-white transition-colors" />
+              <path d={svgPaths.p1c8f0b80} className="fill-[#0F172A] dark:fill-white transition-colors" />
+              <path d={svgPaths.p2f5e4000} className="fill-[#0F172A] dark:fill-white transition-colors" />
+              <path d={svgPaths.p25a54cf0} className="fill-[#0F172A] dark:fill-white transition-colors" />
+              <path d={svgPaths.p8920900} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            </g>
+          </g>
+        </svg>
+      </div>
+      {/* Icon Emblem on mobile < sm */}
+      <div className="sm:hidden h-[34px] w-[34px] rounded-xl bg-[#547FEE] flex items-center justify-center shadow-xs">
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 45 45">
+          <path d={svgPaths.p2bca0c0} fill="white" />
+        </svg>
+      </div>
+    </Link>
+  );
+}
+
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 
 function Navbar() {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("FRA");
   const [selectedCurrency, setSelectedCurrency] = useState("EUR");
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Trigger sticky navbar when user scrolls down past 160px
+      if (typeof window !== "undefined") {
+        setIsSticky(window.scrollY > 160);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
+      {/* 1. Default Static Hero Navbar (at top of hero) */}
       <nav className="-translate-x-1/2 absolute flex items-center justify-between left-1/2 top-[20px] sm:top-[28px] w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 z-30">
         <Logo />
 
@@ -532,18 +561,80 @@ function Navbar() {
             <HugeiconsIcon icon={Menu01Icon} size={20} />
           </button>
         </div>
-
-        {/* Full Page Mobile Menu (Whole page overlay) */}
-        <FullPageMobileMenu
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-          onOpenAuth={() => setIsAuthModalOpen(true)}
-          onOpenLang={() => setIsLangModalOpen(true)}
-          selectedLang={selectedLang}
-          selectedCurrency={selectedCurrency}
-          favoritesCount={2}
-        />
       </nav>
+
+      {/* 2. Floating Sticky Navbar Following User on Scroll with Optimized Search Widget */}
+      <AnimatePresence>
+        {isSticky && (
+          <motion.header
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="fixed top-0 inset-x-0 z-[100] bg-white/95 dark:bg-[#070b18]/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800 shadow-md transition-colors"
+          >
+            <div className="max-w-[1280px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
+              {/* Brand Logo */}
+              <StickyBrandLogo />
+
+              {/* Center: Optimized Compact Search Widget - Always visible on all screens */}
+              <div className="flex-1 max-w-[580px] mx-1 sm:mx-3 flex justify-center min-w-0">
+                <NavbarSearchWidget
+                  initialLocation="Choose destination"
+                  initialCheckIn="2026-03-21"
+                  initialCheckOut="2026-03-28"
+                  initialGuests="2 guests"
+                  onSearch={({ location, checkIn, checkOut, guests }) => {
+                    router.push(
+                      `/search?location=${encodeURIComponent(location)}&checkIn=${encodeURIComponent(
+                        checkIn
+                      )}&checkOut=${encodeURIComponent(checkOut)}&guests=${encodeURIComponent(guests)}`
+                    );
+                  }}
+                />
+              </div>
+
+              {/* Right Actions */}
+              <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                <DarkModeToggle />
+                <div className="hidden lg:flex items-center gap-2">
+                  <LanguageSelector
+                    selectedLang={selectedLang}
+                    selectedCurrency={selectedCurrency}
+                    onSelectLang={setSelectedLang}
+                    onSelectCurrency={setSelectedCurrency}
+                  />
+                </div>
+                <FavoritesButton />
+                <div className="hidden sm:block">
+                  <SignInButton onClick={() => setIsAuthModalOpen(true)} />
+                </div>
+
+                {/* Mobile Menu Trigger */}
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  aria-label="Open menu"
+                  className="lg:hidden h-[38px] w-[38px] sm:h-[40px] sm:w-[40px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all duration-200 rounded-full flex items-center justify-center cursor-pointer border-none text-[#556080] dark:text-slate-300 hover:text-[#547fee]"
+                >
+                  <HugeiconsIcon icon={Menu01Icon} size={18} />
+                </button>
+              </div>
+            </div>
+          </motion.header>
+        )}
+      </AnimatePresence>
+
+      {/* Full Page Mobile Menu (Whole page overlay) */}
+      <FullPageMobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenLang={() => setIsLangModalOpen(true)}
+        selectedLang={selectedLang}
+        selectedCurrency={selectedCurrency}
+        favoritesCount={2}
+      />
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       <LanguageCurrencyModal
         isOpen={isLangModalOpen}
@@ -977,6 +1068,44 @@ function SearchWidget() {
     rooms.length > 1 ? `, ${rooms.length} rooms` : ""
   }`;
 
+  const searchWidgetRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll adaptation: when any dropdown/popover opens, smoothly scroll the page if needed so it is 100% visible with comfortable space
+  const ensureDropdownSpace = (popoverHeight = 420) => {
+    if (typeof window === "undefined") return;
+    setTimeout(() => {
+      const el = searchWidgetRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const requiredBottom = rect.bottom + popoverHeight + 36; // 36px space below popover
+
+      if (requiredBottom > viewportHeight) {
+        const scrollDelta = requiredBottom - viewportHeight;
+        window.scrollBy({
+          top: scrollDelta,
+          behavior: "smooth",
+        });
+      } else if (rect.top < 85) {
+        // If the top of the search widget is hidden under navbar
+        window.scrollBy({
+          top: rect.top - 95,
+          behavior: "smooth",
+        });
+      }
+    }, 50);
+  };
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      ensureDropdownSpace(380);
+    } else if (isDatePickerOpen) {
+      ensureDropdownSpace(460);
+    } else if (isGuestPickerOpen) {
+      ensureDropdownSpace(420);
+    }
+  }, [isDropdownOpen, isDatePickerOpen, isGuestPickerOpen]);
+
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -1146,7 +1275,7 @@ function SearchWidget() {
   const frequentItems = activeTab === "experience" ? frequentExperiences : frequentLocations;
 
   return (
-    <div className="flex flex-col items-start relative shrink-0 w-full max-w-[1280px] mx-auto">
+    <div ref={searchWidgetRef} className="flex flex-col items-start relative shrink-0 w-full max-w-[1280px] mx-auto">
 
       {/* Top Tabs */}
       <div className="backdrop-blur-[4px] bg-white/50 flex items-center p-1.5 pb-0 relative rounded-t-[20px] shrink-0 self-start z-10">
@@ -1196,7 +1325,7 @@ function SearchWidget() {
 
         {/* Continuous inner curve merging switcher container with outer search widget container */}
         <div 
-          className="absolute left-full bottom-0 w-5 h-5 bg-white/50 backdrop-blur-[4px] pointer-events-none"
+          className="absolute left-full bottom-0 w-5 h-5 bg-white/50 dark:bg-slate-900/60 backdrop-blur-[4px] pointer-events-none"
           style={{
             maskImage: "radial-gradient(circle at 100% 0%, transparent 19.5px, black 20px)",
             WebkitMaskImage: "radial-gradient(circle at 100% 0%, transparent 19.5px, black 20px)",
@@ -1205,14 +1334,20 @@ function SearchWidget() {
       </div>
 
       {/* Main Search Bar Card */}
-      <div className="backdrop-blur-[4px] bg-white/50 p-1.5 relative rounded-b-[20px] rounded-tr-[20px] rounded-tl-none shrink-0 w-full shadow-xl">
-        <div className="bg-white rounded-[16px] p-1.5 flex flex-col gap-2 shadow-inner w-full lg:flex-row lg:items-stretch">
+      <div className="backdrop-blur-[4px] bg-white/50 dark:bg-slate-900/60 p-1.5 relative rounded-b-[20px] rounded-tr-[20px] rounded-tl-none shrink-0 w-full shadow-xl z-30 transition-colors duration-300">
+        <div className="bg-white dark:bg-[#121a30] rounded-[16px] p-1.5 flex flex-col gap-2 shadow-inner w-full lg:flex-row lg:items-stretch transition-colors duration-300">
           
           {/* First Field: Experience or Location (Custom Dropdown Popover) */}
           <div 
             ref={dropdownRef}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="w-full bg-gray-50/80 hover:bg-gray-100/80 transition-colors rounded-xl p-2.5 flex items-center gap-2.5 border border-gray-100 relative cursor-pointer select-none lg:flex-1"
+            onClick={() => {
+              setIsDropdownOpen(!isDropdownOpen);
+              setIsDatePickerOpen(false);
+              setIsGuestPickerOpen(false);
+            }}
+            className={`w-full bg-gray-50/80 hover:bg-gray-100/80 dark:bg-[#0e162b] dark:hover:bg-[#16203a] transition-colors rounded-xl p-2.5 flex items-center gap-2.5 border border-gray-100 dark:border-slate-800 relative cursor-pointer select-none lg:flex-1 ${
+              isDropdownOpen ? "z-40" : "z-10"
+            }`}
           >
             <div className="w-9 h-9 rounded-lg bg-[#547fee]/10 flex items-center justify-center shrink-0 text-[#547fee]">
               {activeTab === "experience" ? (
@@ -1232,10 +1367,10 @@ function SearchWidget() {
                   transition={{ duration: 0.2 }}
                   className="flex flex-col"
                 >
-                  <label className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider cursor-pointer">
+                  <label className="text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider cursor-pointer">
                     {activeTab === "experience" ? "What experience?" : "Where to?"}
                   </label>
-                  <span className="font-bold text-gray-900 text-sm truncate">
+                  <span className="font-bold text-gray-900 dark:text-white text-sm truncate">
                     {activeTab === "experience" ? selectedExperience : selectedLocation}
                   </span>
                 </motion.div>
@@ -1254,7 +1389,7 @@ function SearchWidget() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.2 }}
-                  className="hidden lg:block absolute top-[calc(100%+8px)] left-0 w-[360px] max-h-[360px] rounded-2xl shadow-2xl bg-white border border-gray-100/90 p-2.5 z-50 overflow-y-auto space-y-1"
+                  className="hidden lg:block absolute top-[calc(100%+8px)] left-0 w-[360px] max-h-[360px] rounded-2xl shadow-2xl bg-white dark:bg-[#121a30] border border-gray-100/90 dark:border-slate-800 p-2.5 z-50 overflow-y-auto space-y-1"
                 >
                   {(activeTab === "experience" ? experienceDetails : locationDetails).map((item) => {
                     const isSelected = activeTab === "experience" 
@@ -1274,7 +1409,7 @@ function SearchWidget() {
                           setIsDropdownOpen(false);
                         }}
                         className={`flex items-center justify-between gap-3.5 p-2.5 rounded-xl transition-all cursor-pointer ${
-                          isSelected ? "bg-[#547fee]/10 text-[#547fee]" : "hover:bg-gray-50 text-gray-900"
+                          isSelected ? "bg-[#547fee]/10 dark:bg-[#547fee]/20 text-[#547fee]" : "hover:bg-gray-50 dark:hover:bg-[#16203a] text-gray-900 dark:text-white"
                         }`}
                       >
                         <div className="flex items-center gap-3.5 min-w-0">
@@ -1284,8 +1419,8 @@ function SearchWidget() {
                             <HugeiconsIcon icon={IconComponent} size={22} />
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="font-bold text-sm text-gray-900 truncate">{item.name}</span>
-                            <span className="text-xs text-gray-500 font-medium truncate">{item.subtitle}</span>
+                            <span className="font-bold text-sm text-gray-900 dark:text-white truncate">{item.name}</span>
+                            <span className="text-xs text-gray-500 dark:text-slate-400 font-medium truncate">{item.subtitle}</span>
                           </div>
                         </div>
                         {isSelected && (
@@ -1322,17 +1457,17 @@ function SearchWidget() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 20 }}
                       transition={{ duration: 0.2 }}
-                      className="fixed inset-x-0 bottom-0 z-[200] bg-white rounded-t-[28px] p-5 shadow-2xl max-h-[85vh] overflow-y-auto space-y-2"
+                      className="fixed inset-x-0 bottom-0 z-[200] bg-white dark:bg-[#121a30] rounded-t-[28px] p-5 shadow-2xl max-h-[85vh] overflow-y-auto space-y-2"
                     >
-                      <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-3" />
-                      <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
-                        <span className="font-bold text-base text-gray-900">
+                      <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto mb-3" />
+                      <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100 dark:border-slate-800">
+                        <span className="font-bold text-base text-gray-900 dark:text-white">
                           {activeTab === "experience" ? "Select Experience" : "Select Location"}
                         </span>
                         <button
                           type="button"
                           onClick={() => setIsDropdownOpen(false)}
-                          className="size-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 border-none cursor-pointer"
+                          className="size-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 border-none cursor-pointer"
                         >
                           <HugeiconsIcon icon={Cancel01Icon} size={18} />
                         </button>
@@ -1356,7 +1491,7 @@ function SearchWidget() {
                               setIsDropdownOpen(false);
                             }}
                             className={`flex items-center justify-between gap-3.5 p-3 rounded-xl transition-all cursor-pointer ${
-                              isSelected ? "bg-[#547fee]/10 text-[#547fee] border border-[#547fee]/30" : "hover:bg-gray-50 text-gray-900 border border-transparent"
+                              isSelected ? "bg-[#547fee]/10 dark:bg-[#547fee]/20 text-[#547fee] border border-[#547fee]/30" : "hover:bg-gray-50 dark:hover:bg-[#16203a] text-gray-900 dark:text-white border border-transparent"
                             }`}
                           >
                             <div className="flex items-center gap-3.5 min-w-0">
@@ -1366,8 +1501,8 @@ function SearchWidget() {
                                 <HugeiconsIcon icon={IconComponent} size={22} />
                               </div>
                               <div className="flex flex-col min-w-0">
-                                <span className="font-bold text-sm text-gray-900 truncate">{item.name}</span>
-                                <span className="text-xs text-gray-500 font-medium truncate">{item.subtitle}</span>
+                                <span className="font-bold text-sm text-gray-900 dark:text-white truncate">{item.name}</span>
+                                <span className="text-xs text-gray-500 dark:text-slate-400 font-medium truncate">{item.subtitle}</span>
                               </div>
                             </div>
                             {isSelected && (
@@ -1389,9 +1524,9 @@ function SearchWidget() {
           {/* Tablet Middle Container: Dates & Guests side-by-side on sm/md, unrolled on lg */}
           <div className="flex flex-col sm:flex-row gap-2 w-full lg:contents">
             {/* Merged Dates Field (Check In & Check Out) with Date Range Popover */}
-            <div ref={datePickerRef} className="relative self-stretch w-full sm:flex-1 lg:flex-[1.2]">
+            <div ref={datePickerRef} className={`relative self-stretch w-full sm:flex-1 lg:flex-[1.2] ${isDatePickerOpen ? "z-40" : "z-10"}`}>
               <div 
-                className="w-full bg-gray-50/80 hover:bg-gray-100/80 transition-colors rounded-xl p-3 px-3.5 flex items-center gap-3 border border-gray-100 relative self-stretch cursor-pointer select-none h-full"
+                className="w-full bg-gray-50/80 hover:bg-gray-100/80 dark:bg-[#0e162b] dark:hover:bg-[#16203a] transition-colors rounded-xl p-3 px-3.5 flex items-center gap-3 border border-gray-100 dark:border-slate-800 relative self-stretch cursor-pointer select-none h-full"
               >
                 <div className="w-9 h-9 rounded-lg bg-[#547fee]/10 flex items-center justify-center shrink-0 text-[#547fee]">
                   <HugeiconsIcon icon={Calendar03Icon} size={20} className="w-5 h-5" />
@@ -1407,12 +1542,12 @@ function SearchWidget() {
                   }}
                   className="flex flex-col min-w-0 flex-1 hover:opacity-80 transition-opacity"
                 >
-                  <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Check In</span>
-                  <span className="font-bold text-gray-900 text-sm truncate">{formatDateLabel(checkIn)}</span>
+                  <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Check In</span>
+                  <span className="font-bold text-gray-900 dark:text-white text-sm truncate">{formatDateLabel(checkIn)}</span>
                 </div>
 
                 {/* Divider */}
-                <div className="h-7 w-px bg-gray-200/80 shrink-0 mx-0.5" />
+                <div className="h-7 w-px bg-gray-200/80 dark:bg-slate-700 shrink-0 mx-0.5" />
 
                 {/* Check Out Segment */}
                 <div 
@@ -1424,8 +1559,8 @@ function SearchWidget() {
                   }}
                   className="flex flex-col min-w-0 flex-1 hover:opacity-80 transition-opacity"
                 >
-                  <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Check Out</span>
-                  <span className="font-bold text-gray-900 text-sm truncate">{formatDateLabel(checkOut)}</span>
+                  <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Check Out</span>
+                  <span className="font-bold text-gray-900 dark:text-white text-sm truncate">{formatDateLabel(checkOut)}</span>
                 </div>
               </div>
 
@@ -1438,23 +1573,23 @@ function SearchWidget() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="hidden lg:block absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-2xl shadow-2xl bg-white border border-gray-100/90 p-5 w-[92vw] max-w-[620px] z-50 space-y-4"
+                    className="hidden lg:block absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-2xl shadow-2xl bg-white dark:bg-[#121a30] border border-gray-100/90 dark:border-slate-800 p-5 w-[92vw] max-w-[620px] z-50 space-y-4"
                   >
                     {/* Top Summary Bar */}
-                    <div className="flex items-center gap-2 sm:gap-3 bg-gray-50/60 p-2 rounded-xl border border-gray-100 relative">
+                    <div className="flex items-center gap-2 sm:gap-3 bg-gray-50/60 dark:bg-[#0e162b] p-2 rounded-xl border border-gray-100 dark:border-slate-800 relative">
                       <div
                         onClick={() => setDatePickerTarget("checkIn")}
                         className={`flex-1 p-2.5 rounded-lg cursor-pointer transition-all ${
                           datePickerTarget === "checkIn"
-                            ? "bg-white border border-[#547fee] shadow-xs"
-                            : "hover:bg-white/60"
+                            ? "bg-white dark:bg-[#16203a] border border-[#547fee] shadow-xs"
+                            : "hover:bg-white/60 dark:hover:bg-white/10"
                         }`}
                       >
-                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Check-In</span>
-                        <span className="text-xs font-bold text-gray-900">{formatDateLabel(checkIn)}</span>
+                        <span className="text-[10px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider block">Check-In</span>
+                        <span className="text-xs font-bold text-gray-900 dark:text-white">{formatDateLabel(checkIn)}</span>
                       </div>
 
-                      <div className="bg-white border border-blue-200/80 shadow-xs rounded-full px-3 py-1.5 text-xs font-bold text-gray-700 flex items-center gap-1.5 shrink-0">
+                      <div className="bg-white dark:bg-[#16203a] border border-blue-200/80 dark:border-slate-700 shadow-xs rounded-full px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-slate-200 flex items-center gap-1.5 shrink-0">
                         <span>🌙</span>
                         <span>{calculateNights(checkIn, checkOut)} nights</span>
                       </div>
@@ -1463,12 +1598,12 @@ function SearchWidget() {
                         onClick={() => setDatePickerTarget("checkOut")}
                         className={`flex-1 p-2.5 rounded-lg cursor-pointer transition-all ${
                           datePickerTarget === "checkOut"
-                            ? "bg-white border border-[#547fee] shadow-xs"
-                            : "hover:bg-white/60"
+                            ? "bg-white dark:bg-[#16203a] border border-[#547fee] shadow-xs"
+                            : "hover:bg-white/60 dark:hover:bg-white/10"
                         }`}
                       >
-                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Check-Out</span>
-                        <span className="text-xs font-bold text-gray-900">{formatDateLabel(checkOut)}</span>
+                        <span className="text-[10px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider block">Check-Out</span>
+                        <span className="text-xs font-bold text-gray-900 dark:text-white">{formatDateLabel(checkOut)}</span>
                       </div>
                     </div>
 
@@ -1485,7 +1620,7 @@ function SearchWidget() {
                               setCalendarMonth(calendarMonth - 1);
                             }
                           }}
-                          className="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors cursor-pointer border-none"
+                          className="w-7 h-7 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-slate-300 transition-colors cursor-pointer border-none"
                         >
                           <HugeiconsIcon icon={ArrowLeft01Icon} size={16} />
                         </button>
@@ -1499,7 +1634,7 @@ function SearchWidget() {
                               setCalendarMonth(calendarMonth + 1);
                             }
                           }}
-                          className="w-7 h-7 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors cursor-pointer border-none"
+                          className="w-7 h-7 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-slate-300 transition-colors cursor-pointer border-none"
                         >
                           <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
                         </button>
@@ -1515,7 +1650,7 @@ function SearchWidget() {
                     </div>
 
                     {/* Bottom Action Bar */}
-                    <div className="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2">
+                    <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -1526,7 +1661,7 @@ function SearchWidget() {
                             setCheckIn(formatDateForInput(today));
                             setCheckOut(formatDateForInput(tomorrow));
                           }}
-                          className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                         >
                           Stay tonight
                         </button>
@@ -1541,7 +1676,7 @@ function SearchWidget() {
                             setCheckIn(formatDateForInput(tomorrow));
                             setCheckOut(formatDateForInput(dayAfter));
                           }}
-                          className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                         >
                           Stay tomorrow
                         </button>
@@ -1583,35 +1718,35 @@ function SearchWidget() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-x-0 bottom-0 z-[200] bg-white rounded-t-[28px] p-5 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4"
+                        className="fixed inset-x-0 bottom-0 z-[200] bg-white dark:bg-[#121a30] rounded-t-[28px] p-5 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4"
                       >
-                        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-3" />
-                        <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100">
-                          <span className="font-bold text-base text-gray-900">Select Travel Dates</span>
+                        <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto mb-3" />
+                        <div className="flex items-center justify-between pb-3 mb-2 border-b border-gray-100 dark:border-slate-800">
+                          <span className="font-bold text-base text-gray-900 dark:text-white">Select Travel Dates</span>
                           <button
                             type="button"
                             onClick={() => setIsDatePickerOpen(false)}
-                            className="size-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 border-none cursor-pointer"
+                            className="size-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 border-none cursor-pointer"
                           >
                             <HugeiconsIcon icon={Cancel01Icon} size={18} />
                           </button>
                         </div>
 
                         {/* Top Summary Bar */}
-                        <div className="flex items-center gap-2 sm:gap-3 bg-gray-50/60 p-2 rounded-xl border border-gray-100 relative">
+                        <div className="flex items-center gap-2 sm:gap-3 bg-gray-50/60 dark:bg-[#0e162b] p-2 rounded-xl border border-gray-100 dark:border-slate-800 relative">
                           <div
                             onClick={() => setDatePickerTarget("checkIn")}
                             className={`flex-1 p-2.5 rounded-lg cursor-pointer transition-all ${
                               datePickerTarget === "checkIn"
-                                ? "bg-white border border-[#547fee] shadow-xs"
-                                : "hover:bg-white/60"
+                                ? "bg-white dark:bg-[#16203a] border border-[#547fee] shadow-xs"
+                                : "hover:bg-white/60 dark:hover:bg-white/10"
                             }`}
                           >
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Check-In</span>
-                            <span className="text-xs font-bold text-gray-900">{formatDateLabel(checkIn)}</span>
+                            <span className="text-[10px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider block">Check-In</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white">{formatDateLabel(checkIn)}</span>
                           </div>
 
-                          <div className="bg-white border border-blue-200/80 shadow-xs rounded-full px-3 py-1.5 text-xs font-bold text-gray-700 flex items-center gap-1.5 shrink-0">
+                          <div className="bg-white dark:bg-[#16203a] border border-blue-200/80 dark:border-slate-700 shadow-xs rounded-full px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-slate-200 flex items-center gap-1.5 shrink-0">
                             <span>🌙</span>
                             <span>{calculateNights(checkIn, checkOut)} nights</span>
                           </div>
@@ -1620,12 +1755,12 @@ function SearchWidget() {
                             onClick={() => setDatePickerTarget("checkOut")}
                             className={`flex-1 p-2.5 rounded-lg cursor-pointer transition-all ${
                               datePickerTarget === "checkOut"
-                                ? "bg-white border border-[#547fee] shadow-xs"
-                                : "hover:bg-white/60"
+                                ? "bg-white dark:bg-[#16203a] border border-[#547fee] shadow-xs"
+                                : "hover:bg-white/60 dark:hover:bg-white/10"
                             }`}
                           >
-                            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Check-Out</span>
-                            <span className="text-xs font-bold text-gray-900">{formatDateLabel(checkOut)}</span>
+                            <span className="text-[10px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider block">Check-Out</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white">{formatDateLabel(checkOut)}</span>
                           </div>
                         </div>
 
@@ -1723,21 +1858,21 @@ function SearchWidget() {
             </div>
 
             {/* Guest Field Container */}
-            <div ref={guestPickerRef} className="relative self-stretch w-full sm:w-[180px] lg:w-[155px]">
+            <div ref={guestPickerRef} className={`relative self-stretch w-full sm:w-[180px] lg:w-[155px] ${isGuestPickerOpen ? "z-40" : "z-10"}`}>
               <div 
                 onClick={() => {
                   setIsGuestPickerOpen(!isGuestPickerOpen);
                   setIsDropdownOpen(false);
                   setIsDatePickerOpen(false);
                 }}
-                className="w-full bg-gray-50/80 hover:bg-gray-100/80 transition-colors rounded-xl p-2.5 flex items-center gap-2 border border-gray-100 relative self-stretch cursor-pointer select-none h-full"
+                className="w-full bg-gray-50/80 hover:bg-gray-100/80 dark:bg-[#0e162b] dark:hover:bg-[#16203a] transition-colors rounded-xl p-2.5 flex items-center gap-2 border border-gray-100 dark:border-slate-800 relative self-stretch cursor-pointer select-none h-full"
               >
                 <div className="w-8 h-8 rounded-lg bg-[#547fee]/10 flex items-center justify-center shrink-0 text-[#547fee]">
                   <HugeiconsIcon icon={UserGroupIcon} size={18} className="w-4.5 h-4.5" />
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Guests</span>
-                  <span className="font-bold text-gray-900 text-xs truncate">{guestSummaryLabel}</span>
+                  <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Guests</span>
+                  <span className="font-bold text-gray-900 dark:text-white text-xs truncate">{guestSummaryLabel}</span>
                 </div>
                 <div className={`transition-transform duration-200 text-gray-400 ${isGuestPickerOpen ? "rotate-180 text-[#547fee]" : ""}`}>
                   <HugeiconsIcon icon={ArrowDown01Icon} size={14} />
@@ -1753,10 +1888,10 @@ function SearchWidget() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="hidden lg:block absolute top-[calc(100%+8px)] right-0 w-[360px] max-h-[480px] rounded-2xl shadow-2xl bg-white border border-gray-100/90 p-5 z-50 overflow-y-auto space-y-4"
+                    className="hidden lg:block absolute top-[calc(100%+8px)] right-0 w-[360px] max-h-[480px] rounded-2xl shadow-2xl bg-white dark:bg-[#121a30] border border-gray-100/90 dark:border-slate-800 p-5 z-50 overflow-y-auto space-y-4"
                   >
-                    <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                      <span className="text-base font-bold text-gray-900">
+                    <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-800">
+                      <span className="text-base font-bold text-gray-900 dark:text-white">
                         Guests & Rooms
                       </span>
                     </div>
@@ -1770,13 +1905,13 @@ function SearchWidget() {
                             onClick={() => setActiveRoomIndex(rIdx)}
                             className={`border rounded-2xl p-3.5 space-y-3 transition-all ${
                               isExpanded
-                                ? "border-[#547fee] bg-white shadow-xs"
-                                : "border-gray-200/80 bg-gray-50/50 hover:bg-gray-50 cursor-pointer"
+                                ? "border-[#547fee] bg-white dark:bg-[#16203a] shadow-xs"
+                                : "border-gray-200/80 dark:border-slate-800 bg-gray-50/50 dark:bg-[#0e162b] hover:bg-gray-50 dark:hover:bg-[#16203a] cursor-pointer"
                             }`}
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-sm text-gray-900">Room {rIdx + 1}</span>
+                                <span className="font-bold text-sm text-gray-900 dark:text-white">Room {rIdx + 1}</span>
                                 <span className="text-xs text-gray-400 font-medium">
                                   {room.adults} adult{room.adults > 1 ? "s" : ""}, {room.children} child{room.children !== 1 ? "ren" : ""}
                                 </span>
@@ -1797,10 +1932,10 @@ function SearchWidget() {
                             </div>
 
                             {isExpanded && (
-                              <div className="pt-2 border-t border-gray-100 space-y-3">
+                              <div className="pt-2 border-t border-gray-100 dark:border-slate-800 space-y-3">
                                 <div className="flex items-center justify-between">
                                   <div className="flex flex-col">
-                                    <span className="text-sm font-bold text-gray-900">Adults</span>
+                                    <span className="text-sm font-bold text-gray-900 dark:text-white">Adults</span>
                                     <span className="text-xs text-gray-400 font-medium">12+ years</span>
                                   </div>
                                   <div className="flex items-center gap-3">
@@ -1811,11 +1946,11 @@ function SearchWidget() {
                                         e.stopPropagation();
                                         updateAdults(rIdx, -1);
                                       }}
-                                      className="text-[#547fee] disabled:text-gray-300 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
+                                      className="text-[#547fee] disabled:text-gray-300 dark:disabled:text-slate-600 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
                                     >
                                       <HugeiconsIcon icon={RemoveCircleIcon} size={24} />
                                     </button>
-                                    <span className="text-sm font-bold text-gray-900 w-4 text-center">{room.adults}</span>
+                                    <span className="text-sm font-bold text-gray-900 dark:text-white w-4 text-center">{room.adults}</span>
                                     <button
                                       type="button"
                                       onClick={(e) => {
@@ -1831,7 +1966,7 @@ function SearchWidget() {
 
                                 <div className="flex items-center justify-between">
                                   <div className="flex flex-col">
-                                    <span className="text-sm font-bold text-gray-900">Children</span>
+                                    <span className="text-sm font-bold text-gray-900 dark:text-white">Children</span>
                                     <span className="text-xs text-gray-400 font-medium">2-11 years</span>
                                   </div>
                                   <div className="flex items-center gap-3">
@@ -1842,11 +1977,11 @@ function SearchWidget() {
                                         e.stopPropagation();
                                         updateChildren(rIdx, -1);
                                       }}
-                                      className="text-[#547fee] disabled:text-gray-300 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
+                                      className="text-[#547fee] disabled:text-gray-300 dark:disabled:text-slate-600 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
                                     >
                                       <HugeiconsIcon icon={RemoveCircleIcon} size={24} />
                                     </button>
-                                    <span className="text-sm font-bold text-gray-900 w-4 text-center">{room.children}</span>
+                                    <span className="text-sm font-bold text-gray-900 dark:text-white w-4 text-center">{room.children}</span>
                                     <button
                                       type="button"
                                       onClick={(e) => {
@@ -1861,15 +1996,15 @@ function SearchWidget() {
                                 </div>
 
                                 {room.children > 0 && (
-                                  <div className="pt-2 border-t border-gray-100 space-y-2">
+                                  <div className="pt-2 border-t border-gray-100 dark:border-slate-800 space-y-2">
                                     {room.childAges.map((age, cIdx) => (
                                       <div key={cIdx} className="flex items-center justify-between">
-                                        <span className="text-xs font-semibold text-gray-600">Age of child {cIdx + 1}</span>
+                                        <span className="text-xs font-semibold text-gray-600 dark:text-slate-300">Age of child {cIdx + 1}</span>
                                         <select
                                           value={age}
                                           onClick={(e) => e.stopPropagation()}
                                           onChange={(e) => updateChildAge(rIdx, cIdx, Number(e.target.value))}
-                                          className="text-xs font-semibold text-gray-900 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 outline-none cursor-pointer"
+                                          className="text-xs font-semibold text-gray-900 dark:text-white bg-gray-50 dark:bg-[#0e162b] border border-gray-200 dark:border-slate-700 rounded-lg px-2.5 py-1 outline-none cursor-pointer"
                                         >
                                           {[...Array(12).keys()].map((val) => (
                                             <option key={val} value={val + 2}>
@@ -1888,11 +2023,11 @@ function SearchWidget() {
                       })}
                     </div>
 
-                    <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-3">
+                    <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-3">
                       <button
                         type="button"
                         onClick={addRoom}
-                        className="flex-1 py-2.5 px-3 rounded-xl border border-[#547fee] text-[#547fee] bg-white hover:bg-blue-50/60 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                        className="flex-1 py-2.5 px-3 rounded-xl border border-[#547fee] text-[#547fee] bg-white dark:bg-[#16203a] hover:bg-blue-50/60 dark:hover:bg-[#1a2542] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                       >
                         <HugeiconsIcon icon={BedDoubleIcon} size={16} />
                         <span>Add a room</span>
@@ -1932,17 +2067,17 @@ function SearchWidget() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-x-0 bottom-0 z-[200] bg-white rounded-t-[28px] p-5 shadow-2xl max-h-[85vh] overflow-y-auto space-y-4"
+                        className="fixed inset-x-0 bottom-0 z-[200] bg-white dark:bg-[#121a30] rounded-t-[28px] p-5 shadow-2xl max-h-[85vh] overflow-y-auto space-y-4"
                       >
-                        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-3" />
-                        <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-                          <span className="text-base font-bold text-gray-900">
+                        <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto mb-3" />
+                        <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-800">
+                          <span className="text-base font-bold text-gray-900 dark:text-white">
                             Guests & Rooms
                           </span>
                           <button
                             type="button"
                             onClick={() => setIsGuestPickerOpen(false)}
-                            className="size-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 border-none cursor-pointer"
+                            className="size-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-700 border-none cursor-pointer"
                           >
                             <HugeiconsIcon icon={Cancel01Icon} size={18} />
                           </button>
@@ -1957,13 +2092,13 @@ function SearchWidget() {
                                 onClick={() => setActiveRoomIndex(rIdx)}
                                 className={`border rounded-2xl p-3.5 space-y-3 transition-all ${
                                   isExpanded
-                                    ? "border-[#547fee] bg-white shadow-xs"
-                                    : "border-gray-200/80 bg-gray-50/50 hover:bg-gray-50 cursor-pointer"
+                                    ? "border-[#547fee] bg-white dark:bg-[#16203a] shadow-xs"
+                                    : "border-gray-200/80 dark:border-slate-800 bg-gray-50/50 dark:bg-[#0e162b] hover:bg-gray-50 dark:hover:bg-[#16203a] cursor-pointer"
                                 }`}
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-bold text-sm text-gray-900">Room {rIdx + 1}</span>
+                                    <span className="font-bold text-sm text-gray-900 dark:text-white">Room {rIdx + 1}</span>
                                     <span className="text-xs text-gray-400 font-medium">
                                       {room.adults} adult{room.adults > 1 ? "s" : ""}, {room.children} child{room.children !== 1 ? "ren" : ""}
                                     </span>
@@ -1984,10 +2119,10 @@ function SearchWidget() {
                                 </div>
 
                                 {isExpanded && (
-                                  <div className="pt-2 border-t border-gray-100 space-y-3">
+                                  <div className="pt-2 border-t border-gray-100 dark:border-slate-800 space-y-3">
                                     <div className="flex items-center justify-between">
                                       <div className="flex flex-col">
-                                        <span className="text-sm font-bold text-gray-900">Adults</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white">Adults</span>
                                         <span className="text-xs text-gray-400 font-medium">12+ years</span>
                                       </div>
                                       <div className="flex items-center gap-3">
@@ -1998,11 +2133,11 @@ function SearchWidget() {
                                             e.stopPropagation();
                                             updateAdults(rIdx, -1);
                                           }}
-                                          className="text-[#547fee] disabled:text-gray-300 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
+                                          className="text-[#547fee] disabled:text-gray-300 dark:disabled:text-slate-600 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
                                         >
                                           <HugeiconsIcon icon={RemoveCircleIcon} size={24} />
                                         </button>
-                                        <span className="text-sm font-bold text-gray-900 w-4 text-center">{room.adults}</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white w-4 text-center">{room.adults}</span>
                                         <button
                                           type="button"
                                           onClick={(e) => {
@@ -2018,7 +2153,7 @@ function SearchWidget() {
 
                                     <div className="flex items-center justify-between">
                                       <div className="flex flex-col">
-                                        <span className="text-sm font-bold text-gray-900">Children</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white">Children</span>
                                         <span className="text-xs text-gray-400 font-medium">2-11 years</span>
                                       </div>
                                       <div className="flex items-center gap-3">
@@ -2029,11 +2164,11 @@ function SearchWidget() {
                                             e.stopPropagation();
                                             updateChildren(rIdx, -1);
                                           }}
-                                          className="text-[#547fee] disabled:text-gray-300 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
+                                          className="text-[#547fee] disabled:text-gray-300 dark:disabled:text-slate-600 transition-colors cursor-pointer disabled:cursor-not-allowed border-none bg-transparent"
                                         >
                                           <HugeiconsIcon icon={RemoveCircleIcon} size={24} />
                                         </button>
-                                        <span className="text-sm font-bold text-gray-900 w-4 text-center">{room.children}</span>
+                                        <span className="text-sm font-bold text-gray-900 dark:text-white w-4 text-center">{room.children}</span>
                                         <button
                                           type="button"
                                           onClick={(e) => {
@@ -2048,15 +2183,15 @@ function SearchWidget() {
                                     </div>
 
                                     {room.children > 0 && (
-                                      <div className="pt-2 border-t border-gray-100 space-y-2">
+                                      <div className="pt-2 border-t border-gray-100 dark:border-slate-800 space-y-2">
                                         {room.childAges.map((age, cIdx) => (
                                           <div key={cIdx} className="flex items-center justify-between">
-                                            <span className="text-xs font-semibold text-gray-600">Age of child {cIdx + 1}</span>
+                                            <span className="text-xs font-semibold text-gray-600 dark:text-slate-300">Age of child {cIdx + 1}</span>
                                             <select
                                               value={age}
                                               onClick={(e) => e.stopPropagation()}
                                               onChange={(e) => updateChildAge(rIdx, cIdx, Number(e.target.value))}
-                                              className="text-xs font-semibold text-gray-900 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 outline-none cursor-pointer"
+                                              className="text-xs font-semibold text-gray-900 dark:text-white bg-gray-50 dark:bg-[#0e162b] border border-gray-200 dark:border-slate-700 rounded-lg px-2.5 py-1 outline-none cursor-pointer"
                                             >
                                               {[...Array(12).keys()].map((val) => (
                                                 <option key={val} value={val + 2}>
@@ -2075,11 +2210,11 @@ function SearchWidget() {
                           })}
                         </div>
 
-                        <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-3">
+                        <div className="pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-3">
                           <button
                             type="button"
                             onClick={addRoom}
-                            className="flex-1 py-2.5 px-3 rounded-xl border border-[#547fee] text-[#547fee] bg-white hover:bg-blue-50/60 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                            className="flex-1 py-2.5 px-3 rounded-xl border border-[#547fee] text-[#547fee] bg-white dark:bg-[#16203a] hover:bg-blue-50/60 dark:hover:bg-[#1a2542] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                           >
                             <HugeiconsIcon icon={BedDoubleIcon} size={16} />
                             <span>Add a room</span>
@@ -2120,7 +2255,7 @@ function SearchWidget() {
       </div>
 
       {/* Frequently Searched Items (Dynamic based on Tab) */}
-      <div className="flex items-center gap-3 mt-2.5 px-2 text-sm text-white/90">
+      <div className="flex items-center gap-3 mt-2.5 px-2 text-sm text-white/90 relative z-10">
         <span className="font-semibold text-white/80 text-xs md:text-sm">Frequently searched:</span>
         <div className="flex flex-wrap items-center gap-2">
           {frequentItems.map((item) => (

@@ -92,7 +92,7 @@ export default function LanguageCurrencyModal({
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div key="lang-curr-portal" className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+        <div key="lang-curr-portal" className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
           {/* Backdrop */}
           <motion.div
             key="lang-curr-backdrop"

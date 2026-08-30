@@ -39,6 +39,7 @@ import svgPaths from "@/imports/LandingPage/svg-p2y91de9gv";
 import AuthModal from "@/components/AuthModal";
 import LanguageCurrencyModal from "@/components/LanguageCurrencyModal";
 import FullPageMobileMenu from "@/components/layout/FullPageMobileMenu";
+import DarkModeToggle from "@/components/theme/dark-mode-toggle";
 import {
   FilterState,
   INITIAL_FILTERS,
@@ -58,7 +59,7 @@ import dynamic from "next/dynamic";
 const MapView = dynamic(() => import("@/components/MapView"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full rounded-3xl bg-slate-100 flex items-center justify-center min-h-[550px]">
+    <div className="w-full h-full rounded-2xl bg-slate-100 flex items-center justify-center min-h-[550px]">
       <div className="flex flex-col items-center gap-3">
         <div className="w-10 h-10 border-4 border-[#4a77ec]/30 border-t-[#4a77ec] rounded-full animate-spin" />
         <span className="text-xs font-semibold text-slate-400">Loading map…</span>
@@ -93,13 +94,13 @@ function BrandLogo() {
         <g id="Group 2087325898">
           <path d={svgPaths.p2bca0c0} fill="#547FEE" id="Union" />
           <g id="Darbook">
-            <path d={svgPaths.p3d515900} fill="#0F172A" />
-            <path d={svgPaths.p1e1c2e00} fill="#0F172A" />
-            <path d={svgPaths.p3dbae00} fill="#0F172A" />
-            <path d={svgPaths.p1c8f0b80} fill="#0F172A" />
-            <path d={svgPaths.p2f5e4000} fill="#0F172A" />
-            <path d={svgPaths.p25a54cf0} fill="#0F172A" />
-            <path d={svgPaths.p8920900} fill="#0F172A" />
+            <path d={svgPaths.p3d515900} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            <path d={svgPaths.p1e1c2e00} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            <path d={svgPaths.p3dbae00} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            <path d={svgPaths.p1c8f0b80} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            <path d={svgPaths.p2f5e4000} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            <path d={svgPaths.p25a54cf0} className="fill-[#0F172A] dark:fill-white transition-colors" />
+            <path d={svgPaths.p8920900} className="fill-[#0F172A] dark:fill-white transition-colors" />
           </g>
         </g>
       </svg>
@@ -661,16 +662,16 @@ function SearchResultsContent() {
   }, [filteredProperties]);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-gray-900 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#070b18] text-gray-900 dark:text-white font-sans transition-colors duration-300">
       {/* ── 1. UNIFIED NAVBAR CONTAINER (Header + Search Widget + Categories + Filter Bar at z-[600]) ── */}
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-[600] bg-white border-b border-gray-200/90 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-[600] bg-white dark:bg-[#0b1022] border-b border-gray-200/90 dark:border-slate-800 transition-all duration-300 ${
           isSearchExpanded ? "shadow-xl" : "shadow-xs"
         }`}
       >
         {/* Row 1: Logo + Centered Search Pill + Actions */}
-        <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-18 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-100">
+        <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-18 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-100 dark:border-slate-800">
           {/* Logo */}
           <div className="flex items-center shrink-0">
             <BrandLogo />
@@ -693,18 +694,13 @@ function SearchResultsContent() {
           {/* Right Header Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Dark Mode */}
-            <button
-              type="button"
-              className="hidden lg:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-50 hover:bg-slate-100 items-center justify-center text-slate-700 transition-colors border border-slate-200/80 cursor-pointer"
-            >
-              <HugeiconsIcon icon={Moon02Icon} size={18} />
-            </button>
+            <DarkModeToggle className="hidden lg:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 items-center justify-center text-slate-700 dark:text-amber-400 transition-colors border border-slate-200/80 dark:border-slate-700 cursor-pointer" />
 
             {/* Language & Currency */}
             <button
               type="button"
               onClick={() => setIsLangModalOpen(true)}
-              className="hidden sm:flex h-8 sm:h-9 px-2 sm:px-2.5 bg-slate-50 hover:bg-slate-100 rounded-full items-center gap-1 text-xs font-bold text-slate-800 border border-slate-200/80 cursor-pointer"
+              className="hidden sm:flex h-8 sm:h-9 px-2 sm:px-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full items-center gap-1 text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 cursor-pointer"
             >
               <img
                 src={`https://flagcdn.com/w40/${selectedLang === "FRA" ? "fr" : "gb"}.png`}
@@ -718,7 +714,7 @@ function SearchResultsContent() {
             <Link
               href="/favorites"
               aria-label="Favorites"
-              className="hidden md:flex w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-full bg-slate-50 hover:bg-red-50 items-center justify-center text-slate-700 hover:text-red-500 transition-colors border border-slate-200/80 no-underline relative"
+              className="hidden md:flex w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-full bg-slate-50 dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-950/40 items-center justify-center text-slate-700 dark:text-slate-200 hover:text-red-500 transition-colors border border-slate-200/80 dark:border-slate-700 no-underline relative"
             >
               <HugeiconsIcon icon={FavouriteIcon} size={17} />
               {favorites.size > 0 && (
@@ -732,7 +728,7 @@ function SearchResultsContent() {
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="hidden xl:flex h-9 px-3.5 bg-slate-50 hover:bg-slate-100 text-slate-800 font-bold text-xs rounded-full items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80"
+              className="hidden xl:flex h-9 px-3.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold text-xs rounded-full items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 dark:border-slate-700"
             >
               <div className="w-4.5 h-4.5 rounded-full bg-[#3B68EC]/10 text-[#3B68EC] flex items-center justify-center">
                 <HugeiconsIcon icon={UserIcon} size={12} />
@@ -745,7 +741,7 @@ function SearchResultsContent() {
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Menu"
-              className="h-8.5 sm:h-9 px-2 sm:px-2.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-800 flex items-center gap-1.5 cursor-pointer border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all"
+              className="h-8.5 sm:h-9 px-2 sm:px-2.5 rounded-full bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer border border-slate-200/90 dark:border-slate-700 shadow-2xs hover:shadow-xs transition-all"
             >
               <HugeiconsIcon icon={Menu01Icon} size={15} />
               <div className="w-5.5 h-5.5 rounded-full bg-[#3B68EC] text-white flex items-center justify-center text-[9px] font-bold shadow-xs">
@@ -763,7 +759,7 @@ function SearchResultsContent() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full px-4 sm:px-6 lg:px-8 pb-5 pt-1 flex justify-center overflow-visible border-b border-gray-100"
+              className="w-full px-4 sm:px-6 lg:px-8 pb-5 pt-1 flex justify-center overflow-visible border-b border-gray-100 dark:border-slate-800"
             >
               <NavbarSearchWidget
                 isExpanded={true}
@@ -778,8 +774,8 @@ function SearchResultsContent() {
         </AnimatePresence>
 
         {/* Row 3: EXPERIENCE CATEGORY ICONS BAR */}
-        <div className="bg-white border-b border-gray-100 py-1 sm:py-1.5">
-          <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 flex items-center justify-start sm:justify-center gap-3.5 sm:gap-6 overflow-x-auto no-scrollbar py-0.5">
+        <div className="bg-white dark:bg-[#0b1022] border-b border-gray-100 dark:border-slate-800 py-1 sm:py-1.5 transition-colors">
+          <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-start sm:justify-center gap-3.5 sm:gap-6 overflow-x-auto no-scrollbar py-0.5">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat.id;
               return (
@@ -792,15 +788,15 @@ function SearchResultsContent() {
                   <div
                     className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-50/90 ring-2 ring-inset ring-[#4a77ec] text-[#4a77ec] shadow-xs scale-105"
-                        : "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 hover:scale-105"
+                        ? "bg-blue-50/90 dark:bg-blue-900/40 ring-2 ring-inset ring-[#4a77ec] text-[#4a77ec] shadow-xs scale-105"
+                        : "bg-gray-50 dark:bg-slate-800/80 hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:scale-105"
                     }`}
                   >
                     <HugeiconsIcon icon={cat.icon} size={17} />
                   </div>
                   <span
                     className={`text-[10.5px] sm:text-[11px] font-semibold transition-colors leading-tight whitespace-nowrap ${
-                      isActive ? "text-[#4a77ec] font-bold" : "text-gray-600 group-hover:text-gray-900"
+                      isActive ? "text-[#4a77ec] font-bold" : "text-gray-600 dark:text-slate-400 group-hover:text-gray-900 dark:group-hover:text-white"
                     }`}
                   >
                     {cat.label}
@@ -812,12 +808,13 @@ function SearchResultsContent() {
         </div>
 
         {/* 3. FILTER BAR ROW WITH DESIGN SYSTEM DROPDOWNS */}
-        <div className="bg-white py-1.5 sm:py-2 overflow-x-auto no-scrollbar">
-          <div className="w-full max-w-none px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2.5 min-w-max">
+        <div className="bg-white dark:bg-[#0b1022] py-1.5 sm:py-2 overflow-x-auto lg:overflow-visible no-scrollbar transition-colors">
+          <div className="w-full max-w-none px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2.5 min-w-max lg:min-w-0">
             {/* Left Dropdown Filters */}
             <div className="flex items-center gap-2 shrink-0">
               {/* 1. Bed and room Dropdown */}
               <div
+                data-filter-chip="true"
                 className={`relative shrink-0 ${
                   openDropdown === "bed_and_room" ? "z-50" : "z-10"
                 }`}
@@ -827,7 +824,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "bed_and_room" ? null : "bed_and_room")
                     }
-                    className={`h-8 px-3 rounded-full bg-blue-50/90 border border-blue-300 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
+                    className={`h-8 px-3 rounded-full bg-blue-50/90 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
                       openDropdown === "bed_and_room" ? "ring-2 ring-[#4a77ec]/40" : ""
                     }`}
                   >
@@ -838,7 +835,7 @@ function SearchResultsContent() {
                         e.stopPropagation();
                         setFilters((prev) => ({ ...prev, bedrooms: 0, beds: 0, bathrooms: 0 }));
                       }}
-                      className="hover:text-blue-800 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
+                      className="hover:text-blue-800 dark:hover:text-blue-200 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
                     >
                       ✕
                     </button>
@@ -849,7 +846,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "bed_and_room" ? null : "bed_and_room")
                     }
-                    className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
+                    className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
                       openDropdown === "bed_and_room"
                         ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                         : ""
@@ -862,7 +859,7 @@ function SearchResultsContent() {
                       className={
                         openDropdown === "bed_and_room"
                           ? "text-[#4a77ec] rotate-180 transition-transform"
-                          : "text-gray-400"
+                          : "text-gray-400 dark:text-slate-500"
                       }
                     />
                   </button>
@@ -882,6 +879,7 @@ function SearchResultsContent() {
 
               {/* 2. Room type Dropdown */}
               <div
+                data-filter-chip="true"
                 className={`relative shrink-0 ${openDropdown === "room_type" ? "z-50" : "z-10"}`}
               >
                 {isRoomTypeActive ? (
@@ -889,7 +887,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "room_type" ? null : "room_type")
                     }
-                    className={`h-8 px-3 rounded-full bg-blue-50/90 border border-blue-300 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
+                    className={`h-8 px-3 rounded-full bg-blue-50/90 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
                       openDropdown === "room_type" ? "ring-2 ring-[#4a77ec]/40" : ""
                     }`}
                   >
@@ -900,7 +898,7 @@ function SearchResultsContent() {
                         e.stopPropagation();
                         setFilters((prev) => ({ ...prev, roomTypes: [] }));
                       }}
-                      className="hover:text-blue-800 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
+                      className="hover:text-blue-800 dark:hover:text-blue-200 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
                     >
                       ✕
                     </button>
@@ -911,7 +909,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "room_type" ? null : "room_type")
                     }
-                    className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
+                    className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
                       openDropdown === "room_type"
                         ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                         : ""
@@ -924,7 +922,7 @@ function SearchResultsContent() {
                       className={
                         openDropdown === "room_type"
                           ? "text-[#4a77ec] rotate-180 transition-transform"
-                          : "text-gray-400"
+                          : "text-gray-400 dark:text-slate-500"
                       }
                     />
                   </button>
@@ -943,11 +941,14 @@ function SearchResultsContent() {
               </div>
 
               {/* 3. Price range Dropdown */}
-              <div className={`relative shrink-0 ${openDropdown === "price" ? "z-50" : "z-10"}`}>
+              <div
+                data-filter-chip="true"
+                className={`relative shrink-0 ${openDropdown === "price" ? "z-50" : "z-10"}`}
+              >
                 {isPriceActive ? (
                   <div
                     onClick={() => setOpenDropdown(openDropdown === "price" ? null : "price")}
-                    className={`h-8 px-3 rounded-full bg-blue-50/90 border border-blue-300 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
+                    className={`h-8 px-3 rounded-full bg-blue-50/90 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
                       openDropdown === "price" ? "ring-2 ring-[#4a77ec]/40" : ""
                     }`}
                   >
@@ -960,7 +961,7 @@ function SearchResultsContent() {
                         e.stopPropagation();
                         setFilters((prev) => ({ ...prev, minPrice: 0, maxPrice: 1000 }));
                       }}
-                      className="hover:text-blue-800 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
+                      className="hover:text-blue-800 dark:hover:text-blue-200 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
                     >
                       ✕
                     </button>
@@ -969,7 +970,7 @@ function SearchResultsContent() {
                   <button
                     type="button"
                     onClick={() => setOpenDropdown(openDropdown === "price" ? null : "price")}
-                    className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
+                    className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
                       openDropdown === "price"
                         ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                         : ""
@@ -982,7 +983,7 @@ function SearchResultsContent() {
                       className={
                         openDropdown === "price"
                           ? "text-[#4a77ec] rotate-180 transition-transform"
-                          : "text-gray-400"
+                          : "text-gray-400 dark:text-slate-500"
                       }
                     />
                   </button>
@@ -1002,6 +1003,7 @@ function SearchResultsContent() {
 
               {/* 4. Equipment Dropdown */}
               <div
+                data-filter-chip="true"
                 className={`relative shrink-0 ${openDropdown === "equipment" ? "z-50" : "z-10"}`}
               >
                 {isEquipmentActive ? (
@@ -1009,7 +1011,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "equipment" ? null : "equipment")
                     }
-                    className={`h-8 px-3 rounded-full bg-blue-50/90 border border-blue-300 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
+                    className={`h-8 px-3 rounded-full bg-blue-50/90 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
                       openDropdown === "equipment" ? "ring-2 ring-[#4a77ec]/40" : ""
                     }`}
                   >
@@ -1020,7 +1022,7 @@ function SearchResultsContent() {
                         e.stopPropagation();
                         setFilters((prev) => ({ ...prev, equipment: [] }));
                       }}
-                      className="hover:text-blue-800 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
+                      className="hover:text-blue-800 dark:hover:text-blue-200 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
                     >
                       ✕
                     </button>
@@ -1031,7 +1033,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "equipment" ? null : "equipment")
                     }
-                    className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
+                    className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
                       openDropdown === "equipment"
                         ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                         : ""
@@ -1044,7 +1046,7 @@ function SearchResultsContent() {
                       className={
                         openDropdown === "equipment"
                           ? "text-[#4a77ec] rotate-180 transition-transform"
-                          : "text-gray-400"
+                          : "text-gray-400 dark:text-slate-500"
                       }
                     />
                   </button>
@@ -1064,12 +1066,13 @@ function SearchResultsContent() {
 
               {/* 5. Payment Dropdown */}
               <div
+                data-filter-chip="true"
                 className={`relative shrink-0 ${openDropdown === "payment" ? "z-50" : "z-10"}`}
               >
                 {isPaymentActive ? (
                   <div
                     onClick={() => setOpenDropdown(openDropdown === "payment" ? null : "payment")}
-                    className={`h-8 px-3 rounded-full bg-blue-50/90 border border-blue-300 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
+                    className={`h-8 px-3 rounded-full bg-blue-50/90 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
                       openDropdown === "payment" ? "ring-2 ring-[#4a77ec]/40" : ""
                     }`}
                   >
@@ -1080,7 +1083,7 @@ function SearchResultsContent() {
                         e.stopPropagation();
                         setFilters((prev) => ({ ...prev, payment: [] }));
                       }}
-                      className="hover:text-blue-800 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
+                      className="hover:text-blue-800 dark:hover:text-blue-200 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
                     >
                       ✕
                     </button>
@@ -1089,7 +1092,7 @@ function SearchResultsContent() {
                   <button
                     type="button"
                     onClick={() => setOpenDropdown(openDropdown === "payment" ? null : "payment")}
-                    className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
+                    className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
                       openDropdown === "payment"
                         ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                         : ""
@@ -1102,7 +1105,7 @@ function SearchResultsContent() {
                       className={
                         openDropdown === "payment"
                           ? "text-[#4a77ec] rotate-180 transition-transform"
-                          : "text-gray-400"
+                          : "text-gray-400 dark:text-slate-500"
                       }
                     />
                   </button>
@@ -1122,6 +1125,7 @@ function SearchResultsContent() {
 
               {/* 6. Cancellation policy Dropdown */}
               <div
+                data-filter-chip="true"
                 className={`relative shrink-0 ${
                   openDropdown === "cancellation" ? "z-50" : "z-10"
                 }`}
@@ -1131,7 +1135,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "cancellation" ? null : "cancellation")
                     }
-                    className={`h-8 px-3 rounded-full bg-blue-50/90 border border-blue-300 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
+                    className={`h-8 px-3 rounded-full bg-blue-50/90 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 text-[#4a77ec] text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs transition-all ${
                       openDropdown === "cancellation" ? "ring-2 ring-[#4a77ec]/40" : ""
                     }`}
                   >
@@ -1142,7 +1146,7 @@ function SearchResultsContent() {
                         e.stopPropagation();
                         setFilters((prev) => ({ ...prev, cancellation: "any" }));
                       }}
-                      className="hover:text-blue-800 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
+                      className="hover:text-blue-800 dark:hover:text-blue-200 border-none bg-transparent cursor-pointer p-0 ml-0.5 text-xs"
                     >
                       ✕
                     </button>
@@ -1153,7 +1157,7 @@ function SearchResultsContent() {
                     onClick={() =>
                       setOpenDropdown(openDropdown === "cancellation" ? null : "cancellation")
                     }
-                    className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
+                    className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shrink-0 cursor-pointer transition-all ${
                       openDropdown === "cancellation"
                         ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                         : ""
@@ -1166,7 +1170,7 @@ function SearchResultsContent() {
                       className={
                         openDropdown === "cancellation"
                           ? "text-[#4a77ec] rotate-180 transition-transform"
-                          : "text-gray-400"
+                          : "text-gray-400 dark:text-slate-500"
                       }
                     />
                   </button>
@@ -1188,11 +1192,14 @@ function SearchResultsContent() {
             {/* Right Controls: Sort + Filter modal + Map View Toggle */}
             <div className="flex items-center gap-2 shrink-0 overflow-visible">
               {/* 7. Sort Dropdown */}
-              <div className={`relative shrink-0 ${openDropdown === "sort" ? "z-50" : "z-10"}`}>
+              <div
+                data-filter-chip="true"
+                className={`relative shrink-0 ${openDropdown === "sort" ? "z-50" : "z-10"}`}
+              >
                 <button
                   type="button"
                   onClick={() => setOpenDropdown(openDropdown === "sort" ? null : "sort")}
-                  className={`h-8 px-3 rounded-full bg-white border border-gray-200 text-gray-700 text-xs font-semibold hover:bg-gray-50 flex items-center gap-1.5 cursor-pointer transition-all ${
+                  className={`h-8 px-3 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 cursor-pointer transition-all ${
                     openDropdown === "sort"
                       ? "ring-2 ring-[#4a77ec] border-[#4a77ec] text-[#4a77ec]"
                       : ""
@@ -1205,7 +1212,7 @@ function SearchResultsContent() {
                     className={
                       openDropdown === "sort"
                         ? "text-[#4a77ec] rotate-180 transition-transform"
-                        : "text-gray-400"
+                        : "text-gray-400 dark:text-slate-500"
                     }
                   />
                 </button>
@@ -1227,10 +1234,10 @@ function SearchResultsContent() {
               <button
                 type="button"
                 onClick={() => setIsFilterModalOpen(true)}
-                className="h-8 px-3.5 rounded-full bg-white border border-gray-200 text-gray-800 text-xs font-bold hover:bg-gray-50 flex items-center gap-1.5 cursor-pointer relative shadow-2xs"
+                className="h-8 px-3.5 rounded-full bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-200 text-xs font-bold hover:bg-gray-50 dark:hover:bg-slate-800 flex items-center gap-1.5 cursor-pointer relative shadow-2xs"
               >
                 <span>Filter by</span>
-                <HugeiconsIcon icon={FilterIcon} size={14} className="text-gray-500" />
+                <HugeiconsIcon icon={FilterIcon} size={14} className="text-gray-500 dark:text-slate-400" />
                 {activeFilterCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-[#4a77ec] text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
                     {activeFilterCount}
@@ -1286,7 +1293,7 @@ function SearchResultsContent() {
         className="w-full max-w-none transition-all duration-300"
       >
         {filteredProperties.length === 0 ? (
-          <div className="text-center py-24 bg-white rounded-3xl border border-gray-200/80 p-8 my-6 mx-4 sm:mx-6 lg:mx-8">
+          <div className="text-center py-24 bg-white rounded-2xl border border-gray-200/80 p-8 my-6 mx-4 sm:mx-6 lg:mx-8">
             <div className="w-14 h-14 bg-blue-50 text-[#4a77ec] rounded-full flex items-center justify-center mx-auto mb-3">
               <HugeiconsIcon icon={House01Icon} size={28} />
             </div>
@@ -1338,7 +1345,7 @@ function SearchResultsContent() {
 
             {/* Left Listings Column (takes 58% on desktop, with standard start padding; on mobile only shown when mobileViewMode === "list") */}
             <div
-              className={`w-full lg:w-[58%] xl:w-[60%] pl-4 sm:pl-6 lg:pl-8 pr-4 sm:pr-6 lg:pr-6 pb-20 pt-4 ${
+              className={`w-full lg:w-[58%] xl:w-[60%] px-4 sm:px-6 lg:px-8 pb-20 pt-4 ${
                 mobileViewMode === "map" ? "hidden lg:block" : "block"
               }`}
             >
@@ -1486,14 +1493,14 @@ function PropertyCardItem({
       onMouseLeave={() => onHover(null)}
       whileHover={{ y: -4 }}
       animate={isHighlighted ? { y: -4 } : { y: 0 }}
-      className={`bg-white rounded-[20px] overflow-hidden transition-all duration-300 flex flex-col justify-between ${
+      className={`bg-white dark:bg-[#121a30] rounded-[20px] overflow-hidden transition-all duration-300 flex flex-col justify-between ${
         isHighlighted
           ? "ring-3 ring-[#4a77ec] shadow-2xl border-[#4a77ec] scale-[1.02]"
-          : "border border-gray-200/80 shadow-2xs hover:shadow-xl"
+          : "border border-gray-200/80 dark:border-slate-800 shadow-2xs hover:shadow-xl"
       }`}
     >
       {/* Top Image Section */}
-      <div className="relative h-[190px] w-full overflow-hidden bg-gray-100">
+      <div className="relative h-[190px] w-full overflow-hidden bg-gray-100 dark:bg-slate-900">
         <Link
           href={`/property/${prop.id}`}
           target="_blank"
@@ -1508,9 +1515,9 @@ function PropertyCardItem({
         </Link>
 
         {/* Top-Left Badges */}
-        <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 pointer-events-none">
+        <div className="absolute top-3 left-3 z-10 flex items-center gap-2 pointer-events-none">
           <span
-            className="text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-xs"
+            className="text-white text-xs font-extrabold px-3.5 py-1.5 rounded-[10px] shadow-xs tracking-wide"
             style={{ backgroundColor: prop.typeBg }}
           >
             {prop.type}
@@ -1518,9 +1525,9 @@ function PropertyCardItem({
           {prop.amenityIcons.map((IconComp, i) => (
             <span
               key={i}
-              className="w-6 h-6 rounded-md bg-white/90 backdrop-blur-xs flex items-center justify-center text-gray-700 shadow-xs"
+              className="size-7 sm:size-8 rounded-[10px] bg-white/95 dark:bg-[#121a30]/95 backdrop-blur-xs flex items-center justify-center text-gray-700 dark:text-white shadow-xs border border-white/40 dark:border-slate-700/60"
             >
-              <HugeiconsIcon icon={IconComp} size={12} />
+              <HugeiconsIcon icon={IconComp} size={15} />
             </span>
           ))}
         </div>
@@ -1552,10 +1559,10 @@ function PropertyCardItem({
           href={`/property/${prop.id}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="space-y-1 block no-underline text-slate-900 group"
+          className="space-y-1 block no-underline text-slate-900 dark:text-white group"
         >
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-bold text-slate-900 text-sm tracking-tight line-clamp-1 group-hover:text-[#3B68EC] transition-colors">
+            <h3 className="font-bold text-slate-900 dark:text-white text-sm tracking-tight line-clamp-1 group-hover:text-[#3B68EC] dark:group-hover:text-[#547fee] transition-colors">
               {prop.name}
             </h3>
             <span className="bg-[#3B68EC] text-white font-extrabold text-[11px] px-2 py-0.5 rounded-md shrink-0 shadow-2xs">
@@ -1563,43 +1570,43 @@ function PropertyCardItem({
             </span>
           </div>
 
-          <div className="flex items-center gap-1 text-[11px] text-slate-600 font-medium">
-            <HugeiconsIcon icon={Location01Icon} size={12} className="text-slate-400 shrink-0" />
+          <div className="flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+            <HugeiconsIcon icon={Location01Icon} size={12} className="text-slate-400 dark:text-slate-500 shrink-0" />
             <span className="truncate">{prop.location}</span>
           </div>
         </Link>
 
         {/* Specs Badges */}
-        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-700 flex-wrap">
+        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300 flex-wrap">
           {prop.specs.map((s, idx) => (
-            <span key={idx} className="bg-slate-100/90 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200/50">
+            <span key={idx} className="bg-slate-100/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-md border border-slate-200/50 dark:border-slate-700/60">
               {s}
             </span>
           ))}
         </div>
 
         {/* Pricing & Availability Row */}
-        <div className="pt-2 border-t border-slate-100 flex items-end justify-between gap-2">
+        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-end justify-between gap-2">
           <div>
             {prop.isSoldOut ? (
-              <span className="text-xs font-bold text-rose-600 block">Sold out</span>
+              <span className="text-xs font-bold text-rose-500 block">Sold out</span>
             ) : (
               <>
                 {prop.discount && (
-                  <span className="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-[9px] font-bold px-1.5 py-0.5 rounded mb-0.5 shadow-2xs">
+                  <span className="inline-block bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-[9px] font-bold px-1.5 py-0.5 rounded mb-0.5 shadow-2xs">
                     {prop.discount}
                   </span>
                 )}
-                <div className="font-extrabold text-sm text-slate-900 leading-none">
+                <div className="font-extrabold text-sm text-slate-900 dark:text-white leading-none">
                   {prop.price}
                 </div>
               </>
             )}
-            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium block mt-0.5">
               2 nights, 2 guests
             </span>
             {prop.urgency && (
-              <span className="text-[10px] font-bold text-rose-600 block mt-0.5">
+              <span className="text-[10px] font-bold text-rose-500 block mt-0.5">
                 {prop.urgency}
               </span>
             )}
@@ -1616,7 +1623,7 @@ function PropertyCardItem({
             </Link>
             <a
               href="#"
-              className="text-[10px] font-bold text-[#3B68EC] hover:underline no-underline flex items-center gap-0.5"
+              className="text-[10px] font-bold text-[#3B68EC] dark:text-[#547fee] hover:underline no-underline flex items-center gap-0.5"
             >
               <span>Official website</span>
               <HugeiconsIcon icon={ArrowRight01Icon} size={10} />

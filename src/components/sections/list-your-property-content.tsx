@@ -16,9 +16,15 @@ import {
   Cancel01Icon,
   Moon02Icon,
   Sun01Icon,
+  Facebook02Icon,
+  NewTwitterIcon,
+  InstagramIcon,
+  PinterestIcon,
+  YoutubeIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
 import FullPageMobileMenu from "@/components/layout/FullPageMobileMenu";
+import DarkModeToggle from "@/components/theme/dark-mode-toggle";
 import svgPaths from "@/imports/LandingPage/svg-p2y91de9gv";
 import img81831 from "@/imports/LandingPage/a1a57c413ca15b66ba58417dbf49d2caeaafb62f.png";
 import imgLaptopHost from "@/imports/LandingPage/19e6220155bea3ebe8fdd486592d567d1d63cf20.png";
@@ -79,25 +85,6 @@ function Logo() {
 }
 
 // ─── Header Controls ────────────────────────────────────────────────────────
-function DarkModeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  return (
-    <button
-      type="button"
-      onClick={() => setIsDark(!isDark)}
-      aria-label="Toggle dark mode"
-      className="h-[40px] w-[40px] sm:h-[44px] sm:w-[44px] bg-white hover:bg-slate-100 active:scale-95 transition-all duration-200 rounded-full flex items-center justify-center cursor-pointer border-none shadow-xs text-[#556080] hover:text-[#547fee] shrink-0"
-    >
-      {isDark ? (
-        <HugeiconsIcon icon={Sun01Icon} size={20} className="transition-transform duration-200 hover:rotate-12" />
-      ) : (
-        <HugeiconsIcon icon={Moon02Icon} size={20} className="transition-transform duration-200 hover:-rotate-12 text-[#556080]" />
-      )}
-    </button>
-  );
-}
-
 function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("EN");
@@ -232,7 +219,6 @@ function HeaderNavbar({ onOpenModal }: { onOpenModal: () => void }) {
           <DarkModeToggle />
           <LanguageSelector />
           <FavoritesButton />
-          <ListPropertyButton onClick={onOpenModal} />
           <SignInButton />
         </div>
 
@@ -980,33 +966,55 @@ export default function ListYourPropertyContent() {
         )}
       </AnimatePresence>
 
-      {/* ─────────────────────────────────────────────────────────────────────────
-          8. FOOTER
-      ───────────────────────────────────────────────────────────────────────── */}
-      <footer className="w-full bg-[#181743] text-white rounded-t-[32px] sm:rounded-t-[40px] pt-12 sm:pt-16 pb-8 px-4 sm:px-8 md:px-12 lg:px-16 shadow-2xl relative">
+      {/* ─── 8. Authentic Darbook Dark Footer ───────────────────────────────── */}
+      <footer className="w-full bg-[#101438] text-white pt-14 sm:pt-18 pb-10 px-4 sm:px-6 lg:px-8 relative rounded-t-[28px] sm:rounded-t-[40px] rounded-b-none overflow-hidden mt-12">
         <div className="max-w-[1280px] mx-auto">
+          {/* Main Grid Content (5 Columns) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
-            {/* Col 1: Brand / Logo / Description / CTA */}
-            <div className="lg:col-span-4 flex flex-col gap-5 items-start">
-              <Logo />
-              <p className="font-['Inter_Tight:Regular',sans-serif] text-sm sm:text-base leading-relaxed text-[#e4e4e4] max-w-sm m-0">
+
+            {/* Col 1: Brand / Logo / Bio / CTA */}
+            <div className="lg:col-span-4 flex flex-col gap-4 items-start pr-0 lg:pr-4">
+              <Link href="/" aria-label="Darbook home" className="no-underline block h-[40px] w-[200px]">
+                <svg
+                  className="block size-full"
+                  fill="none"
+                  height="44.5742"
+                  preserveAspectRatio="none"
+                  viewBox="0 0 224 44.5742"
+                  width="224"
+                >
+                  <g id="Group 2087325898">
+                    <path d={svgPaths.p2bca0c0} fill="#547FEE" id="Union" />
+                    <g id="Darbook">
+                      <path d={svgPaths.p3d515900} fill="white" />
+                      <path d={svgPaths.p1e1c2e00} fill="white" />
+                      <path d={svgPaths.p3dbae00} fill="white" />
+                      <path d={svgPaths.p1c8f0b80} fill="white" />
+                      <path d={svgPaths.p2f5e4000} fill="white" />
+                      <path d={svgPaths.p25a54cf0} fill="white" />
+                      <path d={svgPaths.p8920900} fill="white" />
+                    </g>
+                  </g>
+                </svg>
+              </Link>
+              <p className="font-['Inter_Tight:Regular',sans-serif] text-xs sm:text-sm leading-relaxed text-slate-300 max-w-xs m-0">
                 Darbook is a platform for renting holiday homes in Tunisia. Book in just a few clicks and enjoy an unforgettable stay.
               </p>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="bg-[#547fee] hover:bg-[#436cd9] transition-colors flex h-[46px] items-center justify-center px-6 py-2.5 rounded-full border-none cursor-pointer text-white font-semibold text-sm mt-1"
+                className="bg-[#547fee] hover:bg-[#436cd9] transition-all text-white font-semibold text-xs sm:text-sm px-6 py-2.5 rounded-full border-none cursor-pointer shadow-md hover:shadow-lg hover:scale-102 no-underline inline-flex items-center justify-center w-fit mt-2"
               >
-                List property
+                List your property
               </button>
             </div>
 
-            {/* Col 2: Company Navigation */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              <p className="font-['Bricolage_Grotesk',sans-serif] font-semibold text-[#8089b3] text-lg m-0">
+            {/* Col 2: Company */}
+            <div className="lg:col-span-2 flex flex-col gap-3">
+              <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Company
-              </p>
-              <ul className="list-none m-0 p-0 flex flex-col gap-2.5 text-sm">
+              </h4>
+              <ul className="list-none m-0 p-0 flex flex-col gap-2 text-xs sm:text-sm text-slate-300">
                 {[
                   { label: "About us", href: "/about" },
                   { label: "Catalog", href: "/search" },
@@ -1019,7 +1027,7 @@ export default function ListYourPropertyContent() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className="font-['Inter_Tight:Regular',sans-serif] text-white/90 hover:text-white hover:underline transition-colors no-underline"
+                      className="text-slate-300 hover:text-white transition-colors no-underline font-normal"
                     >
                       {item.label}
                     </Link>
@@ -1028,37 +1036,48 @@ export default function ListYourPropertyContent() {
               </ul>
             </div>
 
-            {/* Col 3: Experience Navigation */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              <p className="font-['Bricolage_Grotesk',sans-serif] font-semibold text-[#8089b3] text-lg m-0">
+            {/* Col 3: Experience */}
+            <div className="lg:col-span-2 flex flex-col gap-3">
+              <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Experience
-              </p>
-              <ul className="list-none m-0 p-0 flex flex-col gap-2.5 text-sm">
-                {["Seaside", "Swimming pool", "Urban stays", "Nature", "Sahara", "Cultural", "Family", "Romantics"].map((link) => (
+              </h4>
+              <ul className="list-none m-0 p-0 flex flex-col gap-2 text-xs sm:text-sm text-slate-300">
+                {[
+                  "Seaside",
+                  "Swimming pool",
+                  "Urban stays",
+                  "Nature",
+                  "Sahara",
+                  "Cultural",
+                  "Family",
+                  "Romantics",
+                ].map((link) => (
                   <li key={link}>
-                    <a href="#" className="font-['Inter_Tight:Regular',sans-serif] text-white/90 hover:text-white hover:underline transition-colors no-underline">
+                    <Link
+                      href={`/search?category=${link.toLowerCase()}`}
+                      className="text-slate-300 hover:text-white transition-colors no-underline font-normal"
+                    >
                       {link}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Col 4: Address & Contact */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              <p className="font-['Bricolage_Grotesk',sans-serif] font-semibold text-[#8089b3] text-lg m-0">
+            {/* Col 4: Address */}
+            <div className="lg:col-span-2 flex flex-col gap-3">
+              <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Address
-              </p>
-              <div className="flex flex-col gap-3 text-sm text-[#e9e9e9]">
-                <div>
-                  <p className="leading-relaxed m-0">101 Marlow Street. #12-05 Clife</p>
-                  <p className="leading-relaxed m-0">Parkview. Singapore 059020.</p>
-                </div>
-                <div className="space-y-1">
-                  <a href="tel:+6561565519" className="text-[#e9e9e9] hover:text-white transition-colors block no-underline">
+              </h4>
+              <div className="flex flex-col gap-3 text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                <p className="m-0">
+                  101 Marlow Street, #12-05 Clife Parkview, Singapore 059020.
+                </p>
+                <div className="flex flex-col gap-1">
+                  <a href="tel:+6561565519" className="text-slate-300 hover:text-white transition-colors no-underline block">
                     +65 6156 5519
                   </a>
-                  <a href="mailto:hello@Newsify.com" className="text-[#e9e9e9] hover:text-white transition-colors block no-underline">
+                  <a href="mailto:hello@Newsify.com" className="text-slate-300 hover:text-white transition-colors no-underline block">
                     hello@Newsify.com
                   </a>
                 </div>
@@ -1066,44 +1085,88 @@ export default function ListYourPropertyContent() {
             </div>
 
             {/* Col 5: Mobile App & Social */}
-            <div className="lg:col-span-2 flex flex-col gap-6">
-              <div className="flex flex-col gap-3">
-                <p className="font-['Bricolage_Grotesk',sans-serif] font-semibold text-[#8089b3] text-lg m-0">
+            <div className="lg:col-span-2 flex flex-col gap-5">
+              {/* App Buttons */}
+              <div className="flex flex-col gap-2.5">
+                <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                   Darbook mobile app
-                </p>
+                </h4>
                 <div className="flex flex-col gap-2">
                   <a
                     href="https://apps.apple.com"
-                    aria-label="Download on the App Store"
-                    className="w-[145px] h-[40px] border border-[#333766] hover:border-[#547fee] transition-colors rounded-lg flex items-center justify-center no-underline bg-white/5"
+                    aria-label="App Store"
+                    className="w-[145px] h-[38px] bg-white/5 border border-white/20 hover:border-white/40 transition-colors rounded-xl flex items-center justify-center gap-2 no-underline text-white"
                   >
-                    <span className="text-white font-['Bricolage_Grotesk',sans-serif] font-semibold text-xs">
-                      App Store
-                    </span>
+                    <svg className="size-4 fill-current shrink-0" viewBox="0 0 170 170">
+                      <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-5.03.24-9.97-1.8-14.83-6.13-3.18-2.75-7.05-7.38-11.62-13.88-6.12-8.73-10.86-18.47-14.23-29.23-3.37-10.76-5.06-21.2-5.06-31.33 0-14.48 3.56-26.24 10.68-35.29 7.12-9.05 16.03-13.67 26.73-13.87 5.12 0 10.81 1.25 17.07 3.75 6.26 2.5 10.5 3.75 12.74 3.75 2.01 0 6.37-1.25 13.08-3.75 6.71-2.5 11.97-3.66 15.78-3.48 11.68.83 20.89 4.96 27.63 12.39-10.42 6.35-15.54 15.17-15.36 26.47.18 8.82 3.51 16.14 9.99 21.96 6.48 5.82 14.3 9.07 23.46 9.75-2.23 6.7-5.19 13.62-8.88 20.76zM119.22 31.42c0-6.91 2.52-13.56 7.56-19.95 5.04-6.39 11.37-10.29 18.99-11.7.35 1.53.53 3.01.53 4.44 0 6.91-2.56 13.56-7.68 19.95-5.12 6.39-11.45 10.23-18.99 11.52-.35-1.29-.53-2.71-.53-4.26z" />
+                    </svg>
+                    <div className="flex flex-col text-left">
+                      <span className="text-[8px] uppercase text-slate-400 leading-tight">Download on the</span>
+                      <span className="text-xs font-semibold text-white leading-tight">App Store</span>
+                    </div>
                   </a>
+
                   <a
                     href="https://play.google.com"
-                    aria-label="Get it on Google Play"
-                    className="w-[145px] h-[40px] border border-[#333766] hover:border-[#547fee] transition-colors rounded-lg flex items-center justify-center no-underline bg-white/5"
+                    aria-label="Google Play"
+                    className="w-[145px] h-[38px] bg-white/5 border border-white/20 hover:border-white/40 transition-colors rounded-xl flex items-center justify-center gap-2 no-underline text-white"
                   >
-                    <span className="text-white font-['Bricolage_Grotesk',sans-serif] font-semibold text-xs">
-                      Google Play
-                    </span>
+                    <svg className="size-4 shrink-0" viewBox="0 0 24 24">
+                      <path fill="#EA4335" d="M3.6 1.8L13.2 11.4 3.6 21c-.4-.3-.6-.8-.6-1.4V3.2c0-.6.2-1.1.6-1.4z" />
+                      <path fill="#FBBC04" d="M16.8 7.8L13.2 11.4 16.8 15l4.3-2.4c1-.6 1-1.6 0-2.2l-4.3-2.6z" />
+                      <path fill="#4285F4" d="M13.2 11.4L3.6 1.8 16.8 7.8l-3.6 3.6z" />
+                      <path fill="#34A853" d="M13.2 11.4l3.6 3.6-13.2 6c.4.3.9.3 1.4 0l11.8-6.6z" />
+                    </svg>
+                    <div className="flex flex-col text-left">
+                      <span className="text-[8px] uppercase text-slate-400 leading-tight">GET IT ON</span>
+                      <span className="text-xs font-semibold text-white leading-tight">Google Play</span>
+                    </div>
                   </a>
+                </div>
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex flex-col gap-2.5 pt-1">
+                <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
+                  Social media
+                </h4>
+                <div className="flex items-center gap-2.5">
+                  {[
+                    { icon: Facebook02Icon, label: "Facebook" },
+                    { icon: NewTwitterIcon, label: "Twitter" },
+                    { icon: InstagramIcon, label: "Instagram" },
+                    { icon: PinterestIcon, label: "Pinterest" },
+                    { icon: YoutubeIcon, label: "YouTube" },
+                  ].map((item) => (
+                    <a
+                      key={item.label}
+                      href="#"
+                      onClick={(e) => e.preventDefault()}
+                      aria-label={item.label}
+                      className="size-8 rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
+                    >
+                      <HugeiconsIcon icon={item.icon} size={16} />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom Bar: Copyright & Payment Badges */}
-          <div className="mt-10 sm:mt-12 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs sm:text-sm text-white/80 text-center sm:text-left m-0">
+          {/* Bottom Divider & Copyright Bar */}
+          <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs sm:text-sm text-slate-400 m-0">
               © 2026 Darbook. All rights reserved
             </p>
-            <div className="flex items-center gap-2">
-              <div className="bg-white/10 px-2.5 py-1 rounded text-white text-xs font-bold">VISA</div>
-              <div className="bg-white/10 px-2.5 py-1 rounded text-white text-xs font-bold">MC</div>
-              <div className="bg-white/10 px-2.5 py-1 rounded text-white text-xs font-bold">JCB</div>
+
+            {/* Payment Method Badges */}
+            <div className="flex items-center gap-4 text-white text-xs font-bold font-mono tracking-wider opacity-80">
+              <span className="text-sm font-extrabold italic text-white tracking-tighter">VISA</span>
+              <div className="flex items-center -space-x-1.5">
+                <div className="size-4 rounded-full bg-red-500 opacity-90" />
+                <div className="size-4 rounded-full bg-amber-400 opacity-90" />
+              </div>
+              <span className="text-xs font-black tracking-widest text-white">JCB</span>
             </div>
           </div>
         </div>
@@ -1113,9 +1176,9 @@ export default function ListYourPropertyContent() {
           type="button"
           aria-label="Scroll to top"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="absolute right-4 sm:right-8 bottom-6 w-10 h-10 bg-[#547fee] hover:bg-[#436cd9] transition-all rounded-full flex items-center justify-center cursor-pointer border-none shadow-lg active:scale-95 z-10"
+          className="absolute right-4 sm:right-8 bottom-6 size-10 bg-[#547fee] hover:bg-[#436cd9] transition-all rounded-full flex items-center justify-center cursor-pointer border-none shadow-lg active:scale-95 z-10"
         >
-          <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
         </button>

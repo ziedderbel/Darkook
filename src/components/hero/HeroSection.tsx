@@ -17,6 +17,7 @@ import {
 } from "@hugeicons-pro/core-stroke-rounded";
 import svgPaths from "../../imports/LandingPage/svg-p2y91de9gv"
 import img81831 from "../../imports/LandingPage/a1a57c413ca15b66ba58417dbf49d2caeaafb62f.png"
+import DarkModeToggle from "@/components/theme/dark-mode-toggle"
 
 function toImgSrc(val: any): string {
   if (!val) return "";
@@ -75,19 +76,6 @@ function Logo() {
 }
 
 // ─── Navbar actions ───────────────────────────────────────────────────────────
-
-function DarkModeToggle() {
-  return (
-    <div className="flex flex-row items-center self-stretch">
-      <button
-        aria-label="Toggle dark mode"
-        className="bg-white h-full overflow-clip relative rounded-[40px] shrink-0 w-[48px] cursor-pointer border-none p-0 flex items-center justify-center"
-      >
-        <HugeiconsIcon icon={Moon02Icon} size={20} className="text-[#556080]" />
-      </button>
-    </div>
-  )
-}
 
 function LanguageSelector() {
   return (

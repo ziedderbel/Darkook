@@ -129,17 +129,17 @@ function SectionHeading({
   return (
     <div className="flex gap-4 items-center justify-between relative shrink-0 w-full mb-2">
       <div className="flex flex-col gap-1 items-start justify-center min-w-0">
-        <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-2xl sm:text-3xl tracking-tight text-[#1b1d22]">
+        <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-2xl sm:text-3xl tracking-tight text-[#1b1d22] dark:text-white">
           {title}
         </h2>
-        <p className="font-['Inter_Tight:Regular',sans-serif] leading-[24px] text-[#475467] text-sm sm:text-base">
+        <p className="font-['Inter_Tight:Regular',sans-serif] leading-[24px] text-[#475467] dark:text-slate-400 text-sm sm:text-base">
           {subtitle}
         </p>
       </div>
       {linkLabel && (
         <Link
           href={linkHref}
-          className="h-[36px] shrink-0 flex items-center gap-2 text-[#667085] hover:text-[#1b1d22] font-semibold text-sm sm:text-base no-underline transition-colors"
+          className="h-[36px] shrink-0 flex items-center gap-2 text-[#667085] dark:text-slate-400 hover:text-[#1b1d22] dark:hover:text-white font-semibold text-sm sm:text-base no-underline transition-colors"
         >
           <span className="whitespace-nowrap">{linkLabel}</span>
           <div className="flex items-center justify-center relative shrink-0">
@@ -153,7 +153,7 @@ function SectionHeading({
                   viewBox="0 0 17 18"
                   width="17"
                 >
-                  <path d={svgPaths.p22420b00} fill="#667085" />
+                  <path d={svgPaths.p22420b00} fill="currentColor" />
                 </svg>
               </div>
             </div>
@@ -175,7 +175,7 @@ function CategoryPhoto({ src, alt }: { src: any; alt: string }) {
         src={toImgSrc(src)}
       />
     </div>
-  )
+  );
 }
 
 function CategoryItem({ id, photo, label }: { id: string; photo: any; label: string }) {
@@ -185,7 +185,7 @@ function CategoryItem({ id, photo, label }: { id: string; photo: any; label: str
       className="group flex flex-col gap-2 items-center shrink-0 cursor-pointer no-underline transition-transform duration-300 hover:-translate-y-1 select-none"
     >
       <CategoryPhoto src={photo} alt={label} />
-      <p className="font-['Inter_Tight:Medium',sans-serif] font-medium text-xs sm:text-sm text-[#1b1d22] group-hover:text-[#3B68EC] text-center transition-colors duration-200">
+      <p className="font-['Inter_Tight:Medium',sans-serif] font-medium text-xs sm:text-sm text-[#1b1d22] dark:text-slate-200 group-hover:text-[#3B68EC] text-center transition-colors duration-200">
         {label}
       </p>
     </Link>
@@ -205,13 +205,13 @@ function CategorySection() {
     { id: "historical", photo: catPhoto9, label: "Historical" },
   ];
   return (
-    <section className="bg-[#f5f7fa] pt-1 sm:pt-2 lg:pt-3 pb-8 sm:pb-12 lg:pb-14 w-full">
+    <section className="bg-[#f5f7fa] dark:bg-[#0b1022] pt-1 sm:pt-2 lg:pt-3 pb-8 sm:pb-12 lg:pb-14 w-full transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5">
         <div>
-          <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-[#1b1d22]">
+          <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-[#1b1d22] dark:text-white">
             Each category, an experience to be lived
           </h2>
-          <p className="text-[#475467] text-xs sm:text-sm mt-0.5">
+          <p className="text-[#475467] dark:text-slate-400 text-xs sm:text-sm mt-0.5">
             Explore different types of stays and find the experience that matches your travel style.
           </p>
         </div>
@@ -265,28 +265,31 @@ function WishlistHeartButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
         whileTap={{ scale: 0.8 }}
         aria-label={isLiked ? "Remove from Wishlist" : "Save to Wishlist"}
         title={isLiked ? "Saved in Wishlist" : "Save to Wishlist"}
-        className={`${containerSizes[size]} rounded-full border transition-all duration-300 shadow-md cursor-pointer flex items-center justify-center relative ${
-          isLiked
+        className={`${containerSizes[size]} rounded-full border transition-all duration-300 shadow-md cursor-pointer flex items-center justify-center relative ${isLiked
             ? "bg-white border-transparent text-red-500 shadow-red-500/10"
             : "bg-white border-gray-100 text-[#475467] hover:scale-105 hover:bg-slate-50 hover:text-red-500"
-        }`}
+          }`}
       >
         {/* Ring Pulse Expansion & Micro Sparkles */}
         <AnimatePresence>
           {isLiked && (
-            <>
+            <motion.span
+              key="like-burst-wrap"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 pointer-events-none"
+            >
               <motion.span
                 initial={{ scale: 0.3, opacity: 0.8 }}
                 animate={{ scale: 2.3, opacity: 0 }}
-                exit={{ opacity: 0 }}
                 transition={{ duration: 0.48, ease: "easeOut" }}
-                className="absolute inset-0 rounded-full bg-red-500/15 pointer-events-none"
+                className="absolute inset-0 rounded-full bg-red-500/15"
               />
 
               {/* Burst Sparkle Particles */}
               {particleOffsets.map((pt, i) => (
                 <motion.span
-                  key={i}
+                  key={`particle-${i}`}
                   initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
                   animate={{
                     x: pt.x,
@@ -294,11 +297,12 @@ function WishlistHeartButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
                     scale: [0, 1.3, 0],
                     opacity: [1, 1, 0],
                   }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.42, ease: "easeOut", delay: 0.02 }}
-                  className="absolute size-1.5 rounded-full bg-red-400 shadow-xs pointer-events-none"
+                  className="absolute size-1.5 rounded-full bg-red-400 shadow-xs"
                 />
               ))}
-            </>
+            </motion.span>
           )}
         </AnimatePresence>
 
@@ -307,9 +311,9 @@ function WishlistHeartButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           animate={
             isLiked
               ? {
-                  scale: [1, 0.72, 1.45, 0.88, 1.12, 1],
-                  rotate: [0, -18, 18, -8, 4, 0],
-                }
+                scale: [1, 0.72, 1.45, 0.88, 1.12, 1],
+                rotate: [0, -18, 18, -8, 4, 0],
+              }
               : { scale: [1, 0.85, 1], rotate: 0 }
           }
           transition={{ duration: 0.45, ease: "easeOut" }}
@@ -318,18 +322,17 @@ function WishlistHeartButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
           <HugeiconsIcon
             icon={FavouriteIcon}
             size={iconSizes[size]}
-            className={`transition-all duration-300 ${
-              isLiked
+            className={`transition-all duration-300 ${isLiked
                 ? "fill-red-500 text-transparent [&_path]:stroke-none drop-shadow-[0_2px_8px_rgba(239,68,68,0.5)]"
-                : "text-[#475467] group-hover/heart:text-red-500"
-            }`}
+                : "text-[#475467] dark:text-slate-200 group-hover/heart:text-red-500"
+              }`}
           />
         </motion.div>
       </motion.button>
 
       {/* Tooltip */}
-      <div className="absolute top-[calc(100%+8px)] right-0 hidden group-hover/heart:flex items-center justify-center bg-[#101438] text-white text-[11px] font-bold px-2.5 py-1 rounded-lg whitespace-nowrap shadow-2xl z-50 pointer-events-none transition-all duration-200">
-        <div className="absolute -top-1 right-3 border-x-4 border-x-transparent border-b-4 border-b-[#101438]" />
+      <div className="absolute top-[calc(100%+8px)] right-0 hidden group-hover/heart:flex items-center justify-center bg-[#101438] dark:bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg whitespace-nowrap shadow-2xl z-50 pointer-events-none transition-all duration-200 border border-slate-800">
+        <div className="absolute -top-1 right-3 border-x-4 border-x-transparent border-b-4 border-b-[#101438] dark:border-b-slate-900" />
         {isLiked ? "Saved in Wishlist" : "Save to Wishlist"}
       </div>
     </div>
@@ -339,15 +342,15 @@ function WishlistHeartButton({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 function AmenityIconSquare({ children, label }: { children: React.ReactNode; label?: string }) {
   return (
     <div className="relative group/tooltip">
-      <div 
+      <div
         title={label}
-        className="bg-white/95 backdrop-blur-md size-7 sm:size-8 rounded-[10px] p-1.5 text-[#181743] shadow-xs flex items-center justify-center border border-white/40 cursor-pointer"
+        className="bg-white/95 dark:bg-[#121a30]/95 backdrop-blur-md size-8 sm:size-9 rounded-[10px] p-1.5 text-[#181743] dark:text-white shadow-xs flex items-center justify-center border border-white/40 dark:border-slate-700/60 cursor-pointer"
       >
         {children}
       </div>
       {label && (
-        <div className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 hidden group-hover/tooltip:flex items-center justify-center bg-[#101438] text-white text-[11px] font-bold px-2.5 py-1 rounded-lg whitespace-nowrap shadow-2xl z-50 pointer-events-none transition-all duration-200">
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 border-x-4 border-x-transparent border-b-4 border-b-[#101438]" />
+        <div className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 hidden group-hover/tooltip:flex items-center justify-center bg-[#101438] dark:bg-slate-900 text-white text-[11px] font-bold px-2.5 py-1 rounded-lg whitespace-nowrap shadow-2xl z-50 pointer-events-none transition-all duration-200 border border-slate-800">
+          <div className="absolute -top-1 left-1/2 -translate-x-1/2 border-x-4 border-x-transparent border-b-4 border-b-[#101438] dark:border-b-slate-900" />
           {label}
         </div>
       )}
@@ -356,11 +359,11 @@ function AmenityIconSquare({ children, label }: { children: React.ReactNode; lab
 }
 
 function PropertyCard({
-  id = "p1",
+  id,
   photo,
   name,
   type,
-  typeBg,
+  typeBg = "#6927da",
   location,
   rating,
   price,
@@ -369,11 +372,11 @@ function PropertyCard({
   guests,
   amenityIconsCount = 3,
 }: {
-  id?: string;
+  id: string;
   photo: any;
   name: string;
   type: string;
-  typeBg: string;
+  typeBg?: string;
   location: string;
   rating: string;
   price: string;
@@ -383,7 +386,7 @@ function PropertyCard({
   amenityIconsCount?: number;
 }) {
   return (
-    <div className="flex flex-col shrink-0 w-[330px] sm:w-[380px] md:w-[410px] rounded-[24px] overflow-hidden shadow-xs hover:shadow-xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1.5 group/card">
+    <div className="flex flex-col w-[290px] sm:w-[330px] md:w-[360px] lg:w-full shrink-0 snap-start rounded-2xl overflow-hidden shadow-xs hover:shadow-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-[#121a30] transition-all duration-300 hover:-translate-y-1.5 group/card">
       {/* Top Photo Area (opens in new tab) */}
       <Link
         href={`/property/${id}`}
@@ -400,10 +403,10 @@ function PropertyCard({
 
         {/* Top Badges Row */}
         <div className="absolute left-3.5 top-3.5 right-3.5 z-10 flex items-center justify-between pointer-events-none">
-          <div className="flex items-center gap-1.5 pointer-events-auto">
+          <div className="flex items-center gap-2 pointer-events-auto">
             {/* Property Type Pill */}
             <div
-              className="px-3 py-1.5 rounded-[10px] shadow-xs text-white font-bold text-xs sm:text-sm tracking-wide"
+              className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-[10px] shadow-xs text-white font-extrabold text-xs sm:text-sm tracking-wide flex items-center justify-center"
               style={{ backgroundColor: typeBg }}
             >
               {type}
@@ -411,20 +414,20 @@ function PropertyCard({
 
             {/* Amenity Square Badges with Tooltips */}
             <AmenityIconSquare label="Guests & Capacity">
-              <HugeiconsIcon icon={UserIcon} size={16} />
+              <HugeiconsIcon icon={UserIcon} size={18} />
             </AmenityIconSquare>
 
             <AmenityIconSquare label="Swimming Pool">
-              <HugeiconsIcon icon={SwimmingIcon} size={16} />
+              <HugeiconsIcon icon={SwimmingIcon} size={18} />
             </AmenityIconSquare>
 
             <AmenityIconSquare label="Seaside Access">
-              <HugeiconsIcon icon={BeachIcon} size={16} />
+              <HugeiconsIcon icon={BeachIcon} size={18} />
             </AmenityIconSquare>
 
             {amenityIconsCount > 3 && (
               <AmenityIconSquare label="Family Friendly">
-                <HugeiconsIcon icon={UserGroupIcon} size={16} />
+                <HugeiconsIcon icon={UserGroupIcon} size={18} />
               </AmenityIconSquare>
             )}
           </div>
@@ -444,7 +447,7 @@ function PropertyCard({
       </Link>
 
       {/* Bottom Info Details Area */}
-      <div className="bg-white p-5 sm:p-6 flex flex-col gap-3.5 w-full">
+      <div className="bg-white dark:bg-[#121a30] p-5 sm:p-6 flex flex-col gap-3.5 w-full transition-colors duration-300">
         {/* Title & Rating */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -454,13 +457,13 @@ function PropertyCard({
               rel="noopener noreferrer"
               className="no-underline block"
             >
-              <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl sm:text-2xl text-[#181743] hover:text-[#3B68EC] transition-colors tracking-tight m-0 leading-snug truncate">
+              <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl sm:text-2xl text-[#181743] dark:text-white hover:text-[#3B68EC] dark:hover:text-[#547fee] transition-colors tracking-tight m-0 leading-snug truncate">
                 {name}
               </h3>
             </Link>
             {/* Location */}
-            <div className="flex items-center gap-1 text-slate-500 text-xs sm:text-sm font-medium mt-1">
-              <HugeiconsIcon icon={Location01Icon} size={16} className="text-slate-400 shrink-0" />
+            <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium mt-1">
+              <HugeiconsIcon icon={Location01Icon} size={16} className="text-slate-400 dark:text-slate-500 shrink-0" />
               <span className="truncate">{location}</span>
             </div>
           </div>
@@ -473,26 +476,26 @@ function PropertyCard({
         </div>
 
         {/* Feature Badges Row */}
-        <div className="flex flex-wrap gap-1.5 text-xs text-[#475467]">
-          <div className="bg-slate-100/90 text-slate-700 font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-            <HugeiconsIcon icon={House01Icon} size={14} className="text-slate-500 shrink-0" />
+        <div className="flex flex-wrap gap-1.5 text-xs text-[#475467] dark:text-slate-300">
+          <div className="bg-slate-100/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+            <HugeiconsIcon icon={House01Icon} size={14} className="text-slate-500 dark:text-slate-400 shrink-0" />
             <span>Logement entier</span>
           </div>
 
-          <div className="bg-slate-100/90 text-slate-700 font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-            <HugeiconsIcon icon={BedDoubleIcon} size={14} className="text-slate-500 shrink-0" />
+          <div className="bg-slate-100/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+            <HugeiconsIcon icon={BedDoubleIcon} size={14} className="text-slate-500 dark:text-slate-400 shrink-0" />
             <span>{beds}</span>
           </div>
 
-          <div className="bg-slate-100/90 text-slate-700 font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-            <HugeiconsIcon icon={UserGroupIcon} size={14} className="text-slate-500 shrink-0" />
+          <div className="bg-slate-100/90 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+            <HugeiconsIcon icon={UserGroupIcon} size={14} className="text-slate-500 dark:text-slate-400 shrink-0" />
             <span>{guests}</span>
           </div>
         </div>
 
         {/* Price & CTA Row - Badge on top, price on bottom */}
-        <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-100 mt-1">
-          <div className="flex flex-col gap-1 min-w-0">
+        <div className="flex items-end sm:items-center justify-between gap-2 sm:gap-3 pt-3 border-t border-slate-100 dark:border-slate-800 mt-1">
+          <div className="flex flex-col gap-1 shrink-0">
             {badge && (
               <div>
                 <span className="bg-[#10b981] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-md inline-block shadow-2xs">
@@ -501,12 +504,12 @@ function PropertyCard({
               </div>
             )}
 
-            <div className="flex items-baseline gap-1 shrink-0">
-              <span className="text-[11px] sm:text-xs text-slate-400 font-medium">From</span>
-              <span className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl sm:text-2xl text-[#181743]">
+            <div className="flex items-baseline gap-1 shrink-0 whitespace-nowrap">
+              <span className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-medium">From</span>
+              <span className="font-['Bricolage_Grotesk',sans-serif] font-bold text-lg sm:text-xl lg:text-2xl text-[#181743] dark:text-white whitespace-nowrap">
                 {price}
               </span>
-              <span className="text-[11px] sm:text-xs text-slate-500 font-medium">/night</span>
+              <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap">/night</span>
             </div>
           </div>
 
@@ -514,7 +517,7 @@ function PropertyCard({
             href={`/property/${id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#3B68EC] hover:bg-[#254EDB] text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full border-none cursor-pointer transition-all shadow-xs hover:shadow-md shrink-0 whitespace-nowrap no-underline inline-flex items-center justify-center"
+            className="bg-[#3B68EC] hover:bg-[#254EDB] text-white font-semibold text-xs sm:text-sm px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full border-none cursor-pointer transition-all shadow-xs hover:shadow-md shrink-0 whitespace-nowrap no-underline inline-flex items-center justify-center text-center"
           >
             Check availability
           </Link>
@@ -571,7 +574,7 @@ function PopularRightNow() {
   ];
 
   return (
-    <section className="bg-white py-12 sm:py-16 w-full overflow-hidden">
+    <section className="bg-white dark:bg-[#0b1022] py-12 sm:py-16 w-full overflow-hidden transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
         <SectionHeading
           title="Popular right now"
@@ -579,7 +582,7 @@ function PopularRightNow() {
           linkLabel="All stays"
           linkHref="/search"
         />
-        <div className="flex gap-5 sm:gap-6 items-start w-full overflow-x-auto no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-2 pb-4">
+        <div className="flex lg:grid lg:grid-cols-3 gap-5 sm:gap-6 w-full overflow-x-auto lg:overflow-x-visible no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-2 pb-4 scroll-smooth snap-x snap-mandatory">
           {cards.map((card) => (
             <PropertyCard key={card.name} {...card} />
           ))}
@@ -601,13 +604,13 @@ function FeatureCard({
   img: any
 }) {
   return (
-    <div className="bg-white p-6 sm:p-7 rounded-[24px] shadow-xs hover:shadow-xl transition-all duration-300 border border-[#E4ECFB] flex flex-col justify-between min-h-[230px] sm:min-h-[250px] relative overflow-hidden group hover:-translate-y-1">
+    <div className="bg-white dark:bg-[#121a30] p-6 sm:p-7 rounded-2xl shadow-xs hover:shadow-xl transition-all duration-300 border border-[#E4ECFB] dark:border-slate-800 flex flex-col justify-between min-h-[230px] sm:min-h-[250px] relative overflow-hidden group hover:-translate-y-1">
       <div className="absolute bg-[#547fee]/5 h-[180px] w-[180px] right-[-40px] bottom-[-40px] rounded-full blur-[24px] pointer-events-none transition-opacity duration-300 group-hover:opacity-100" />
       <div className="flex flex-col gap-2.5 relative z-10">
-        <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl text-[#181743] m-0">
+        <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl text-[#181743] dark:text-white m-0">
           {title}
         </h3>
-        <p className="font-['Inter_Tight:Regular',sans-serif] text-sm text-[#556080] leading-relaxed m-0">
+        <p className="font-['Inter_Tight:Regular',sans-serif] text-sm text-[#556080] dark:text-slate-400 leading-relaxed m-0">
           {body}
         </p>
       </div>
@@ -647,13 +650,13 @@ function WhyDarbook() {
     },
   ]
   return (
-    <section className="bg-[#f5f7fa] py-12 sm:py-16 w-full border-b border-gray-200/50">
+    <section className="bg-[#f5f7fa] dark:bg-[#0b1022] py-12 sm:py-16 w-full border-b border-gray-200/50 dark:border-slate-800 transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
         <div>
-          <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-2xl sm:text-3xl tracking-tight text-[#181743]">
+          <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-2xl sm:text-3xl tracking-tight text-[#181743] dark:text-white">
             Why Darbook
           </h2>
-          <p className="text-[#556080] text-sm sm:text-base mt-1.5 font-['Inter_Tight:Regular',sans-serif]">
+          <p className="text-[#556080] dark:text-slate-400 text-sm sm:text-base mt-1.5 font-['Inter_Tight:Regular',sans-serif]">
             Everything you need for a smooth, secure, and memorable stay.
           </p>
         </div>
@@ -801,7 +804,7 @@ function PropertyTypeCard({
 
 function HoweverYouTravel() {
   return (
-    <section className="bg-white py-12 sm:py-16 w-full overflow-hidden">
+    <section className="bg-white dark:bg-[#0b1022] py-12 sm:py-16 w-full overflow-hidden transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
         <SectionHeading
           title="However you travel, we host it all"
@@ -1024,22 +1027,18 @@ function ShufflingCards() {
 
 function GetStartedCTA() {
   return (
-    <section className="bg-white py-10 sm:py-14 lg:py-16 w-full">
+    <section className="bg-white dark:bg-[#0b1022] py-10 sm:py-14 lg:py-16 w-full transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div
-          className="rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 lg:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 min-h-[340px] sm:min-h-[360px] shadow-sm"
-          style={{
-            backgroundImage:
-              "linear-gradient(135deg, rgb(168, 191, 250) 0%, rgb(246, 249, 254) 100%)",
-          }}
+          className="rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 lg:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 min-h-[340px] sm:min-h-[360px] shadow-sm bg-gradient-to-br from-[#a8bffa] to-[#f6f9fe] dark:from-[#182348] dark:to-[#0d1428] border border-blue-100/40 dark:border-slate-800 transition-colors duration-300"
         >
           {/* Text + CTA */}
           <div className="flex flex-col gap-4 sm:gap-5 items-start max-w-xl relative z-10 w-full">
             <div className="flex flex-col gap-2">
-              <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-2xl sm:text-3xl lg:text-4xl text-[#181743] leading-tight m-0">
+              <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-2xl sm:text-3xl lg:text-4xl text-[#181743] dark:text-white leading-tight m-0">
                 Start Your Journey with Darbook
               </h2>
-              <p className="font-['Inter_Tight:Regular',sans-serif] text-sm sm:text-base text-[#556080] leading-relaxed m-0">
+              <p className="font-['Inter_Tight:Regular',sans-serif] text-sm sm:text-base text-[#556080] dark:text-slate-300 leading-relaxed m-0">
                 Create your account and discover authentic stays in just a few
                 clicks. Your next escape is waiting.
               </p>
@@ -1105,7 +1104,7 @@ function PopularDestinations() {
     { photo: imgChalet1, name: "Kélibia", count: "55 properties" },
   ]
   return (
-    <section className="bg-white pt-8 pb-12 w-full overflow-hidden">
+    <section className="bg-white dark:bg-[#0b1022] pt-8 pb-12 w-full overflow-hidden transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
         <SectionHeading
           title="Popular Destinations"
@@ -1126,10 +1125,10 @@ function PopularDestinations() {
 
 function AppCTA() {
   return (
-    <section className="bg-white py-10 sm:py-14 lg:py-16 w-full">
+    <section className="bg-white dark:bg-[#0b1022] py-10 sm:py-14 lg:py-16 w-full transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6 w-full">
-          
+
           {/* Card 1: App Download Panel */}
           <div className="bg-[#547FEE] text-white p-7 sm:p-9 lg:p-10 rounded-[20px] sm:rounded-[24px] h-[390px] sm:h-[410px] lg:h-[422px] relative overflow-hidden flex flex-col justify-between shadow-xs">
             {/* Background Radial Glow */}
@@ -1187,18 +1186,14 @@ function AppCTA() {
 
           {/* Card 2: List Your Property Panel */}
           <div
-            className="text-[#181743] p-7 sm:p-9 lg:p-10 rounded-[20px] sm:rounded-[24px] h-[390px] sm:h-[410px] lg:h-[422px] relative overflow-hidden flex flex-col justify-between shadow-xs border border-blue-100/50"
-            style={{
-              backgroundImage:
-                "linear-gradient(219.74deg, rgb(182, 204, 252) 0%, rgb(215, 230, 255) 45%, rgb(246, 249, 255) 100%)",
-            }}
+            className="text-[#181743] dark:text-white p-7 sm:p-9 lg:p-10 rounded-[20px] sm:rounded-[24px] h-[390px] sm:h-[410px] lg:h-[422px] relative overflow-hidden flex flex-col justify-between shadow-xs bg-gradient-to-br from-[#b6ccfc] via-[#d7e6ff] to-[#f6f9ff] dark:from-[#182348] dark:via-[#131c36] dark:to-[#0d1428] border border-blue-100/50 dark:border-slate-800 transition-colors duration-300"
           >
             {/* Top Text & CTA Content */}
             <div className="flex flex-col items-start relative z-10 max-w-[300px] sm:max-w-[340px] pt-1">
-              <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-[#181743] leading-[30px] m-0 tracking-tight">
+              <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-[22px] sm:text-[24px] lg:text-[26px] text-[#181743] dark:text-white leading-[30px] m-0 tracking-tight">
                 List Your Property
               </h3>
-              <p className="font-['Inter_Tight:Regular',sans-serif] text-[14px] sm:text-[15px] text-[#475467] leading-[22px] m-0 font-normal mt-2.5 mb-6">
+              <p className="font-['Inter_Tight:Regular',sans-serif] text-[14px] sm:text-[15px] text-[#475467] dark:text-slate-300 leading-[22px] m-0 font-normal mt-2.5 mb-6">
                 Reach more travelers and grow your bookings. <br className="hidden sm:inline" />
                 Join a trusted platform designed to support local hosts.
               </p>
@@ -1243,7 +1238,7 @@ function GuestHouseCard({
   amenities: string[]
 }) {
   return (
-    <div className="bg-white flex flex-col shrink-0 w-[280px] sm:w-[320px] rounded-[16px] shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100">
+    <div className="bg-white dark:bg-[#121a30] flex flex-col w-full rounded-[16px] shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100 dark:border-slate-800">
       {/* Photo */}
       <div className="h-[180px] relative w-full overflow-hidden">
         <img
@@ -1261,7 +1256,7 @@ function GuestHouseCard({
       <div className="p-4 flex flex-col gap-3 flex-1 justify-between">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-base text-[#0d1352] truncate m-0">
+            <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-base text-[#0d1352] dark:text-white truncate m-0">
               {name}
             </h3>
             <span className="bg-[#2250da] text-white font-bold text-xs px-2 py-0.5 rounded-lg shrink-0">
@@ -1269,10 +1264,10 @@ function GuestHouseCard({
             </span>
           </div>
 
-          <div className="flex gap-1.5 items-center text-xs text-[#344054]">
+          <div className="flex gap-1.5 items-center text-xs text-[#344054] dark:text-slate-400">
             <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 16 16">
-              <path d={svgPaths.p1d60ef00} stroke="#344054" strokeWidth="1.2" />
-              <path d={svgPaths.p3d82780} stroke="#344054" strokeWidth="1.2" />
+              <path d={svgPaths.p1d60ef00} stroke="currentColor" strokeWidth="1.2" />
+              <path d={svgPaths.p3d82780} stroke="currentColor" strokeWidth="1.2" />
             </svg>
             <span className="font-medium truncate">{location}</span>
           </div>
@@ -1280,23 +1275,23 @@ function GuestHouseCard({
 
         <div className="flex flex-wrap gap-1">
           {amenities.map((a) => (
-            <span key={a} className="bg-[#f2f4f7] border border-[#eaecf0] px-2 py-0.5 rounded text-[11px] font-medium text-[#344054]">
+            <span key={a} className="bg-[#f2f4f7] dark:bg-slate-800 border border-[#eaecf0] dark:border-slate-700 px-2 py-0.5 rounded text-[11px] font-medium text-[#344054] dark:text-slate-300">
               {a}
             </span>
           ))}
         </div>
 
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
-          <div className="flex items-baseline gap-1">
-            <span className="text-xs text-gray-500">From</span>
-            <span className="font-['Bricolage_Grotesk',sans-serif] font-bold text-base text-[#344054]">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+          <div className="flex items-baseline gap-1 shrink-0 whitespace-nowrap">
+            <span className="text-xs text-gray-500 dark:text-slate-400">From</span>
+            <span className="font-['Bricolage_Grotesk',sans-serif] font-bold text-base text-[#344054] dark:text-white whitespace-nowrap">
               {price}
             </span>
-            <span className="text-xs text-gray-500">/night</span>
+            <span className="text-xs text-gray-500 dark:text-slate-400 whitespace-nowrap">/night</span>
           </div>
           <a
             href="#"
-            className="bg-[#547fee] hover:bg-[#436cd9] text-white text-xs font-semibold px-3 py-1.5 rounded-full no-underline transition-colors whitespace-nowrap"
+            className="bg-[#547fee] hover:bg-[#436cd9] text-white text-xs font-semibold px-3 py-1.5 rounded-full no-underline transition-colors whitespace-nowrap shrink-0"
           >
             Details
           </a>
@@ -1342,15 +1337,15 @@ function GuestHousePicks() {
     },
   ]
   return (
-    <section className="bg-white pt-8 pb-12 w-full overflow-hidden">
+    <section className="bg-white dark:bg-[#0b1022] pt-8 pb-12 w-full overflow-hidden transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white py-6 rounded-[16px] shadow-xs flex flex-col gap-6 w-full">
+        <div className="bg-white dark:bg-[#0d1428] py-6 rounded-[16px] shadow-xs flex flex-col gap-6 w-full transition-colors duration-300">
           <SectionHeading
             title="Guest house picks just for you"
             subtitle="Hand-selected guesthouses offering authentic local experiences."
             linkLabel="All experiences"
           />
-          <div className="flex gap-4 sm:gap-6 items-start w-full overflow-x-auto no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-2 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full py-2 pb-4">
             {cards.map((card) => (
               <GuestHouseCard key={card.name} {...card} />
             ))}
@@ -1368,12 +1363,12 @@ function Newsletter() {
     <section className="bg-white py-12 sm:py-16 w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-[#212b57] text-white rounded-[20px] p-6 sm:p-10 lg:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-6 shadow-md">
-          
+
           <div className="flex flex-col gap-4 max-w-xl w-full relative z-10">
             <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl sm:text-2xl text-white m-0">
               Special Promotion – Limited Time Offer!
             </h3>
-            
+
             <form
               className="flex flex-col sm:flex-row gap-2.5 w-full"
               onSubmit={(e) => e.preventDefault()}
@@ -1421,54 +1416,58 @@ function ArticleCard({
   photo,
   date,
   title,
+  href = "/news",
   bg,
 }: {
   photo: any
   date: string
   title: string
+  href?: string
   bg?: string
 }) {
   return (
-    <article className="flex-[1_0_0] overflow-clip relative rounded-[12px] shadow-[0px_1px_10px_0px_rgba(0,0,0,0.08)] bg-white">
-      <a href="#" className="block no-underline">
+    <article className="flex-[1_0_0] overflow-clip relative rounded-[16px] shadow-[0px_1px_10px_0px_rgba(0,0,0,0.08)] bg-white dark:bg-[#121a30] border border-slate-100 dark:border-slate-800 hover:shadow-lg transition-all duration-300 group">
+      <Link href={href} className="block no-underline text-inherit">
         <div
-          className={`h-[158px] rounded-tl-[12px] rounded-tr-[12px] ${bg || "bg-[#f2f8ff]"} relative overflow-hidden`}
+          className={`h-[175px] rounded-tl-[16px] rounded-tr-[16px] ${bg || "bg-[#f2f8ff] dark:bg-slate-800"} relative overflow-hidden`}
         >
           <img
             alt=""
             aria-hidden
-            className="absolute inset-0 size-full object-cover"
+            className="absolute inset-0 size-full object-cover group-hover:scale-105 transition-transform duration-500"
             src={toImgSrc(photo)}
           />
         </div>
-        <div className="p-[16px] content-stretch flex flex-col gap-[8px]">
-          <p className="font-['Inter_Tight:Regular',sans-serif] leading-[20px] text-[#475467] text-[14px]">
+        <div className="p-[18px] content-stretch flex flex-col gap-[8px]">
+          <p className="font-['Inter_Tight:Regular',sans-serif] leading-[20px] text-[#475467] dark:text-slate-400 text-[13px] font-medium m-0">
             {date}
           </p>
-          <h3 className="[word-break:break-word] font-['Bricolage_Grotesk',sans-serif] font-semibold leading-[26px] not-italic text-[#1d2939] text-[20px] m-0">
+          <h3 className="[word-break:break-word] font-['Bricolage_Grotesk',sans-serif] font-bold leading-[26px] not-italic text-[#1d2939] dark:text-white text-[18px] sm:text-[19px] m-0 group-hover:text-[#547FEE] dark:group-hover:text-[#547fee] transition-colors">
             {title}
           </h3>
         </div>
-      </a>
+      </Link>
     </article>
   )
 }
 
 function LatestNews() {
   return (
-    <section className="bg-white pt-8 pb-12 w-full">
+    <section className="bg-white dark:bg-[#0b1022] pt-8 pb-12 w-full transition-colors duration-300">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white drop-shadow-sm p-6 sm:p-8 rounded-[16px] w-full flex flex-col gap-6">
+        <div className="bg-white dark:bg-[#0d1428] drop-shadow-sm p-6 sm:p-8 rounded-[16px] w-full flex flex-col gap-6 transition-colors duration-300 border border-transparent dark:border-slate-800">
           <SectionHeading
             title="Latest News"
             subtitle="Read our latest articles about travel, unique stays, and tourism in Tunisia."
             linkLabel="All news"
+            linkHref="/news"
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             <ArticleCard
               photo={imgBeachfrontBungalowDusk3}
               date="05/05/2025"
               title={"Top Guesthouses in Tunisia\nYou Need to Visit"}
+              href="/news/top-guesthouses-tunisia"
             />
             <ArticleCard
               photo={imgFrame2087327312}
@@ -1476,11 +1475,13 @@ function LatestNews() {
               title={
                 "Traveling to Tunisia: Practical Tips,\nUnique Stays, and Authentic..."
               }
+              href="/news/traveling-to-tunisia-tips"
             />
             <ArticleCard
               photo={imgHotelCard6}
               date="02/02/2026"
               title={"Why Hospitality Is No Longer Just\nAbout Accommodation"}
+              href="/news/why-hospitality-is-not-just-accommodation"
             />
           </div>
         </div>
@@ -1511,12 +1512,12 @@ function SocialIcon({
 
 function Footer() {
   return (
-    <footer className="w-full bg-[#101438] text-white pt-14 sm:pt-18 pb-10 px-4 sm:px-6 lg:px-8 relative rounded-b-[28px] sm:rounded-b-[40px] overflow-hidden">
+    <footer className="w-full bg-[#101438] text-white pt-14 sm:pt-18 pb-10 px-4 sm:px-6 lg:px-8 relative rounded-t-[28px] sm:rounded-t-[40px] rounded-b-none overflow-hidden">
       <div className="max-w-[1280px] mx-auto">
-        
+
         {/* Main Grid Content (5 Columns) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
-          
+
           {/* Col 1: Brand / Logo / Bio / CTA */}
           <div className="lg:col-span-4 flex flex-col gap-4 items-start pr-0 lg:pr-4">
             <a href="/" aria-label="Darbook home" className="no-underline block h-[40px] w-[200px]">

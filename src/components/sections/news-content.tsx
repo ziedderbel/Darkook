@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -16,11 +15,16 @@ import {
   UserIcon,
   ArrowDown01Icon,
   ArrowRight01Icon,
+  Search01Icon,
+  Calendar03Icon,
+  Clock01Icon,
   Facebook02Icon,
   NewTwitterIcon,
   InstagramIcon,
   PinterestIcon,
   YoutubeIcon,
+  SparklesIcon,
+  Bookmark01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
 import AuthModal from "@/components/AuthModal";
@@ -28,14 +32,15 @@ import DarkModeToggle from "@/components/theme/dark-mode-toggle";
 import FullPageMobileMenu from "@/components/layout/FullPageMobileMenu";
 import svgPaths from "@/imports/LandingPage/svg-p2y91de9gv";
 import imgRusticPatioFurnitureHouseDeckWithVegetation2 from "@/imports/LandingPage/fabb010c874f57c47211afac0d2c3c2209cc0840.png";
-import imgIconCalendar from "@/imports/About/icon-calendar.png";
-import imgIconHouse from "@/imports/About/icon-house.png";
-import imgIconShield from "@/imports/About/icon-shield.png";
-import imgIconChat from "@/imports/About/icon-chat.png";
-import imgVillaMain from "@/imports/About/villa-main.jpg";
-import imgCtaVilla1 from "@/imports/About/cta-villa1.jpg";
-import imgCtaVilla2 from "@/imports/About/cta-villa2.jpg";
-import imgCtaVilla3 from "@/imports/About/cta-villa3.jpg";
+
+// Import sample photos for articles
+import imgBeachfrontBungalow from "@/imports/LandingPage/2e243250df73f8665c2076148b1ef31fae40d3e8.png";
+import imgTunisiaTravelTips from "@/imports/LandingPage/ec2789d611400a25173d812dfdc5d6656f384f5b.png";
+import imgHospitalityStory from "@/imports/LandingPage/b238a19d42fe20f37a4d2898024be6e4fb9c965d.png";
+import imgDjerbaExplore from "@/imports/LandingPage/68c031d4d79add7e14a6b6bcf66753f4420c861f.png";
+import imgGastronomyFood from "@/imports/LandingPage/c0ef98efbe3a53b1c514867312bfe556daeee299.png";
+import imgHostGrowthTips from "@/imports/LandingPage/19e6220155bea3ebe8fdd486592d567d1d63cf20.png";
+import imgFeaturedCover from "@/imports/LandingPage/f5c8061b896e0ad8b3ac0aa45cedc31ec176b6cd.png";
 
 function toImgSrc(val: any): string {
   if (!val) return "";
@@ -89,6 +94,33 @@ function Logo() {
 
 // ─── Navbar Actions ──────────────────────────────────────────────────────────
 
+const mainLanguages = [
+  { code: "FRA", name: "Français", country: "fr" },
+  { code: "ARA", name: "العربية", country: "tn" },
+  { code: "ENG", name: "English (US)", country: "us" },
+  { code: "DEU", name: "Deutsch", country: "de" },
+  { code: "ITA", name: "Italiano", country: "it" },
+  { code: "RUS", name: "Русский", country: "ru" },
+];
+
+const otherLanguages = [
+  { code: "SPA", name: "Español", country: "es" },
+  { code: "POR", name: "Português", country: "pt" },
+  { code: "NLD", name: "Nederlands", country: "nl" },
+  { code: "TUR", name: "Türkçe", country: "tr" },
+  { code: "POL", name: "Polski", country: "pl" },
+  { code: "UKR", name: "Українська", country: "ua" },
+];
+
+const mainCurrencies = [
+  { code: "TND", symbol: "DT", name: "Dinar Tunisien" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "USD", symbol: "$", name: "US Dollar" },
+  { code: "GBP", symbol: "£", name: "British Pound" },
+  { code: "CAD", symbol: "CA$", name: "Canadian Dollar" },
+  { code: "CHF", symbol: "CHF", name: "Swiss Franc" },
+];
+
 function LanguageSelector({
   selectedLang,
   selectedCurrency,
@@ -112,60 +144,29 @@ function LanguageSelector({
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
-  const mainLanguages = [
-    { code: "ENG", label: "English", country: "gb" },
-    { code: "FRA", label: "Français", country: "fr" },
-  ];
-
-  const otherLanguages = [
-    { code: "RUS", label: "Русский", country: "ru" },
-    { code: "DE", label: "Deutsch", country: "de" },
-    { code: "ES", label: "Español", country: "es" },
-    { code: "JPY", label: "日本語", country: "jp" },
-    { code: "PT", label: "Português", country: "pt" },
-    { code: "ITA", label: "Italiano", country: "it" },
-    { code: "PY", label: "Guaraní", country: "py" },
-    { code: "ARA", label: "العربية", country: "sa" },
-  ];
-
-  const mainCurrencies = [
-    { code: "EUR", label: "Euro", country: "eu" },
-    { code: "USD", label: "US Dollar", country: "us" },
-    { code: "TND", label: "Tunisian Dinar", country: "tn" },
-  ];
-
-  const otherCurrencies = [
-    { code: "GBP", label: "British Pound", country: "gb" },
-    { code: "CAD", label: "Canadian Dollar", country: "ca" },
-    { code: "CHF", label: "Swiss Franc", country: "ch" },
-    { code: "AUD", label: "Australian Dollar", country: "au" },
-    { code: "JPY", label: "Japanese Yen", country: "jp" },
-    { code: "SAR", label: "Saudi Riyal", country: "sa" },
-    { code: "AED", label: "UAE Dirham", country: "ae" },
-  ];
+  const currentLangObj =
+    [...mainLanguages, ...otherLanguages].find((l) => l.code === selectedLang) || mainLanguages[0];
 
   const dropdownBody = (
-    <div className="space-y-4">
-      <h2 className="text-xl font-bold text-gray-900 tracking-tight">
-        {activeTab === "language" ? "Choose language" : "Choose currency"}
-      </h2>
-
-      <div className="flex border-b border-gray-100 relative">
+    <div className="flex flex-col gap-4">
+      <div className="flex border-b border-gray-100 pb-2 gap-4">
         <button
           type="button"
           onClick={() => setActiveTab("language")}
-          className={`flex-1 py-2.5 text-sm transition-all cursor-pointer border-none bg-transparent text-center font-bold relative ${
-            activeTab === "language" ? "text-gray-900" : "text-gray-400 hover:text-gray-600 font-semibold"
+          className={`pb-1 text-sm font-bold transition-all relative border-none bg-transparent cursor-pointer ${
+            activeTab === "language" ? "text-slate-900" : "text-gray-400 hover:text-gray-600"
           }`}
         >
-          Language ({selectedLang})
+          Language
           {activeTab === "language" && (
             <motion.div
-              layoutId="aboutDropdownActiveTabUnderline"
+              layoutId="newsDropdownActiveTabUnderline"
               className="absolute bottom-0 inset-x-0 h-[2.5px] bg-slate-900 rounded-full"
             />
           )}
@@ -173,14 +174,14 @@ function LanguageSelector({
         <button
           type="button"
           onClick={() => setActiveTab("currency")}
-          className={`flex-1 py-2.5 text-sm transition-all cursor-pointer border-none bg-transparent text-center font-bold relative ${
-            activeTab === "currency" ? "text-gray-900" : "text-gray-400 hover:text-gray-600 font-semibold"
+          className={`pb-1 text-sm font-bold transition-all relative border-none bg-transparent cursor-pointer ${
+            activeTab === "currency" ? "text-slate-900" : "text-gray-400 hover:text-gray-600"
           }`}
         >
-          Currency ({selectedCurrency})
+          Currency
           {activeTab === "currency" && (
             <motion.div
-              layoutId="aboutDropdownActiveTabUnderline"
+              layoutId="newsDropdownActiveTabUnderline"
               className="absolute bottom-0 inset-x-0 h-[2.5px] bg-slate-900 rounded-full"
             />
           )}
@@ -193,37 +194,6 @@ function LanguageSelector({
             <h3 className="text-xs font-bold text-gray-700">Main languages</h3>
             <div className="grid grid-cols-2 gap-2.5">
               {mainLanguages.map((lang) => {
-                const isSelected = selectedLang === lang.code;
-                return (
-                  <button
-                    key={lang.code}
-                    type="button"
-                    onClick={() => {
-                      onSelectLang(lang.code);
-                      setIsOpen(false);
-                    }}
-                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer border ${
-                      isSelected
-                        ? "border-[#4a77ec] border-2 text-gray-900 bg-white shadow-xs"
-                        : "border-gray-200 text-gray-800 bg-white hover:bg-gray-50 hover:border-gray-300"
-                    }`}
-                  >
-                    <img
-                      src={`https://flagcdn.com/w40/${lang.country}.png`}
-                      alt={lang.code}
-                      className="w-5 h-5 rounded-full object-cover shrink-0 border border-gray-100/80"
-                    />
-                    <span>- {lang.code}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-xs font-bold text-gray-700">Other languages</h3>
-            <div className="grid grid-cols-2 gap-2.5">
-              {otherLanguages.map((lang) => {
                 const isSelected = selectedLang === lang.code;
                 return (
                   <button
@@ -266,49 +236,14 @@ function LanguageSelector({
                       onSelectCurrency(curr.code);
                       setIsOpen(false);
                     }}
-                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer border ${
+                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-between text-xs font-bold transition-all cursor-pointer border ${
                       isSelected
                         ? "border-[#4a77ec] border-2 text-gray-900 bg-white shadow-xs"
                         : "border-gray-200 text-gray-800 bg-white hover:bg-gray-50 hover:border-gray-300"
                     }`}
                   >
-                    <img
-                      src={`https://flagcdn.com/w40/${curr.country}.png`}
-                      alt={curr.code}
-                      className="w-5 h-5 rounded-full object-cover shrink-0 border border-gray-100/80"
-                    />
-                    <span>- {curr.code}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-xs font-bold text-gray-700">Other currencies</h3>
-            <div className="grid grid-cols-2 gap-2.5">
-              {otherCurrencies.map((curr) => {
-                const isSelected = selectedCurrency === curr.code;
-                return (
-                  <button
-                    key={curr.code}
-                    type="button"
-                    onClick={() => {
-                      onSelectCurrency(curr.code);
-                      setIsOpen(false);
-                    }}
-                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer border ${
-                      isSelected
-                        ? "border-[#4a77ec] border-2 text-gray-900 bg-white shadow-xs"
-                        : "border-gray-200 text-gray-800 bg-white hover:bg-gray-50 hover:border-gray-300"
-                    }`}
-                  >
-                    <img
-                      src={`https://flagcdn.com/w40/${curr.country}.png`}
-                      alt={curr.code}
-                      className="w-5 h-5 rounded-full object-cover shrink-0 border border-gray-100/80"
-                    />
-                    <span>- {curr.code}</span>
+                    <span className="truncate">{curr.name}</span>
+                    <span className="text-gray-500 shrink-0 ml-1 font-mono">{curr.symbol}</span>
                   </button>
                 );
               })}
@@ -320,15 +255,20 @@ function LanguageSelector({
   );
 
   return (
-    <div ref={containerRef} className="relative shrink-0">
+    <div ref={containerRef} className="relative">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Select language and currency"
-        className="h-[40px] sm:h-[44px] px-3 sm:px-4 bg-white hover:bg-slate-100 active:scale-95 transition-all duration-200 rounded-full flex items-center gap-2 cursor-pointer border-none shadow-sm text-[#344054] hover:text-[#547fee]"
+        aria-label="Select language & currency"
+        className="h-[40px] sm:h-[44px] px-3 sm:px-4 bg-white hover:bg-slate-100 active:scale-95 transition-all duration-200 rounded-full flex items-center gap-1.5 sm:gap-2 cursor-pointer border-none shadow-sm text-xs sm:text-sm font-semibold shrink-0"
       >
-        <HugeiconsIcon icon={GlobalIcon} size={18} className="text-[#344054]" />
-        <span className="text-xs font-bold text-[#344054] tracking-tight">
+        <HugeiconsIcon icon={GlobalIcon} size={16} className="text-[#556080]" />
+        <img
+          src={`https://flagcdn.com/w40/${currentLangObj.country}.png`}
+          alt={currentLangObj.code}
+          className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full object-cover shrink-0 border border-gray-200"
+        />
+        <span className="text-[#344054] font-bold tracking-tight text-xs sm:text-sm">
           {selectedLang}
         </span>
         <HugeiconsIcon
@@ -340,11 +280,10 @@ function LanguageSelector({
         />
       </button>
 
-      {/* Desktop Popover */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            key="about-lang-popover"
+            key="news-lang-popover"
             initial={{ opacity: 0, y: 8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -356,12 +295,11 @@ function LanguageSelector({
         )}
       </AnimatePresence>
 
-      {/* Mobile Bottom Sheet */}
       {isClient &&
         createPortal(
           <AnimatePresence>
             {isOpen && (
-              <div key="about-lang-mobile" className="lg:hidden">
+              <div key="news-lang-mobile" className="lg:hidden">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -438,24 +376,147 @@ function SignInButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-// ─── Main About Us Component ───────────────────────────────────────────────────
+// ─── Articles Data ────────────────────────────────────────────────────────────
 
-export default function AboutUsContent() {
+interface ArticleItem {
+  id: string;
+  title: string;
+  category: string;
+  categoryBg: string;
+  date: string;
+  readTime: string;
+  excerpt: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  photo: any;
+}
+
+const allArticles: ArticleItem[] = [
+  {
+    id: "top-guesthouses-tunisia",
+    title: "Top Guesthouses in Tunisia You Need to Visit in 2026",
+    category: "Stays & Dars",
+    categoryBg: "#547FEE",
+    date: "05 Mai 2025",
+    readTime: "4 min de lecture",
+    excerpt: "From historical courtyards in Tunis Medina to seaside architectural gems in Djerba, discover our curated selection of authentic Tunisian hospitality.",
+    author: {
+      name: "Sonia Ben Amor",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
+    },
+    photo: imgBeachfrontBungalow,
+  },
+  {
+    id: "traveling-to-tunisia-tips",
+    title: "Traveling to Tunisia: Practical Tips, Unique Stays, and Authentic Culture",
+    category: "Travel Guides",
+    categoryBg: "#10B981",
+    date: "12 Août 2025",
+    readTime: "6 min de lecture",
+    excerpt: "Everything you need to plan an unforgettable stay: best seasons, secret regional routes, hospitality etiquette, and packing essentials.",
+    author: {
+      name: "Mehdi Trabelsi",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
+    },
+    photo: imgTunisiaTravelTips,
+  },
+  {
+    id: "why-hospitality-is-not-just-accommodation",
+    title: "Why Hospitality Is No Longer Just About Accommodation",
+    category: "Host Tips",
+    categoryBg: "#8B5CF6",
+    date: "02 Février 2026",
+    readTime: "5 min de lecture",
+    excerpt: "Today's travelers look for heartfelt human connection, local culinary traditions, and tailor-made experiences curated by welcoming local hosts.",
+    author: {
+      name: "Yasmine Khelil",
+      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80",
+    },
+    photo: imgHospitalityStory,
+  },
+  {
+    id: "why-is-tunisia-attracting-foreign-tenants",
+    title: "Why Is Tunisia Attracting More and More Foreign Tenants?",
+    category: "Travel Guides",
+    categoryBg: "#10B981",
+    date: "20 Décembre 2024",
+    readTime: "5 min de lecture",
+    excerpt: "With over 300 days of sunshine, fast internet, and affordable cost of living, Tunisia has emerged as a premier destination.",
+    author: {
+      name: "Mehdi Trabelsi",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
+    },
+    photo: imgDjerbaExplore,
+  },
+  {
+    id: "guest-house-rental-tozeur",
+    title: "Guest House Rental in Tozeur: Houses and Villas for a Unique Stay",
+    category: "Local Experiences",
+    categoryBg: "#F59E0B",
+    date: "23 Janvier 2026",
+    readTime: "5 min de lecture",
+    excerpt: "Lush oases, Sahara desert landscapes, and unique architectural ochre brick heritage in Southern Tunisia.",
+    author: {
+      name: "Sonia Ben Amor",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
+    },
+    photo: imgFeaturedCover,
+  },
+  {
+    id: "how-to-grow-vacation-rental-bookings",
+    title: "Comment Valoriser Votre Propriété et Maximiser Vos Réservations",
+    category: "Host Tips",
+    categoryBg: "#8B5CF6",
+    date: "10 Novembre 2025",
+    readTime: "7 min de lecture",
+    excerpt: "Photographie soignée, tarification saisonnière dynamique, accueil personnalisé et optimisation de votre calendrier sur Darbook.",
+    author: {
+      name: "Yasmine Khelil",
+      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80",
+    },
+    photo: imgHostGrowthTips,
+  },
+];
+
+const categoriesList = [
+  "All",
+  "Travel Guides",
+  "Stays & Dars",
+  "Local Experiences",
+  "Host Tips",
+];
+
+// ─── Main News Page Component ─────────────────────────────────────────────────
+
+export default function NewsContent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("FRA");
   const [selectedCurrency, setSelectedCurrency] = useState("EUR");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredArticles = allArticles.filter((item) => {
+    const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+    const matchesSearch =
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-['Inter_Tight',sans-serif] antialiased overflow-x-hidden selection:bg-[#547fee]/20 selection:text-[#547fee]">
       
-      {/* ─── Hero & Navbar Header ────────────────────────────────────────────── */}
+      {/* ─── 1. Hero & Navbar Header ────────────────────────────────────────── */}
       <header className="relative w-full overflow-hidden bg-[#09112a]">
-        {/* Background Image with Sea Reflection */}
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none select-none">
           <img
             src={toImgSrc(imgRusticPatioFurnitureHouseDeckWithVegetation2)}
-            alt="Darbook Seaside luxury"
+            alt="Darbook News & Travel"
             className="w-full h-full object-cover object-center scale-105 filter brightness-100 contrast-[1.05]"
           />
           {/* Softer, vibrant gradient overlay for enhanced photo visibility */}
@@ -499,305 +560,278 @@ export default function AboutUsContent() {
           </div>
         </div>
 
-        {/* Centered Page Title */}
-        <div className="relative z-20 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 sm:pt-24 sm:pb-28 lg:pt-28 lg:pb-32 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="font-['Bricolage_Grotesk',sans-serif] text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-white tracking-tight drop-shadow-md m-0"
-          >
-            About us
-          </motion.h1>
+        {/* Centered Page Title & Search Bar */}
+        <div className="relative z-20 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-20 sm:pb-26 text-center flex flex-col items-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-['Bricolage_Grotesk',sans-serif] tracking-tight m-0 max-w-3xl leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+            Latest News & Travel Insights
+          </h1>
+          <p className="text-slate-200 text-xs sm:text-sm md:text-base max-w-xl mx-auto mt-3 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+            Explore our latest articles about authentic stays, travel guides, host stories, and tourism in Tunisia.
+          </p>
+
+          {/* Search Input Bar */}
+          <div className="w-full max-w-lg mt-8 relative">
+            <div className="relative flex items-center bg-white rounded-full p-1.5 shadow-2xl border border-white/40">
+              <div className="pl-4 text-slate-400 flex items-center">
+                <HugeiconsIcon icon={Search01Icon} size={18} />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher un article, un guide, une destination..."
+                className="w-full px-3 py-2.5 bg-transparent border-none text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none font-medium"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="pr-3 text-xs text-slate-400 hover:text-slate-600 border-none bg-transparent cursor-pointer font-bold"
+                >
+                  Effacer
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* ─── Main Content Container ─────────────────────────────────────────── */}
+      {/* ─── Main Content Container with Top Rounded Corners ────────────────── */}
       <main className="relative z-10 -mt-6 sm:-mt-8 bg-[#f8fafc] rounded-t-[28px] sm:rounded-t-[36px] lg:rounded-t-[44px] pb-16 sm:pb-24">
         
-        {/* Breadcrumb Navigation */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-[13px] font-medium">
-            <Link
-              href="/"
-              className="text-slate-400 hover:text-slate-700 transition-colors no-underline"
-            >
+        {/* ─── Breadcrumb Navigation ───────────────────────────────────────── */}
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-2">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-500">
+            <Link href="/" className="hover:text-slate-900 transition-colors no-underline text-slate-500">
               Home
             </Link>
-            <span className="text-slate-300 font-light select-none">&gt;</span>
-            <span className="text-[#547fee] font-semibold">
-              About us
+            <span className="text-slate-400">›</span>
+            <span className="text-[#547fee] font-bold">
+              Latest News
             </span>
           </nav>
         </div>
 
-        {/* ─── Section 1: "More than a stay, a place to belong" ───────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-5 sm:mt-7">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
-            className="bg-white rounded-[24px] sm:rounded-[32px] border border-slate-100 shadow-[0_4px_25px_rgba(0,0,0,0.03)] p-6 sm:p-10 lg:p-12"
+      {/* ─── 3. Category Filter Tabs ────────────────────────────────────────── */}
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {categoriesList.map((cat) => {
+            const isSelected = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer border whitespace-nowrap shadow-2xs ${
+                  isSelected
+                    ? "bg-[#181743] text-white border-[#181743] shadow-xs scale-102"
+                    : "bg-white text-slate-600 hover:text-slate-900 border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                {cat === "All" ? "Tous les articles" : cat}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ─── 4. Featured Spotlight Article (Shown when no search filter) ────── */}
+      {!searchQuery && activeCategory === "All" && (
+        <section className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Link
+            href="/news/guest-house-rental-tozeur"
+            className="block no-underline text-inherit bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-2xs hover:shadow-xl transition-all duration-300 group grid grid-cols-1 lg:grid-cols-12 gap-0 hover:-translate-y-1"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-              {/* Left Text */}
-              <div className="lg:col-span-7 space-y-4 sm:space-y-5">
-                <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-3xl lg:text-[36px] font-extrabold text-[#101438] leading-[1.2] tracking-tight m-0">
-                  More than a stay, a place to belong
+            {/* Left Large Photo */}
+            <div className="lg:col-span-7 relative h-[260px] sm:h-[340px] lg:h-full min-h-[280px] overflow-hidden bg-slate-100">
+              <img
+                src={toImgSrc(imgFeaturedCover)}
+                alt="Featured Story"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <span className="absolute top-4 left-4 px-3.5 py-1 rounded-[10px] text-[11px] font-extrabold text-white bg-[#547FEE] uppercase tracking-wider shadow-md">
+                À la une
+              </span>
+            </div>
+
+            {/* Right Story Content */}
+            <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-xs text-slate-500 font-semibold">
+                  <span className="flex items-center gap-1">
+                    <HugeiconsIcon icon={Calendar03Icon} size={14} className="text-[#547FEE]" />
+                    23 Janvier 2026
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <HugeiconsIcon icon={Clock01Icon} size={14} className="text-[#547FEE]" />
+                    5 min de lecture
+                  </span>
+                </div>
+
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 font-['Bricolage_Grotesk',sans-serif] leading-tight group-hover:text-[#547FEE] transition-colors">
+                  Guest House Rental in Tozeur: Houses and Villas for a Unique Stay
                 </h2>
-                <p className="font-['Inter_Tight:Regular',sans-serif] text-slate-600 text-xs sm:text-sm lg:text-[15px] leading-relaxed m-0 max-w-2xl">
-                  Darbook is a hospitality platform built around experiences, not just accommodation. We connect travelers with carefully selected guesthouses and unique stays in Tunisia&apos;s most inspiring destinations, from seaside escapes and vibrant cities to nature retreats and desert journeys. Our mission is to make every booking simple, secure, and transparent, while helping guests enjoy authentic local hospitality and enabling hosts to welcome travelers with confidence. With Darbook, every stay is personal, comfortable, and truly unforgettable.
+
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Tozeur is one of the most exotic destinations in Tunisia, known for its lush oases, Sahara desert landscapes, and unique architectural heritage.
                 </p>
               </div>
 
-              {/* Right Image */}
-              <div className="lg:col-span-5">
-                <div className="relative rounded-[20px] sm:rounded-[26px] overflow-hidden aspect-[4/3] shadow-md group">
+              <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                <div className="flex items-center gap-2.5">
                   <img
-                    src={toImgSrc(imgVillaMain)}
-                    alt="Luxury architectural villa with swimming pool"
-                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                    alt="Sonia Ben Amor"
+                    className="size-9 rounded-full object-cover border border-slate-200"
                   />
-                  <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-[20px] sm:rounded-[26px] pointer-events-none" />
-                </div>
-              </div>
-
-            </div>
-          </motion.div>
-        </div>
-
-        {/* ─── Section 2: "Darbook in Numbers" ──────────────────────────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
-          <div className="space-y-1.5">
-            <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#101438] tracking-tight m-0">
-              Darbook in Numbers
-            </h2>
-            <p className="font-['Inter_Tight',sans-serif] text-slate-500 text-xs sm:text-sm font-medium m-0">
-              Growing together with trusted hosts and thousands of happy travelers.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5 mt-6 sm:mt-8">
-            {[
-              { stat: "250+", label: "Properties" },
-              { stat: "30+", label: "Cities & Regions" },
-              { stat: "4,000+", label: "Confirmed Bookings" },
-              { stat: "5+", label: "Years in Hospitality" },
-              { stat: "100%", label: "Secure & Transparent Booking" },
-            ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="bg-[#f0f5ff] hover:bg-[#e4eeff] border border-[#e2edff] rounded-[18px] sm:rounded-[22px] p-5 sm:p-6 flex flex-col items-center justify-center text-center gap-1.5 transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5"
-              >
-                <span className="font-['Bricolage_Grotesk',sans-serif] font-black text-2xl sm:text-3xl lg:text-[32px] text-[#547fee] tracking-tight leading-none">
-                  {item.stat}
-                </span>
-                <span className="font-['Inter_Tight',sans-serif] text-slate-600 text-xs sm:text-[13px] font-medium leading-snug">
-                  {item.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* ─── Section 3: "Why Darbook" ─────────────────────────────────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
-          <div className="space-y-1">
-            <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-[28px] font-bold text-[#101438] tracking-tight m-0">
-              Why Darbook
-            </h2>
-            <p className="font-['Inter_Tight',sans-serif] text-slate-500 text-xs sm:text-[13.5px] font-normal m-0">
-              Everything you need for a smooth, secure, and memorable stay.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-5 mt-6 sm:mt-7">
-            {[
-              {
-                title: "Easy Booking",
-                description:
-                  "Search, choose, and book your stay in just a few steps. The process is simple, fast, and clear.",
-                image: imgIconCalendar,
-                alt: "Easy Booking",
-                imgWidth: "w-[96px] sm:w-[106px] lg:w-[115px]",
-              },
-              {
-                title: "Carefully Selected Stays",
-                description:
-                  "We choose each property with care. Enjoy unique guesthouses and special places that offer real local hospitality.",
-                image: imgIconHouse,
-                alt: "Carefully Selected Stays",
-                imgWidth: "w-[98px] sm:w-[108px] lg:w-[118px]",
-              },
-              {
-                title: "Safe & Clear Payments",
-                description:
-                  "Your payment is secure and transparent. No hidden fees. No surprises.",
-                image: imgIconShield,
-                alt: "Safe & Clear Payments",
-                imgWidth: "w-[92px] sm:w-[102px] lg:w-[110px]",
-              },
-              {
-                title: "Friendly Support",
-                description:
-                  "Need help? We're here for you. Before, during, and after your stay.",
-                image: imgIconChat,
-                alt: "Friendly Support",
-                imgWidth: "w-[98px] sm:w-[108px] lg:w-[118px]",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="bg-white border border-[#edf1f7] shadow-[0_2px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] rounded-[22px] sm:rounded-[24px] pt-6 px-6 pb-0 flex flex-col justify-between h-[275px] sm:h-[285px] transition-all duration-300 hover:-translate-y-1 relative group overflow-hidden"
-              >
-                {/* Top Text Content */}
-                <div className="space-y-1.5 z-10 relative">
-                  <h3 className="font-['Bricolage_Grotesk',sans-serif] text-[15px] sm:text-base font-bold text-[#101438] m-0">
-                    {item.title}
-                  </h3>
-                  <p className="font-['Inter_Tight:Regular',sans-serif] text-slate-500 text-[11.5px] sm:text-xs leading-[1.5] m-0 max-w-[95%]">
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Bottom Right Graphic Area - Flush to Bottom and Right Edges with 0 padding */}
-                <div className="absolute bottom-0 right-0 pointer-events-none flex items-end justify-end">
-                  {/* Soft Light-Blue Background Curve in Bottom-Right Corner */}
-                  <div className="w-[145px] sm:w-[165px] h-[115px] sm:h-[130px] bg-[#ebf4fe] rounded-tl-full absolute bottom-0 right-0 pointer-events-none" />
-                  
-                  {/* 3D PNG Icon aligned flush in Bottom-Right */}
-                  <div className={`${item.imgWidth} aspect-square relative z-10 p-0 m-0 group-hover:scale-105 transition-transform duration-300 ease-out flex items-end justify-end`}>
-                    <img
-                      src={toImgSrc(item.image)}
-                      alt={item.alt}
-                      className="w-full h-full object-contain filter drop-shadow-sm select-none pointer-events-none"
-                    />
+                  <div>
+                    <p className="text-xs font-bold text-slate-900 m-0">Sonia Ben Amor</p>
+                    <p className="text-[11px] text-slate-400 m-0">Rédactrice Voyage</p>
                   </div>
                 </div>
-              </motion.div>
+
+                <span className="px-4 py-2 rounded-full bg-[#547FEE] group-hover:bg-[#406CE3] text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs">
+                  <span>Lire l'article</span>
+                  <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
+                </span>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {/* ─── 5. Articles Grid ───────────────────────────────────────────────── */}
+      <section className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-xl sm:text-2xl text-slate-900 m-0">
+            {activeCategory === "All" ? "Tous les articles" : activeCategory}
+            <span className="text-sm font-semibold text-slate-400 ml-2">
+              ({filteredArticles.length} {filteredArticles.length > 1 ? "articles" : "article"})
+            </span>
+          </h2>
+        </div>
+
+        {filteredArticles.length === 0 ? (
+          <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-2xs space-y-3">
+            <div className="size-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl font-bold">
+              🔍
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Aucun article trouvé</h3>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              Aucun résultat ne correspond à votre recherche "{searchQuery}". Essayez avec d'autres mots-clés ou réinitialisez les filtres.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery("");
+                setActiveCategory("All");
+              }}
+              className="px-4 py-2 bg-[#547FEE] text-white rounded-full text-xs font-bold cursor-pointer border-none"
+            >
+              Réinitialiser les filtres
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+            {filteredArticles.map((article) => (
+              <Link
+                key={article.id}
+                href={`/news/${article.id}`}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5 no-underline text-inherit"
+              >
+                <div>
+                  {/* Photo Container */}
+                  <div className="h-[210px] w-full relative overflow-hidden bg-slate-100">
+                    <img
+                      src={toImgSrc(article.photo)}
+                      alt={article.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span
+                      style={{ backgroundColor: article.categoryBg }}
+                      className="absolute top-3.5 left-3.5 px-3 py-1 rounded-[10px] text-[11px] font-extrabold text-white uppercase tracking-wider shadow-xs"
+                    >
+                      {article.category}
+                    </span>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-5 sm:p-6 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                      <span className="flex items-center gap-1">
+                        <HugeiconsIcon icon={Calendar03Icon} size={13} className="text-[#547FEE]" />
+                        {article.date}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <HugeiconsIcon icon={Clock01Icon} size={13} className="text-slate-400" />
+                        {article.readTime}
+                      </span>
+                    </div>
+
+                    <h3 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-lg sm:text-xl text-slate-900 leading-snug group-hover:text-[#547FEE] transition-colors m-0">
+                      {article.title}
+                    </h3>
+
+                    <p className="text-xs text-slate-500 leading-relaxed font-normal line-clamp-3 m-0">
+                      {article.excerpt}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card Footer */}
+                <div className="px-5 sm:px-6 pb-5 pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={article.author.avatar}
+                      alt={article.author.name}
+                      className="size-7 rounded-full object-cover border border-slate-200"
+                    />
+                    <span className="text-xs font-bold text-slate-700">{article.author.name}</span>
+                  </div>
+
+                  <span className="text-xs font-bold text-[#547FEE] group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    <span>Lire</span>
+                    <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
-        </div>
+        )}
+      </section>
+    </main>
 
-        {/* ─── Section 4: "List Your Property With Us" CTA Banner ──────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-[#eef4ff] via-[#e5f0fe] to-[#d6e6fc] rounded-[28px] sm:rounded-[36px] border border-[#d3e3fc] p-6 sm:p-10 lg:p-14 relative overflow-hidden shadow-xs"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-              {/* Left Column: Heading, Copy, Buttons, Pagination Indicators */}
-              <div className="lg:col-span-6 flex flex-col justify-between h-full space-y-6 sm:space-y-8">
-                <div className="space-y-2.5">
-                  <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-3xl lg:text-[36px] font-extrabold text-[#101438] tracking-tight leading-tight m-0">
-                    List Your Property With Us
-                  </h2>
-                  <p className="font-['Inter_Tight',sans-serif] text-slate-600 text-xs sm:text-sm lg:text-[15px] m-0">
-                    Reach more travelers and grow your bookings with Darbook.
-                  </p>
-                </div>
+      {/* ─── 7. Authentic Darbook Dark Footer ───────────────────────────────── */}
+      <footer className="w-full bg-[#101438] text-white pt-14 sm:pt-18 pb-10 px-4 sm:px-6 lg:px-8 relative rounded-t-[28px] sm:rounded-t-[40px] rounded-b-none overflow-hidden mt-12">
+        <div className="max-w-[1280px] mx-auto">
+          {/* Main Grid Content (5 Columns) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
 
-                {/* CTA Action Buttons */}
-                <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                  <Link
-                    href="/list-your-property"
-                    className="h-[44px] sm:h-[48px] px-6 sm:px-7 bg-[#547fee] hover:bg-[#436cd9] text-white font-semibold text-xs sm:text-sm rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all no-underline inline-flex items-center justify-center"
-                  >
-                    Start Hosting
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="h-[44px] sm:h-[48px] px-6 sm:px-7 bg-white/70 hover:bg-white text-[#547fee] border border-[#547fee]/30 hover:border-[#547fee]/60 font-semibold text-xs sm:text-sm rounded-full shadow-xs active:scale-95 transition-all no-underline inline-flex items-center justify-center"
-                  >
-                    Contact Us
-                  </Link>
-                </div>
-
-                {/* Indicator Progress Bars */}
-                <div className="flex items-center gap-2 pt-2">
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-12 sm:w-16 h-1.5 rounded-full bg-[#547fee] shadow-xs" />
-                </div>
-              </div>
-
-              {/* Right Column: 3 Layered / Fanned Villa Cards */}
-              <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end py-4">
-                <div className="flex items-center justify-center gap-2 sm:gap-3">
-                  
-                  {/* Card 1: Sunset Villa Terrace */}
-                  <motion.div
-                    whileHover={{ scale: 1.05, rotate: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-[110px] sm:w-[160px] lg:w-[185px] aspect-[3/4] rounded-2xl overflow-hidden shadow-xl ring-4 ring-white/90 transform -rotate-6 shrink-0 relative"
-                  >
-                    <img
-                      src={toImgSrc(imgCtaVilla1)}
-                      alt="Sunset terrace villa"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-
-                  {/* Card 2: Modern Pool Villa (Center & Elevated) */}
-                  <motion.div
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-[125px] sm:w-[180px] lg:w-[210px] aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white z-10 transform scale-105 shrink-0 relative -mx-2 sm:-mx-3"
-                  >
-                    <img
-                      src={toImgSrc(imgCtaVilla2)}
-                      alt="Contemporary pool villa"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-
-                  {/* Card 3: Palm Patio Courtyard */}
-                  <motion.div
-                    whileHover={{ scale: 1.05, rotate: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-[110px] sm:w-[160px] lg:w-[185px] aspect-[3/4] rounded-2xl overflow-hidden shadow-xl ring-4 ring-white/90 transform rotate-6 shrink-0 relative"
-                  >
-                    <img
-                      src={toImgSrc(imgCtaVilla3)}
-                      alt="Mediterranean patio villa"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-
-                </div>
-              </div>
-
-            </div>
-          </motion.div>
-        </div>
-
-      </main>
-
-      {/* ─── Global Footer ─────────────────────────────────────────────────── */}
-      <footer className="w-full bg-[#101438] text-white rounded-t-[28px] sm:rounded-t-[40px] pt-14 pb-10 sm:pt-16 sm:pb-12 relative overflow-hidden border-t border-slate-800">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-10 gap-10 lg:gap-8 pb-12">
-            
-            {/* Col 1: Brand & Bio */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              <Link href="/" className="inline-block no-underline">
-                <Group79 />
+            {/* Col 1: Brand / Logo / Bio / CTA */}
+            <div className="lg:col-span-4 flex flex-col gap-4 items-start pr-0 lg:pr-4">
+              <Link href="/" aria-label="Darbook home" className="no-underline block h-[40px] w-[200px]">
+                <svg
+                  className="block size-full"
+                  fill="none"
+                  height="44.5742"
+                  preserveAspectRatio="none"
+                  viewBox="0 0 224 44.5742"
+                  width="224"
+                >
+                  <g id="Group 2087325898">
+                    <path d={svgPaths.p2bca0c0} fill="#547FEE" id="Union" />
+                    <g id="Darbook">
+                      <path d={svgPaths.p3d515900} fill="white" />
+                      <path d={svgPaths.p1e1c2e00} fill="white" />
+                      <path d={svgPaths.p3dbae00} fill="white" />
+                      <path d={svgPaths.p1c8f0b80} fill="white" />
+                      <path d={svgPaths.p2f5e4000} fill="white" />
+                      <path d={svgPaths.p25a54cf0} fill="white" />
+                      <path d={svgPaths.p8920900} fill="white" />
+                    </g>
+                  </g>
+                </svg>
               </Link>
               <p className="font-['Inter_Tight:Regular',sans-serif] text-xs sm:text-sm leading-relaxed text-slate-300 max-w-xs m-0">
                 Darbook is a platform for renting holiday homes in Tunisia. Book in just a few clicks and enjoy an unforgettable stay.
@@ -810,7 +844,7 @@ export default function AboutUsContent() {
               </Link>
             </div>
 
-            {/* Col 2: Company Navigation */}
+            {/* Col 2: Company */}
             <div className="lg:col-span-2 flex flex-col gap-3">
               <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Company
@@ -837,7 +871,7 @@ export default function AboutUsContent() {
               </ul>
             </div>
 
-            {/* Col 3: Experience Navigation */}
+            {/* Col 3: Experience */}
             <div className="lg:col-span-2 flex flex-col gap-3">
               <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Experience
@@ -852,20 +886,20 @@ export default function AboutUsContent() {
                   "Cultural",
                   "Family",
                   "Romantics",
-                ].map((item) => (
-                  <li key={item}>
+                ].map((link) => (
+                  <li key={link}>
                     <Link
-                      href={`/search?category=${encodeURIComponent(item)}`}
+                      href={`/search?category=${link.toLowerCase()}`}
                       className="text-slate-300 hover:text-white transition-colors no-underline font-normal"
                     >
-                      {item}
+                      {link}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Col 4: Address & Contact */}
+            {/* Col 4: Address */}
             <div className="lg:col-span-2 flex flex-col gap-3">
               <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Address
@@ -952,7 +986,6 @@ export default function AboutUsContent() {
                 </div>
               </div>
             </div>
-
           </div>
 
           {/* Bottom Divider & Copyright Bar */}
@@ -971,31 +1004,30 @@ export default function AboutUsContent() {
               <span className="text-xs font-black tracking-widest text-white">JCB</span>
             </div>
           </div>
-
         </div>
 
         {/* Back to Top Floating Button */}
         <button
-          type="button"
           aria-label="Scroll to top"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="absolute right-4 sm:right-8 bottom-6 size-9 sm:size-10 bg-[#547fee] hover:bg-[#436cd9] transition-all rounded-full flex items-center justify-center cursor-pointer border-none shadow-lg active:scale-95 z-10 text-white"
+          className="absolute right-4 sm:right-8 bottom-6 size-10 bg-[#547fee] hover:bg-[#436cd9] transition-all rounded-full flex items-center justify-center cursor-pointer border-none shadow-lg active:scale-95 z-10"
         >
-          <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
         </button>
       </footer>
 
-      {/* Auth Modal */}
+      {/* Global Modals */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-
-      {/* Full Page Mobile Menu */}
       <FullPageMobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenLang={() => {}}
+        selectedLang={selectedLang}
+        selectedCurrency={selectedCurrency}
       />
-
     </div>
   );
 }

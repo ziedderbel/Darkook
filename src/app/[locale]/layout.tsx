@@ -54,6 +54,28 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={fontVariables}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                window.addEventListener('error', function(e) {
+                  if (!e.error || !(e.error instanceof Error)) {
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                  }
+                }, true);
+                window.addEventListener('unhandledrejection', function(e) {
+                  if (!e.reason || !(e.reason instanceof Error)) {
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                  }
+                }, true);
+              }
+            `,
+          }}
+        />
+      </head>
       <body className="flex min-h-svh flex-col antialiased" suppressHydrationWarning>
         <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
         <ThemeProvider>

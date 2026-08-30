@@ -265,12 +265,45 @@ export default function NavbarSearchWidget({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // When expanding, always open location by default
+  // Auto-scroll adaptation: when any dropdown/popover opens in expanded mode, smoothly scroll the page if needed
+  const ensureDropdownSpace = (popoverHeight = 420) => {
+    if (typeof window === "undefined") return;
+    setTimeout(() => {
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const requiredBottom = rect.bottom + popoverHeight + 32;
+
+      if (requiredBottom > viewportHeight) {
+        const scrollDelta = requiredBottom - viewportHeight;
+        window.scrollBy({
+          top: scrollDelta,
+          behavior: "smooth",
+        });
+      } else if (rect.top < 70) {
+        window.scrollBy({
+          top: rect.top - 80,
+          behavior: "smooth",
+        });
+      }
+    }, 50);
+  };
+
+  // When expanding, always open location by default and adjust scroll
   useEffect(() => {
     if (isExpanded) {
       setActiveTab("location");
+      ensureDropdownSpace(380);
     }
   }, [isExpanded]);
+
+  useEffect(() => {
+    if (isExpanded && activeTab) {
+      const h = activeTab === "checkin" || activeTab === "checkout" ? 460 : activeTab === "guests" ? 380 : 380;
+      ensureDropdownSpace(h);
+    }
+  }, [isExpanded, activeTab]);
 
   // Close on Escape or outside click
   useEffect(() => {
@@ -323,44 +356,44 @@ export default function NavbarSearchWidget({
                 setIsExpanded(true);
                 setActiveTab("location");
               }}
-              className="flex items-center bg-white hover:bg-slate-50 border border-slate-200/90 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 cursor-pointer shadow-2xs hover:shadow-xs transition-all gap-1.5 sm:gap-2.5 select-none min-w-0 max-w-full"
+              className="flex items-center bg-white dark:bg-[#121a30] hover:bg-slate-50 dark:hover:bg-[#16203a] border border-slate-200/90 dark:border-slate-800 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 cursor-pointer shadow-2xs hover:shadow-md transition-all gap-2 sm:gap-3 select-none min-w-0 max-w-full"
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
             >
               {/* Location */}
-              <div className="flex items-center gap-1 sm:gap-1.5 text-[11.5px] sm:text-xs font-bold text-slate-900 min-w-0 shrink">
-                <HugeiconsIcon icon={SwimmingIcon} size={14} className="text-[#3B68EC] shrink-0" />
-                <span className="truncate max-w-[95px] sm:max-w-[130px] lg:max-w-[160px] whitespace-nowrap">
-                  {location === "Choose the city" ? "Where to ?" : location}
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white min-w-0 shrink">
+                <HugeiconsIcon icon={Location01Icon} size={15} className="text-[#3B68EC] shrink-0" />
+                <span className="truncate max-w-[100px] sm:max-w-[140px] lg:max-w-[170px] whitespace-nowrap">
+                  {location === "Choose the city" || location === "Choose destination" ? "Where to ?" : location}
                 </span>
               </div>
 
-              <div className="hidden sm:block h-3.5 w-px bg-slate-200 shrink-0" />
+              <div className="h-4 w-px bg-slate-200 dark:bg-slate-700 shrink-0" />
 
-              {/* Dates (Visible on Tablet & Desktop) */}
-              <div className="hidden sm:flex items-center gap-1 sm:gap-1.5 text-[11.5px] sm:text-xs font-semibold text-slate-700 min-w-0 shrink">
-                <HugeiconsIcon icon={Calendar03Icon} size={13} className="text-slate-400 shrink-0" />
-                <span className="truncate max-w-[90px] lg:max-w-[130px] whitespace-nowrap">
-                  {checkIn !== "03/21/2019" ? `${checkIn} - ${checkOut}` : "Any dates"}
+              {/* Dates */}
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 min-w-0 shrink">
+                <HugeiconsIcon icon={Calendar03Icon} size={14} className="text-slate-400 shrink-0" />
+                <span className="truncate max-w-[80px] sm:max-w-[120px] lg:max-w-[140px] whitespace-nowrap">
+                  {checkIn !== "03/21/2019" && checkIn !== "2026-03-21" ? `${formatDateLabel(checkIn)}` : "Any dates"}
                 </span>
               </div>
 
-              <div className="hidden lg:block h-3.5 w-px bg-slate-200 shrink-0" />
+              <div className="hidden sm:block h-4 w-px bg-slate-200 dark:bg-slate-700 shrink-0" />
 
-              {/* Guests (Visible on Desktop only to prevent tablet squishing) */}
-              <div className="hidden lg:flex items-center gap-1.5 text-[11.5px] sm:text-xs font-semibold text-slate-700 min-w-0 shrink">
-                <HugeiconsIcon icon={UserGroupIcon} size={13} className="text-slate-400 shrink-0" />
-                <span className="truncate max-w-[80px] lg:max-w-[100px] whitespace-nowrap">
+              {/* Guests */}
+              <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 min-w-0 shrink">
+                <HugeiconsIcon icon={UserGroupIcon} size={14} className="text-slate-400 shrink-0" />
+                <span className="truncate max-w-[70px] lg:max-w-[100px] whitespace-nowrap">
                   {guests}
                 </span>
               </div>
 
-              {/* Search Circle */}
+              {/* Search Button Circle */}
               <motion.div
                 layoutId="search-submit-icon-circle"
-                className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 rounded-full bg-[#3B68EC] text-white flex items-center justify-center shrink-0 ml-0.5 shadow-xs hover:bg-[#254EDB]"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#3B68EC] text-white flex items-center justify-center shrink-0 ml-0.5 shadow-xs hover:bg-[#254EDB] transition-colors"
                 transition={{ type: "spring", stiffness: 350, damping: 26 }}
               >
-                <HugeiconsIcon icon={Search01Icon} size={13} className="shrink-0" />
+                <HugeiconsIcon icon={Search01Icon} size={14} className="shrink-0" />
               </motion.div>
             </motion.div>
           ) : (
@@ -368,7 +401,7 @@ export default function NavbarSearchWidget({
             <motion.div
               key="expanded-search-bar"
               layoutId="search-widget-morph"
-              className="bg-[#F1F5F9] border border-slate-200/90 rounded-full shadow-2xl p-2 sm:p-2.5 flex items-center max-w-[960px] xl:max-w-[1020px] w-full select-none relative"
+              className="bg-[#F1F5F9] dark:bg-[#0e162b] border border-slate-200/90 dark:border-slate-800 rounded-full shadow-2xl p-2 sm:p-2.5 flex items-center max-w-[960px] xl:max-w-[1020px] w-full select-none relative"
               transition={{ type: "spring", stiffness: 320, damping: 28 }}
             >
               {/* ── Segment 1: Where to ? / Destination ── */}
@@ -380,7 +413,7 @@ export default function NavbarSearchWidget({
                 {activeTab === "location" && (
                   <motion.div
                     layoutId="active-search-segment-pill"
-                    className="absolute inset-0 bg-white rounded-full shadow-[0_6px_25px_rgba(0,0,0,0.12)] z-0"
+                    className="absolute inset-0 bg-white dark:bg-[#16203a] rounded-full shadow-[0_6px_25px_rgba(0,0,0,0.12)] z-0"
                     transition={{ type: "spring", stiffness: 450, damping: 35 }}
                   />
                 )}
@@ -390,10 +423,10 @@ export default function NavbarSearchWidget({
                     <HugeiconsIcon icon={Location01Icon} size={20} />
                   </div>
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                       Where to ?
                     </span>
-                    <span className="text-sm sm:text-[15px] font-extrabold text-slate-900 truncate">
+                    <span className="text-sm sm:text-[15px] font-extrabold text-slate-900 dark:text-white truncate">
                       {location}
                     </span>
                   </div>
@@ -416,7 +449,7 @@ export default function NavbarSearchWidget({
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 14, scale: 0.95 }}
                       transition={{ duration: 0.18 }}
-                      className="hidden lg:block absolute top-[calc(100%+14px)] left-0 w-[400px] sm:w-[460px] bg-white rounded-[32px] shadow-2xl border border-gray-100 p-5 z-50 space-y-2"
+                      className="hidden lg:block absolute top-[calc(100%+14px)] left-0 w-[400px] sm:w-[460px] bg-white dark:bg-[#121a30] rounded-[32px] shadow-2xl border border-gray-100 dark:border-slate-800 p-5 z-50 space-y-2"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <div className="px-3 py-1.5 text-xs font-extrabold text-gray-400 uppercase tracking-wider">
@@ -434,8 +467,8 @@ export default function NavbarSearchWidget({
                             }}
                             className={`flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all ${
                               isSelected
-                                ? "bg-blue-50 text-[#4a77ec] font-bold"
-                                : "hover:bg-gray-50 text-gray-900"
+                                ? "bg-blue-50 dark:bg-blue-900/30 text-[#4a77ec] font-bold"
+                                : "hover:bg-gray-50 dark:hover:bg-[#16203a] text-gray-900 dark:text-white"
                             }`}
                           >
                             <div className="flex items-center gap-3.5 min-w-0">
@@ -445,8 +478,8 @@ export default function NavbarSearchWidget({
                                 <HugeiconsIcon icon={IconComponent} size={22} />
                               </div>
                               <div className="flex flex-col min-w-0">
-                                <span className="text-sm font-bold truncate">{dest.name}</span>
-                                <span className="text-xs text-gray-500 font-medium truncate">
+                                <span className="text-sm font-bold dark:text-white truncate">{dest.name}</span>
+                                <span className="text-xs text-gray-500 dark:text-slate-400 font-medium truncate">
                                   {dest.subtitle}
                                 </span>
                               </div>
@@ -456,7 +489,7 @@ export default function NavbarSearchWidget({
                                 <HugeiconsIcon icon={Tick01Icon} size={15} />
                               </div>
                             ) : (
-                              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 shrink-0">
+                              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 shrink-0">
                                 {dest.badge}
                               </span>
                             )}
@@ -488,16 +521,16 @@ export default function NavbarSearchWidget({
                             animate={{ y: 0 }}
                             exit={{ y: "100%" }}
                             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-                            className="relative w-full max-h-[85vh] bg-white rounded-t-[28px] p-5 shadow-2xl z-[200] overflow-y-auto space-y-3"
+                            className="relative w-full max-h-[85vh] bg-white dark:bg-[#121a30] rounded-t-[28px] p-5 shadow-2xl z-[200] overflow-y-auto space-y-3"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-2" />
-                            <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-1">
-                              <h3 className="font-bold text-base text-gray-900">Where to ? Destination</h3>
+                            <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full mx-auto mb-2" />
+                            <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-800 mb-1">
+                              <h3 className="font-bold text-base text-gray-900 dark:text-white">Where to ? Destination</h3>
                               <button
                                 type="button"
                                 onClick={() => setActiveTab(null)}
-                                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center border-none cursor-pointer"
+                                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 flex items-center justify-center border-none cursor-pointer"
                               >
                                 <HugeiconsIcon icon={Cancel01Icon} size={16} />
                               </button>
@@ -515,8 +548,8 @@ export default function NavbarSearchWidget({
                                     }}
                                     className={`flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all ${
                                       isSelected
-                                        ? "bg-blue-50 text-[#4a77ec] font-bold border border-blue-200"
-                                        : "hover:bg-gray-50 text-gray-900 border border-transparent"
+                                        ? "bg-blue-50 dark:bg-blue-900/30 text-[#4a77ec] font-bold border border-blue-200 dark:border-blue-700"
+                                        : "hover:bg-gray-50 dark:hover:bg-[#16203a] text-gray-900 dark:text-white border border-transparent"
                                     }`}
                                   >
                                     <div className="flex items-center gap-3.5 min-w-0">
@@ -526,8 +559,8 @@ export default function NavbarSearchWidget({
                                         <HugeiconsIcon icon={IconComponent} size={22} />
                                       </div>
                                       <div className="flex flex-col min-w-0">
-                                        <span className="text-sm font-bold truncate">{dest.name}</span>
-                                        <span className="text-xs text-gray-500 font-medium truncate">
+                                        <span className="text-sm font-bold dark:text-white truncate">{dest.name}</span>
+                                        <span className="text-xs text-gray-500 dark:text-slate-400 font-medium truncate">
                                           {dest.subtitle}
                                         </span>
                                       </div>
@@ -537,7 +570,7 @@ export default function NavbarSearchWidget({
                                         <HugeiconsIcon icon={Tick01Icon} size={15} />
                                       </div>
                                     ) : (
-                                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 shrink-0">
+                                      <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 shrink-0">
                                         {dest.badge}
                                       </span>
                                     )}

@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -21,6 +20,8 @@ import {
   InstagramIcon,
   PinterestIcon,
   YoutubeIcon,
+  Add01Icon,
+  Remove01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
 import AuthModal from "@/components/AuthModal";
@@ -28,14 +29,6 @@ import DarkModeToggle from "@/components/theme/dark-mode-toggle";
 import FullPageMobileMenu from "@/components/layout/FullPageMobileMenu";
 import svgPaths from "@/imports/LandingPage/svg-p2y91de9gv";
 import imgRusticPatioFurnitureHouseDeckWithVegetation2 from "@/imports/LandingPage/fabb010c874f57c47211afac0d2c3c2209cc0840.png";
-import imgIconCalendar from "@/imports/About/icon-calendar.png";
-import imgIconHouse from "@/imports/About/icon-house.png";
-import imgIconShield from "@/imports/About/icon-shield.png";
-import imgIconChat from "@/imports/About/icon-chat.png";
-import imgVillaMain from "@/imports/About/villa-main.jpg";
-import imgCtaVilla1 from "@/imports/About/cta-villa1.jpg";
-import imgCtaVilla2 from "@/imports/About/cta-villa2.jpg";
-import imgCtaVilla3 from "@/imports/About/cta-villa3.jpg";
 
 function toImgSrc(val: any): string {
   if (!val) return "";
@@ -89,6 +82,33 @@ function Logo() {
 
 // ─── Navbar Actions ──────────────────────────────────────────────────────────
 
+const mainLanguages = [
+  { code: "FRA", name: "Français", country: "fr" },
+  { code: "ARA", name: "العربية", country: "tn" },
+  { code: "ENG", name: "English (US)", country: "us" },
+  { code: "DEU", name: "Deutsch", country: "de" },
+  { code: "ITA", name: "Italiano", country: "it" },
+  { code: "RUS", name: "Русский", country: "ru" },
+];
+
+const otherLanguages = [
+  { code: "SPA", name: "Español", country: "es" },
+  { code: "POR", name: "Português", country: "pt" },
+  { code: "NLD", name: "Nederlands", country: "nl" },
+  { code: "TUR", name: "Türkçe", country: "tr" },
+  { code: "POL", name: "Polski", country: "pl" },
+  { code: "UKR", name: "Українська", country: "ua" },
+];
+
+const mainCurrencies = [
+  { code: "TND", symbol: "DT", name: "Dinar Tunisien" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "USD", symbol: "$", name: "US Dollar" },
+  { code: "GBP", symbol: "£", name: "British Pound" },
+  { code: "CAD", symbol: "CA$", name: "Canadian Dollar" },
+  { code: "CHF", symbol: "CHF", name: "Swiss Franc" },
+];
+
 function LanguageSelector({
   selectedLang,
   selectedCurrency,
@@ -112,60 +132,30 @@ function LanguageSelector({
         setIsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
-  const mainLanguages = [
-    { code: "ENG", label: "English", country: "gb" },
-    { code: "FRA", label: "Français", country: "fr" },
-  ];
-
-  const otherLanguages = [
-    { code: "RUS", label: "Русский", country: "ru" },
-    { code: "DE", label: "Deutsch", country: "de" },
-    { code: "ES", label: "Español", country: "es" },
-    { code: "JPY", label: "日本語", country: "jp" },
-    { code: "PT", label: "Português", country: "pt" },
-    { code: "ITA", label: "Italiano", country: "it" },
-    { code: "PY", label: "Guaraní", country: "py" },
-    { code: "ARA", label: "العربية", country: "sa" },
-  ];
-
-  const mainCurrencies = [
-    { code: "EUR", label: "Euro", country: "eu" },
-    { code: "USD", label: "US Dollar", country: "us" },
-    { code: "TND", label: "Tunisian Dinar", country: "tn" },
-  ];
-
-  const otherCurrencies = [
-    { code: "GBP", label: "British Pound", country: "gb" },
-    { code: "CAD", label: "Canadian Dollar", country: "ca" },
-    { code: "CHF", label: "Swiss Franc", country: "ch" },
-    { code: "AUD", label: "Australian Dollar", country: "au" },
-    { code: "JPY", label: "Japanese Yen", country: "jp" },
-    { code: "SAR", label: "Saudi Riyal", country: "sa" },
-    { code: "AED", label: "UAE Dirham", country: "ae" },
-  ];
+  const currentLangObj =
+    [...mainLanguages, ...otherLanguages].find((l) => l.code === selectedLang) || mainLanguages[0];
 
   const dropdownBody = (
-    <div className="space-y-4">
-      <h2 className="text-xl font-bold text-gray-900 tracking-tight">
-        {activeTab === "language" ? "Choose language" : "Choose currency"}
-      </h2>
-
-      <div className="flex border-b border-gray-100 relative">
+    <div className="flex flex-col gap-4">
+      {/* Switcher tabs */}
+      <div className="flex border-b border-gray-100 pb-2 gap-4">
         <button
           type="button"
           onClick={() => setActiveTab("language")}
-          className={`flex-1 py-2.5 text-sm transition-all cursor-pointer border-none bg-transparent text-center font-bold relative ${
-            activeTab === "language" ? "text-gray-900" : "text-gray-400 hover:text-gray-600 font-semibold"
+          className={`pb-1 text-sm font-bold transition-all relative border-none bg-transparent cursor-pointer ${
+            activeTab === "language" ? "text-slate-900" : "text-gray-400 hover:text-gray-600"
           }`}
         >
-          Language ({selectedLang})
+          Language
           {activeTab === "language" && (
             <motion.div
-              layoutId="aboutDropdownActiveTabUnderline"
+              layoutId="termsDropdownActiveTabUnderline"
               className="absolute bottom-0 inset-x-0 h-[2.5px] bg-slate-900 rounded-full"
             />
           )}
@@ -173,14 +163,14 @@ function LanguageSelector({
         <button
           type="button"
           onClick={() => setActiveTab("currency")}
-          className={`flex-1 py-2.5 text-sm transition-all cursor-pointer border-none bg-transparent text-center font-bold relative ${
-            activeTab === "currency" ? "text-gray-900" : "text-gray-400 hover:text-gray-600 font-semibold"
+          className={`pb-1 text-sm font-bold transition-all relative border-none bg-transparent cursor-pointer ${
+            activeTab === "currency" ? "text-slate-900" : "text-gray-400 hover:text-gray-600"
           }`}
         >
-          Currency ({selectedCurrency})
+          Currency
           {activeTab === "currency" && (
             <motion.div
-              layoutId="aboutDropdownActiveTabUnderline"
+              layoutId="termsDropdownActiveTabUnderline"
               className="absolute bottom-0 inset-x-0 h-[2.5px] bg-slate-900 rounded-full"
             />
           )}
@@ -266,49 +256,14 @@ function LanguageSelector({
                       onSelectCurrency(curr.code);
                       setIsOpen(false);
                     }}
-                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer border ${
+                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-between text-xs font-bold transition-all cursor-pointer border ${
                       isSelected
                         ? "border-[#4a77ec] border-2 text-gray-900 bg-white shadow-xs"
                         : "border-gray-200 text-gray-800 bg-white hover:bg-gray-50 hover:border-gray-300"
                     }`}
                   >
-                    <img
-                      src={`https://flagcdn.com/w40/${curr.country}.png`}
-                      alt={curr.code}
-                      className="w-5 h-5 rounded-full object-cover shrink-0 border border-gray-100/80"
-                    />
-                    <span>- {curr.code}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-xs font-bold text-gray-700">Other currencies</h3>
-            <div className="grid grid-cols-2 gap-2.5">
-              {otherCurrencies.map((curr) => {
-                const isSelected = selectedCurrency === curr.code;
-                return (
-                  <button
-                    key={curr.code}
-                    type="button"
-                    onClick={() => {
-                      onSelectCurrency(curr.code);
-                      setIsOpen(false);
-                    }}
-                    className={`h-[44px] px-3.5 rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all cursor-pointer border ${
-                      isSelected
-                        ? "border-[#4a77ec] border-2 text-gray-900 bg-white shadow-xs"
-                        : "border-gray-200 text-gray-800 bg-white hover:bg-gray-50 hover:border-gray-300"
-                    }`}
-                  >
-                    <img
-                      src={`https://flagcdn.com/w40/${curr.country}.png`}
-                      alt={curr.code}
-                      className="w-5 h-5 rounded-full object-cover shrink-0 border border-gray-100/80"
-                    />
-                    <span>- {curr.code}</span>
+                    <span className="truncate">{curr.name}</span>
+                    <span className="text-gray-500 shrink-0 ml-1 font-mono">{curr.symbol}</span>
                   </button>
                 );
               })}
@@ -320,15 +275,20 @@ function LanguageSelector({
   );
 
   return (
-    <div ref={containerRef} className="relative shrink-0">
+    <div ref={containerRef} className="relative">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Select language and currency"
-        className="h-[40px] sm:h-[44px] px-3 sm:px-4 bg-white hover:bg-slate-100 active:scale-95 transition-all duration-200 rounded-full flex items-center gap-2 cursor-pointer border-none shadow-sm text-[#344054] hover:text-[#547fee]"
+        aria-label="Select language & currency"
+        className="h-[40px] sm:h-[44px] px-3 sm:px-4 bg-white hover:bg-slate-100 active:scale-95 transition-all duration-200 rounded-full flex items-center gap-1.5 sm:gap-2 cursor-pointer border-none shadow-sm text-xs sm:text-sm font-semibold shrink-0"
       >
-        <HugeiconsIcon icon={GlobalIcon} size={18} className="text-[#344054]" />
-        <span className="text-xs font-bold text-[#344054] tracking-tight">
+        <HugeiconsIcon icon={GlobalIcon} size={16} className="text-[#556080]" />
+        <img
+          src={`https://flagcdn.com/w40/${currentLangObj.country}.png`}
+          alt={currentLangObj.code}
+          className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full object-cover shrink-0 border border-gray-200"
+        />
+        <span className="text-[#344054] font-bold tracking-tight text-xs sm:text-sm">
           {selectedLang}
         </span>
         <HugeiconsIcon
@@ -344,7 +304,7 @@ function LanguageSelector({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            key="about-lang-popover"
+            key="terms-lang-popover"
             initial={{ opacity: 0, y: 8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -361,7 +321,7 @@ function LanguageSelector({
         createPortal(
           <AnimatePresence>
             {isOpen && (
-              <div key="about-lang-mobile" className="lg:hidden">
+              <div key="terms-lang-mobile" className="lg:hidden">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -438,24 +398,246 @@ function SignInButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-// ─── Main About Us Component ───────────────────────────────────────────────────
+// ─── Terms Accordion Data ─────────────────────────────────────────────────────
 
-export default function AboutUsContent() {
+interface TermSection {
+  id: string;
+  title: string;
+  content: React.ReactNode;
+}
+
+const termsSections: TermSection[] = [
+  {
+    id: "scope-of-services",
+    title: "1. Scope of Services of Darbook",
+    content: (
+      <div className="space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p className="font-medium text-slate-700">
+          1.1 To create a host account on the Darbook platform, the user must complete the registration process by providing the following information:
+        </p>
+        <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
+          <li>His/her first and last name</li>
+          <li>A valid email address</li>
+          <li>A reachable phone number</li>
+          <li>His/her country of residence</li>
+          <li>A confirmation of his/her gender</li>
+          <li>Creation of a secure password</li>
+          <li>Acceptance of these Terms and Conditions of Use</li>
+        </ul>
+        <p>
+          The user guarantees that the information provided is accurate, complete, and up to date. Any omission or inaccuracy in the data may result in the suspension or termination of the account.
+        </p>
+        <p className="font-medium text-slate-700 pt-2">
+          1.2 To become a host on the Darbook platform and offer services, the user must meet the following conditions:
+        </p>
+        <div className="space-y-2 pl-3 border-l-2 border-blue-200">
+          <p>
+            <strong className="text-slate-900">Age and legal capacity:</strong> The user must be of legal age according to Tunisian law and have the necessary legal capacity to enter into legally binding contracts.
+          </p>
+          <p>
+            <strong className="text-slate-900">Legal compliance of accommodations:</strong> Ensure that the accommodations or services offered comply with all applicable laws and regulations, particularly in terms of safety, hygiene, urban planning, and administrative permits.
+          </p>
+          <p>
+            <strong className="text-slate-900">Legal representation:</strong> If the user is acting on behalf of a legal entity (company, organization), they must have the legal authority to represent and bind this entity in accordance with the applicable laws.
+          </p>
+        </div>
+        <p>
+          Any failure to meet these conditions may result in the suspension or termination of the host account by Darbook.
+        </p>
+        <p>
+          1.3 Obligation to provide accurate and up-to-date information during registration and keep listing details fully synchronized.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "registration-creation",
+    title: "2. Registration and Creation of a Host Account",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          2.1 Each host must maintain a single active account. Account sharing or transferring credentials to third parties without prior written authorization from Darbook is strictly prohibited.
+        </p>
+        <p>
+          2.2 Identity verification may be required, including providing a valid government-issued ID and proof of property ownership or authorized management rights for vacation rental properties in Tunisia.
+        </p>
+        <p>
+          2.3 Darbook reserves the right to accept, reject, or request additional documentation for any host application at its sole discretion to protect platform integrity.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "obligations-host",
+    title: "3. Obligations of the Host",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          3.1 Hosts are responsible for providing clear, accurate descriptions, authentic photographs, and true amenity representations of the listed properties (e.g. private swimming pool, air conditioning, Wi-Fi speed).
+        </p>
+        <p>
+          3.2 The host agrees to honor all accepted bookings and maintain high hospitality and cleanliness standards at all times.
+        </p>
+        <p>
+          3.3 Immediate assistance and emergency contact information must be provided to travelers during their stay.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "management-reservations",
+    title: "4. Management of Reservations",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          4.1 Once a guest submits a reservation request or completes an instant booking, the host receives instant notification and has a designated time window to confirm or coordinate check-in.
+        </p>
+        <p>
+          4.2 Unauthorized host cancellations penalize guest experience and may incur platform fees, listing ranking demotion, or temporary calendar blocking.
+        </p>
+        <p>
+          4.3 Flexible or strict cancellation policies chosen by the host apply directly according to the agreed terms at checkout.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "fees-payments",
+    title: "5. Fees and Payments",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          5.1 Darbook charges a transparent service commission on confirmed reservations to cover platform maintenance, customer support, and secure payment processing.
+        </p>
+        <p>
+          5.2 Host payouts are released securely via bank wire transfer or preferred local payment gateways typically 24 hours after successful guest check-in.
+        </p>
+        <p>
+          5.3 All prices shown include relevant applicable taxes and transparently disclose optional cleaning or service fees.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "insurance-liability",
+    title: "6. Insurance and Liability",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          6.1 Hosts are advised to hold adequate property, civil liability, and home insurance covering short-term vacation rental activities in Tunisia.
+        </p>
+        <p>
+          6.2 Darbook provides mediation tools but is not liable for direct damage, loss of personal belongings, or unforeseen force majeure events occurring during stays.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "reviews-reputation",
+    title: "7. Reviews and Reputation",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          7.1 Only guests who completed an authentic verified stay can post reviews and ratings.
+        </p>
+        <p>
+          7.2 Reviews must remain truthful, respectful, and free of extortion, commercial promotion, or abusive language. Darbook reserves the right to moderate illegitimate content.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "modifications-termination",
+    title: "8. Modifications and Termination of Host Account",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          8.1 Hosts may unpublish listings or close their accounts at any time, provided all upcoming confirmed reservations are fulfilled or properly transferred with guest consent.
+        </p>
+        <p>
+          8.2 Darbook reserves the right to suspend or terminate accounts that repeatedly violate quality guidelines, safety protocols, or terms of service.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "contractual-relations",
+    title: "9. Contractual Relations",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          9.1 Darbook acts as an online intermediation and booking technology platform. The rental agreement itself is formed directly between the Host and the Guest.
+        </p>
+        <p>
+          9.2 Neither party shall be considered an employee, agent, or partner of Darbook.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "claims-disputes",
+    title: "10. Claims and Disputes",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          10.1 In the event of a disagreement regarding check-in condition, cleanliness, or amenities, travelers and hosts are encouraged to resolve matters amicably via Darbook Customer Support within 24 hours of arrival.
+        </p>
+        <p>
+          10.2 Tunisian law governs these terms, and any unresolved litigation shall fall under the jurisdiction of competent Tunisian courts.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "promotion-listings",
+    title: "11. Promotion of Listings",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          11.1 By listing on Darbook, the host grants the platform a non-exclusive license to feature property photos, descriptions, and highlights in promotional campaigns, social media, and digital catalogs.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "privacy-data-protection",
+    title: "12. Privacy and Data Protection",
+    content: (
+      <div className="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <p>
+          12.1 Personal data is processed in strict compliance with applicable privacy regulations and the Darbook Privacy Policy.
+        </p>
+        <p>
+          12.2 Contact details (phone, email, exact GPS coordinates) are only disclosed to the parties once a reservation has been confirmed.
+        </p>
+      </div>
+    ),
+  },
+];
+
+// ─── Main Terms & Conditions Component ────────────────────────────────────────
+
+export default function TermsContent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("FRA");
   const [selectedCurrency, setSelectedCurrency] = useState("EUR");
+  const [expandedSection, setExpandedSection] = useState<string | null>("scope-of-services");
+
+  const toggleSection = (id: string) => {
+    setExpandedSection((prev) => (prev === id ? null : id));
+  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-['Inter_Tight',sans-serif] antialiased overflow-x-hidden selection:bg-[#547fee]/20 selection:text-[#547fee]">
       
       {/* ─── Hero & Navbar Header ────────────────────────────────────────────── */}
       <header className="relative w-full overflow-hidden bg-[#09112a]">
-        {/* Background Image with Sea Reflection */}
+        {/* Background Image with Sea/Patio Reflection */}
         <div className="absolute inset-0 pointer-events-none select-none">
           <img
             src={toImgSrc(imgRusticPatioFurnitureHouseDeckWithVegetation2)}
-            alt="Darbook Seaside luxury"
+            alt="Darbook Luxury Stays"
             className="w-full h-full object-cover object-center scale-105 filter brightness-100 contrast-[1.05]"
           />
           {/* Softer, vibrant gradient overlay for enhanced photo visibility */}
@@ -500,304 +682,119 @@ export default function AboutUsContent() {
         </div>
 
         {/* Centered Page Title */}
-        <div className="relative z-20 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 sm:pt-24 sm:pb-28 lg:pt-28 lg:pb-32 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="font-['Bricolage_Grotesk',sans-serif] text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-white tracking-tight drop-shadow-md m-0"
-          >
-            About us
-          </motion.h1>
+        <div className="relative z-20 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-20 sm:pb-26 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-['Bricolage_Grotesk',sans-serif] tracking-tight m-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+            Term & conditions
+          </h1>
         </div>
       </header>
 
-      {/* ─── Main Content Container ─────────────────────────────────────────── */}
+      {/* ─── Main Content Container with Top Rounded Corners ────────────────── */}
       <main className="relative z-10 -mt-6 sm:-mt-8 bg-[#f8fafc] rounded-t-[28px] sm:rounded-t-[36px] lg:rounded-t-[44px] pb-16 sm:pb-24">
         
         {/* Breadcrumb Navigation */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-[13px] font-medium">
-            <Link
-              href="/"
-              className="text-slate-400 hover:text-slate-700 transition-colors no-underline"
-            >
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-3">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-500">
+            <Link href="/" className="hover:text-slate-900 transition-colors no-underline text-slate-500">
               Home
             </Link>
-            <span className="text-slate-300 font-light select-none">&gt;</span>
-            <span className="text-[#547fee] font-semibold">
-              About us
+            <span className="text-slate-400">›</span>
+            <span className="text-[#547fee] font-bold">
+              Term & conditions
             </span>
           </nav>
         </div>
 
-        {/* ─── Section 1: "More than a stay, a place to belong" ───────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-5 sm:mt-7">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
-            className="bg-white rounded-[24px] sm:rounded-[32px] border border-slate-100 shadow-[0_4px_25px_rgba(0,0,0,0.03)] p-6 sm:p-10 lg:p-12"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-              {/* Left Text */}
-              <div className="lg:col-span-7 space-y-4 sm:space-y-5">
-                <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-3xl lg:text-[36px] font-extrabold text-[#101438] leading-[1.2] tracking-tight m-0">
-                  More than a stay, a place to belong
-                </h2>
-                <p className="font-['Inter_Tight:Regular',sans-serif] text-slate-600 text-xs sm:text-sm lg:text-[15px] leading-relaxed m-0 max-w-2xl">
-                  Darbook is a hospitality platform built around experiences, not just accommodation. We connect travelers with carefully selected guesthouses and unique stays in Tunisia&apos;s most inspiring destinations, from seaside escapes and vibrant cities to nature retreats and desert journeys. Our mission is to make every booking simple, secure, and transparent, while helping guests enjoy authentic local hospitality and enabling hosts to welcome travelers with confidence. With Darbook, every stay is personal, comfortable, and truly unforgettable.
-                </p>
-              </div>
-
-              {/* Right Image */}
-              <div className="lg:col-span-5">
-                <div className="relative rounded-[20px] sm:rounded-[26px] overflow-hidden aspect-[4/3] shadow-md group">
-                  <img
-                    src={toImgSrc(imgVillaMain)}
-                    alt="Luxury architectural villa with swimming pool"
-                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 ease-out"
-                  />
-                  <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-[20px] sm:rounded-[26px] pointer-events-none" />
-                </div>
-              </div>
-
-            </div>
-          </motion.div>
-        </div>
-
-        {/* ─── Section 2: "Darbook in Numbers" ──────────────────────────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
-          <div className="space-y-1.5">
-            <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#101438] tracking-tight m-0">
-              Darbook in Numbers
-            </h2>
-            <p className="font-['Inter_Tight',sans-serif] text-slate-500 text-xs sm:text-sm font-medium m-0">
-              Growing together with trusted hosts and thousands of happy travelers.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5 mt-6 sm:mt-8">
-            {[
-              { stat: "250+", label: "Properties" },
-              { stat: "30+", label: "Cities & Regions" },
-              { stat: "4,000+", label: "Confirmed Bookings" },
-              { stat: "5+", label: "Years in Hospitality" },
-              { stat: "100%", label: "Secure & Transparent Booking" },
-            ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="bg-[#f0f5ff] hover:bg-[#e4eeff] border border-[#e2edff] rounded-[18px] sm:rounded-[22px] p-5 sm:p-6 flex flex-col items-center justify-center text-center gap-1.5 transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5"
-              >
-                <span className="font-['Bricolage_Grotesk',sans-serif] font-black text-2xl sm:text-3xl lg:text-[32px] text-[#547fee] tracking-tight leading-none">
-                  {item.stat}
-                </span>
-                <span className="font-['Inter_Tight',sans-serif] text-slate-600 text-xs sm:text-[13px] font-medium leading-snug">
-                  {item.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* ─── Section 3: "Why Darbook" ─────────────────────────────────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
-          <div className="space-y-1">
-            <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-[28px] font-bold text-[#101438] tracking-tight m-0">
-              Why Darbook
-            </h2>
-            <p className="font-['Inter_Tight',sans-serif] text-slate-500 text-xs sm:text-[13.5px] font-normal m-0">
-              Everything you need for a smooth, secure, and memorable stay.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-5 mt-6 sm:mt-7">
-            {[
-              {
-                title: "Easy Booking",
-                description:
-                  "Search, choose, and book your stay in just a few steps. The process is simple, fast, and clear.",
-                image: imgIconCalendar,
-                alt: "Easy Booking",
-                imgWidth: "w-[96px] sm:w-[106px] lg:w-[115px]",
-              },
-              {
-                title: "Carefully Selected Stays",
-                description:
-                  "We choose each property with care. Enjoy unique guesthouses and special places that offer real local hospitality.",
-                image: imgIconHouse,
-                alt: "Carefully Selected Stays",
-                imgWidth: "w-[98px] sm:w-[108px] lg:w-[118px]",
-              },
-              {
-                title: "Safe & Clear Payments",
-                description:
-                  "Your payment is secure and transparent. No hidden fees. No surprises.",
-                image: imgIconShield,
-                alt: "Safe & Clear Payments",
-                imgWidth: "w-[92px] sm:w-[102px] lg:w-[110px]",
-              },
-              {
-                title: "Friendly Support",
-                description:
-                  "Need help? We're here for you. Before, during, and after your stay.",
-                image: imgIconChat,
-                alt: "Friendly Support",
-                imgWidth: "w-[98px] sm:w-[108px] lg:w-[118px]",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="bg-white border border-[#edf1f7] shadow-[0_2px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_28px_rgba(0,0,0,0.06)] rounded-[22px] sm:rounded-[24px] pt-6 px-6 pb-0 flex flex-col justify-between h-[275px] sm:h-[285px] transition-all duration-300 hover:-translate-y-1 relative group overflow-hidden"
-              >
-                {/* Top Text Content */}
-                <div className="space-y-1.5 z-10 relative">
-                  <h3 className="font-['Bricolage_Grotesk',sans-serif] text-[15px] sm:text-base font-bold text-[#101438] m-0">
-                    {item.title}
-                  </h3>
-                  <p className="font-['Inter_Tight:Regular',sans-serif] text-slate-500 text-[11.5px] sm:text-xs leading-[1.5] m-0 max-w-[95%]">
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Bottom Right Graphic Area - Flush to Bottom and Right Edges with 0 padding */}
-                <div className="absolute bottom-0 right-0 pointer-events-none flex items-end justify-end">
-                  {/* Soft Light-Blue Background Curve in Bottom-Right Corner */}
-                  <div className="w-[145px] sm:w-[165px] h-[115px] sm:h-[130px] bg-[#ebf4fe] rounded-tl-full absolute bottom-0 right-0 pointer-events-none" />
-                  
-                  {/* 3D PNG Icon aligned flush in Bottom-Right */}
-                  <div className={`${item.imgWidth} aspect-square relative z-10 p-0 m-0 group-hover:scale-105 transition-transform duration-300 ease-out flex items-end justify-end`}>
-                    <img
-                      src={toImgSrc(item.image)}
-                      alt={item.alt}
-                      className="w-full h-full object-contain filter drop-shadow-sm select-none pointer-events-none"
+        {/* Main Accordion Container */}
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-2">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 border border-slate-200/90 shadow-2xs space-y-2">
+            {termsSections.map((section) => {
+              const isExpanded = expandedSection === section.id;
+              return (
+                <div
+                  key={section.id}
+                  className="border-b border-slate-100 last:border-b-0 transition-colors"
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(section.id)}
+                    aria-expanded={isExpanded}
+                    className="w-full py-4 sm:py-5 flex items-center justify-between text-left cursor-pointer border-none bg-transparent group select-none gap-4"
+                  >
+                  <span
+                    className={`font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base transition-colors ${
+                      isExpanded ? "text-[#181743]" : "text-slate-800 group-hover:text-[#547fee]"
+                    }`}
+                  >
+                    {section.title}
+                  </span>
+                  <div
+                    className={`size-6 sm:size-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
+                      isExpanded
+                        ? "text-slate-900 bg-slate-100"
+                        : "text-slate-400 group-hover:text-slate-900 group-hover:bg-slate-50"
+                    }`}
+                  >
+                    <HugeiconsIcon
+                      icon={isExpanded ? Remove01Icon : Add01Icon}
+                      size={16}
                     />
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+                </button>
 
-        {/* ─── Section 4: "List Your Property With Us" CTA Banner ──────────── */}
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-[#eef4ff] via-[#e5f0fe] to-[#d6e6fc] rounded-[28px] sm:rounded-[36px] border border-[#d3e3fc] p-6 sm:p-10 lg:p-14 relative overflow-hidden shadow-xs"
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-              {/* Left Column: Heading, Copy, Buttons, Pagination Indicators */}
-              <div className="lg:col-span-6 flex flex-col justify-between h-full space-y-6 sm:space-y-8">
-                <div className="space-y-2.5">
-                  <h2 className="font-['Bricolage_Grotesk',sans-serif] text-2xl sm:text-3xl lg:text-[36px] font-extrabold text-[#101438] tracking-tight leading-tight m-0">
-                    List Your Property With Us
-                  </h2>
-                  <p className="font-['Inter_Tight',sans-serif] text-slate-600 text-xs sm:text-sm lg:text-[15px] m-0">
-                    Reach more travelers and grow your bookings with Darbook.
-                  </p>
-                </div>
-
-                {/* CTA Action Buttons */}
-                <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                  <Link
-                    href="/list-your-property"
-                    className="h-[44px] sm:h-[48px] px-6 sm:px-7 bg-[#547fee] hover:bg-[#436cd9] text-white font-semibold text-xs sm:text-sm rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all no-underline inline-flex items-center justify-center"
-                  >
-                    Start Hosting
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="h-[44px] sm:h-[48px] px-6 sm:px-7 bg-white/70 hover:bg-white text-[#547fee] border border-[#547fee]/30 hover:border-[#547fee]/60 font-semibold text-xs sm:text-sm rounded-full shadow-xs active:scale-95 transition-all no-underline inline-flex items-center justify-center"
-                  >
-                    Contact Us
-                  </Link>
-                </div>
-
-                {/* Indicator Progress Bars */}
-                <div className="flex items-center gap-2 pt-2">
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-8 sm:w-10 h-1.5 rounded-full bg-white/80" />
-                  <div className="w-12 sm:w-16 h-1.5 rounded-full bg-[#547fee] shadow-xs" />
-                </div>
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      key={`content-${section.id}`}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pb-5 sm:pb-6 pt-1 text-slate-600">
+                        {section.content}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-
-              {/* Right Column: 3 Layered / Fanned Villa Cards */}
-              <div className="lg:col-span-6 relative flex items-center justify-center lg:justify-end py-4">
-                <div className="flex items-center justify-center gap-2 sm:gap-3">
-                  
-                  {/* Card 1: Sunset Villa Terrace */}
-                  <motion.div
-                    whileHover={{ scale: 1.05, rotate: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-[110px] sm:w-[160px] lg:w-[185px] aspect-[3/4] rounded-2xl overflow-hidden shadow-xl ring-4 ring-white/90 transform -rotate-6 shrink-0 relative"
-                  >
-                    <img
-                      src={toImgSrc(imgCtaVilla1)}
-                      alt="Sunset terrace villa"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-
-                  {/* Card 2: Modern Pool Villa (Center & Elevated) */}
-                  <motion.div
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-[125px] sm:w-[180px] lg:w-[210px] aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white z-10 transform scale-105 shrink-0 relative -mx-2 sm:-mx-3"
-                  >
-                    <img
-                      src={toImgSrc(imgCtaVilla2)}
-                      alt="Contemporary pool villa"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-
-                  {/* Card 3: Palm Patio Courtyard */}
-                  <motion.div
-                    whileHover={{ scale: 1.05, rotate: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-[110px] sm:w-[160px] lg:w-[185px] aspect-[3/4] rounded-2xl overflow-hidden shadow-xl ring-4 ring-white/90 transform rotate-6 shrink-0 relative"
-                  >
-                    <img
-                      src={toImgSrc(imgCtaVilla3)}
-                      alt="Mediterranean patio villa"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-
-                </div>
-              </div>
-
-            </div>
-          </motion.div>
+            );
+          })}
         </div>
+      </div>
+    </main>
 
-      </main>
+      {/* ─── Authentic Darbook Dark Footer ───────────────────────────────────── */}
+      <footer className="w-full bg-[#101438] text-white pt-14 sm:pt-18 pb-10 px-4 sm:px-6 lg:px-8 relative rounded-t-[28px] sm:rounded-t-[40px] rounded-b-none overflow-hidden mt-12">
+        <div className="max-w-[1280px] mx-auto">
+          {/* Main Grid Content (5 Columns) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
 
-      {/* ─── Global Footer ─────────────────────────────────────────────────── */}
-      <footer className="w-full bg-[#101438] text-white rounded-t-[28px] sm:rounded-t-[40px] pt-14 pb-10 sm:pt-16 sm:pb-12 relative overflow-hidden border-t border-slate-800">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-10 gap-10 lg:gap-8 pb-12">
-            
-            {/* Col 1: Brand & Bio */}
-            <div className="lg:col-span-2 flex flex-col gap-4">
-              <Link href="/" className="inline-block no-underline">
-                <Group79 />
+            {/* Col 1: Brand / Logo / Bio / CTA */}
+            <div className="lg:col-span-4 flex flex-col gap-4 items-start pr-0 lg:pr-4">
+              <Link href="/" aria-label="Darbook home" className="no-underline block h-[40px] w-[200px]">
+                <svg
+                  className="block size-full"
+                  fill="none"
+                  height="44.5742"
+                  preserveAspectRatio="none"
+                  viewBox="0 0 224 44.5742"
+                  width="224"
+                >
+                  <g id="Group 2087325898">
+                    <path d={svgPaths.p2bca0c0} fill="#547FEE" id="Union" />
+                    <g id="Darbook">
+                      <path d={svgPaths.p3d515900} fill="white" />
+                      <path d={svgPaths.p1e1c2e00} fill="white" />
+                      <path d={svgPaths.p3dbae00} fill="white" />
+                      <path d={svgPaths.p1c8f0b80} fill="white" />
+                      <path d={svgPaths.p2f5e4000} fill="white" />
+                      <path d={svgPaths.p25a54cf0} fill="white" />
+                      <path d={svgPaths.p8920900} fill="white" />
+                    </g>
+                  </g>
+                </svg>
               </Link>
               <p className="font-['Inter_Tight:Regular',sans-serif] text-xs sm:text-sm leading-relaxed text-slate-300 max-w-xs m-0">
                 Darbook is a platform for renting holiday homes in Tunisia. Book in just a few clicks and enjoy an unforgettable stay.
@@ -810,7 +807,7 @@ export default function AboutUsContent() {
               </Link>
             </div>
 
-            {/* Col 2: Company Navigation */}
+            {/* Col 2: Company */}
             <div className="lg:col-span-2 flex flex-col gap-3">
               <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Company
@@ -837,7 +834,7 @@ export default function AboutUsContent() {
               </ul>
             </div>
 
-            {/* Col 3: Experience Navigation */}
+            {/* Col 3: Experience */}
             <div className="lg:col-span-2 flex flex-col gap-3">
               <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Experience
@@ -852,20 +849,20 @@ export default function AboutUsContent() {
                   "Cultural",
                   "Family",
                   "Romantics",
-                ].map((item) => (
-                  <li key={item}>
+                ].map((link) => (
+                  <li key={link}>
                     <Link
-                      href={`/search?category=${encodeURIComponent(item)}`}
+                      href={`/search?category=${link.toLowerCase()}`}
                       className="text-slate-300 hover:text-white transition-colors no-underline font-normal"
                     >
-                      {item}
+                      {link}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Col 4: Address & Contact */}
+            {/* Col 4: Address */}
             <div className="lg:col-span-2 flex flex-col gap-3">
               <h4 className="font-['Bricolage_Grotesk',sans-serif] font-bold text-sm sm:text-base text-white tracking-wide m-0">
                 Address
@@ -952,7 +949,6 @@ export default function AboutUsContent() {
                 </div>
               </div>
             </div>
-
           </div>
 
           {/* Bottom Divider & Copyright Bar */}
@@ -971,31 +967,30 @@ export default function AboutUsContent() {
               <span className="text-xs font-black tracking-widest text-white">JCB</span>
             </div>
           </div>
-
         </div>
 
         {/* Back to Top Floating Button */}
         <button
-          type="button"
           aria-label="Scroll to top"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="absolute right-4 sm:right-8 bottom-6 size-9 sm:size-10 bg-[#547fee] hover:bg-[#436cd9] transition-all rounded-full flex items-center justify-center cursor-pointer border-none shadow-lg active:scale-95 z-10 text-white"
+          className="absolute right-4 sm:right-8 bottom-6 size-10 bg-[#547fee] hover:bg-[#436cd9] transition-all rounded-full flex items-center justify-center cursor-pointer border-none shadow-lg active:scale-95 z-10"
         >
-          <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
         </button>
       </footer>
 
-      {/* Auth Modal */}
+      {/* Global Modals */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-
-      {/* Full Page Mobile Menu */}
       <FullPageMobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenLang={() => {}}
+        selectedLang={selectedLang}
+        selectedCurrency={selectedCurrency}
       />
-
     </div>
   );
 }

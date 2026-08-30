@@ -2,7 +2,7 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 :root {
   /* ── 1. CORE CANVASES & SURFACES ── */
@@ -226,3 +226,132 @@
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLOBAL DARK MODE THEME SYSTEM
+───────────────────────────────────────────────────────────────────────────── */
+
+html.dark,
+html[class~="dark"],
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html.dark body,
+html[class~="dark"] body {
+  background-color: #0b1022 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Canvases and Section Backgrounds */
+html.dark main,
+html.dark section,
+html.dark [class*="bg-[#f5f7fa]"],
+html.dark [class*="bg-[#f8fafc]"],
+html.dark [class*="bg-[#f4f6fa]"],
+html.dark [class*="bg-slate-50"],
+html.dark [class*="bg-slate-100"] {
+  background-color: #0b1022 !important;
+}
+
+/* Card & Container Backgrounds in Dark Mode */
+html.dark [class*="bg-white"]:not(button):not(a):not(input):not(select):not(textarea):not(img):not(.flag):not(.keep-white),
+html.dark [class*="bg-[#fcfdfe]"] {
+  background-color: #121a30 !important;
+}
+
+html.dark [class*="hover:bg-white"]:hover {
+  background-color: #182340 !important;
+}
+
+html.dark [class*="hover:bg-slate-50"]:hover,
+html.dark [class*="hover:bg-slate-100"]:hover {
+  background-color: #182340 !important;
+}
+
+/* Text Hierarchy in Dark Mode */
+html.dark [class*="text-[#1b1d22]"],
+html.dark [class*="text-[#181743]"],
+html.dark [class*="text-[#0d1352]"],
+html.dark [class*="text-[#101438]"],
+html.dark [class*="text-[#344054]"],
+html.dark [class*="text-slate-900"],
+html.dark [class*="text-slate-800"],
+html.dark [class*="text-slate-700"],
+html.dark [class*="text-gray-900"],
+html.dark [class*="text-gray-800"] {
+  color: #f8fafc !important;
+}
+
+html.dark [class*="text-[#475467]"],
+html.dark [class*="text-[#556080]"],
+html.dark [class*="text-[#667085]"],
+html.dark [class*="text-slate-600"],
+html.dark [class*="text-slate-500"],
+html.dark [class*="text-gray-600"],
+html.dark [class*="text-gray-500"] {
+  color: #94a3b8 !important;
+}
+
+html.dark [class*="text-slate-400"],
+html.dark [class*="text-gray-400"] {
+  color: #64748b !important;
+}
+
+/* Borders in Dark Mode */
+html.dark [class*="border-slate-200"],
+html.dark [class*="border-slate-100"],
+html.dark [class*="border-gray-100"],
+html.dark [class*="border-gray-200"],
+html.dark [class*="border-slate-300"] {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Form Inputs, Textareas, Selects in Dark Mode */
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark textarea,
+html.dark select {
+  background-color: #0e162b !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+  border-color: #547fee !important;
+  background-color: #111a33 !important;
+}
+
+/* Filter pills & Badges in Dark Mode */
+html.dark [class*="bg-[#f2f4f7]"],
+html.dark [class*="bg-slate-100/90"] {
+  background-color: #1a2442 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #cbd5e1 !important;
+}
+
+/* Buttons in Dark Mode */
+html.dark button[class*="bg-white"],
+html.dark a[class*="bg-white"]:not([class*="bg-[#547FEE]"]):not([class*="bg-[#3B68EC]"]) {
+  background-color: #16203a;
+  color: #f8fafc;
+}
+
+html.dark button[class*="bg-slate-100"],
+html.dark button[class*="bg-slate-50"] {
+  background-color: #1a2542 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Accent icons in dark mode */
+html.dark [class*="bg-[#547fee]/10"],
+html.dark [class*="bg-[#3B68EC]/10"] {
+  background-color: rgba(84, 127, 238, 0.2) !important;
+}
+
