@@ -42,6 +42,9 @@ import {
   PaintBoardIcon,
   SparklesIcon,
   FullScreenIcon,
+  Door01Icon,
+  Bathtub01Icon,
+  Toilet01Icon,
   Facebook02Icon,
   NewTwitterIcon,
   InstagramIcon,
@@ -54,6 +57,7 @@ import AuthModal from "@/components/AuthModal";
 import LanguageCurrencyModal from "@/components/LanguageCurrencyModal";
 import FullPageMobileMenu from "@/components/layout/FullPageMobileMenu";
 import DarkModeToggle from "@/components/theme/dark-mode-toggle";
+import RoomCalendarMatrix from "@/components/sections/room-calendar-matrix";
 
 // Photo imports
 import imgHotelCard from "@/imports/LandingPage/c073680884b8f10a9de7959ce4fee30b267ae984.png";
@@ -74,6 +78,26 @@ const MapView = dynamic(() => import("@/components/MapView"), {
     </div>
   ),
 });
+
+const PropertyLocationSection = dynamic(
+  () => import("@/components/sections/property-location-section"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[480px] sm:h-[540px] md:h-[580px] lg:h-[620px] rounded-[28px] bg-slate-100 dark:bg-[#070b18] flex items-center justify-center border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-[#3B68EC]/30 border-t-[#3B68EC] rounded-full animate-spin" />
+          <span className="text-xs font-semibold text-slate-400">Loading map…</span>
+        </div>
+      </div>
+    ),
+  }
+);
+
+const PropertyMapModal = dynamic(
+  () => import("@/components/sections/property-map-modal"),
+  { ssr: false }
+);
 
 function toImgSrc(val: any): string {
   if (!val) return "";
@@ -110,61 +134,148 @@ function BrandLogo() {
 const PROPERTIES_MAP: Record<string, any> = {
   p1: {
     id: "p1",
-    name: "Dar Dhiafa Boutique Hotel",
+    name: "Dar Chick Yahia",
+    tagline: "Luxury guesthouse by the sea in Hammamet",
+    overviewTitle: "Dar Souad, guest house in Hammamet, Tunisia",
     type: "Maison d'hôte",
     typeBg: "#06b6d4",
-    location: "Erriadh (Djerbahood), Djerba, Tunisie",
+    bookingMode: "By room",
+    lastBooked: "Last booked 21 hrs ago",
+    country: "Tunisie",
+    city: "Hammamet",
+    location: "Hammamet, Tunisie",
+    fullAddress: "Boulevard 7 Novembre Yasmine Hammamet Tunis, Yasmine Hammamet, Hammamet, Tunisia, 8057",
+    score: "9.2",
+    scoreLabel: "Very good",
+    reviewsCount: 76,
     rating: 4.9,
-    reviewsCount: 128,
     price: "420 DT",
     priceNum: 420,
-    bedrooms: 3,
-    beds: 3,
-    bathrooms: 2,
-    maxGuests: 6,
+    bedrooms: 11,
+    beds: 14,
+    bathrooms: 3,
+    halfBathrooms: 3,
+    maxGuests: 24,
+    pools: 3,
+    totalPhotos: 31,
+    description: "Bright and comfortable recent studio of 16 m2, less than 20 minutes by train (RER A) from the center of Paris and Disneyland, with a private terrace overlooking a garden with fruit trees and organic vegetable garden. Located in a nice very quiet pavilion area, the apartment is an entire accommodation just next to the guest house but totally independent, close to a large shopping center and 150 m from the charming banks of the Marne...",
+    proximity: [
+      { label: "7 Km From the airport", type: "airport" },
+      { label: "1 Km From the beach", type: "beach" },
+      { label: "1 Km From city center", type: "city" },
+    ],
     equipment: ["pool", "wifi", "ac", "kitchen", "garden"],
-    specs: ["Logement entier", "3 chambres", "3 lits", "2 salles de bain"],
-    photos: [imgHotelCard, imgHotelCard1, imgHotelCard2, imgHotelCard5, imgHotelCard6, imgHotelCard7],
-    lat: 33.8185,
-    lng: 10.856,
+    specs: ["Logement entier", "11 chambres", "14 lits", "3 salles de bain"],
+    photos: [
+      imgHotelCard,
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&auto=format&fit=crop&q=80",
+      imgHotelCard1,
+      imgHotelCard2,
+      imgHotelCard5,
+      imgHotelCard6,
+      imgHotelCard7,
+    ],
+    lat: 36.4000,
+    lng: 10.6167,
   },
   p2: {
     id: "p2",
     name: "Maison Dedine Seafront",
+    tagline: "Exclusive seafront luxury villa in Djerba",
+    overviewTitle: "Maison Dedine, luxury villa in Djerba, Tunisia",
     type: "Villa",
     typeBg: "#8b5cf6",
+    bookingMode: "Logement entier",
+    lastBooked: "Last booked 5 hrs ago",
+    country: "Tunisie",
+    city: "Djerba",
     location: "Plage Sidi Mahrez, Djerba, Tunisie",
-    rating: 4.8,
+    fullAddress: "Zone Touristique Sidi Mahrez, Djerba Midoun, Tunisie, 4116",
+    score: "9.5",
+    scoreLabel: "Exceptional",
     reviewsCount: 94,
+    rating: 4.8,
     price: "780 DT",
     priceNum: 780,
     bedrooms: 4,
     beds: 4,
     bathrooms: 3,
+    halfBathrooms: 1,
     maxGuests: 8,
+    pools: 1,
+    totalPhotos: 24,
+    description: "Exceptional private waterfront villa offering panoramic Mediterranean sea views, heated infinity pool, private beach access, and personalized butler service in an oasis of tranquility.",
+    proximity: [
+      { label: "18 Km From the airport", type: "airport" },
+      { label: "50 m From the beach", type: "beach" },
+      { label: "4 Km From city center", type: "city" },
+    ],
     equipment: ["pool", "beach", "wifi", "ac", "sea_view"],
     specs: ["Villa pieds dans l'eau", "4 chambres", "4 lits", "3 salles de bain"],
-    photos: [imgHotelCard1, imgHotelCard2, imgHotelCard5, imgHotelCard6, imgHotelCard7, imgHotelCard],
+    photos: [
+      imgHotelCard1,
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&auto=format&fit=crop&q=80",
+      imgHotelCard2,
+      imgHotelCard5,
+      imgHotelCard6,
+      imgHotelCard7,
+      imgHotelCard,
+    ],
     lat: 33.8835,
     lng: 10.982,
   },
   p3: {
     id: "p3",
     name: "Dar Bibine Artist Riad",
+    tagline: "Authentic artist riad nestled in Djerbahood",
+    overviewTitle: "Dar Bibine, boutique riad in Djerbahood, Tunisia",
     type: "Maison d'hôte",
     typeBg: "#06b6d4",
+    bookingMode: "By room",
+    lastBooked: "Last booked 12 hrs ago",
+    country: "Tunisie",
+    city: "Djerba",
     location: "Djerbahood, Erriadh, Djerba, Tunisie",
-    rating: 4.9,
+    fullAddress: "Rue Abdelwahab, Erriadh, Djerba, Tunisie, 4146",
+    score: "9.4",
+    scoreLabel: "Superb",
     reviewsCount: 112,
+    rating: 4.9,
     price: "350 DT",
     priceNum: 350,
     bedrooms: 2,
     beds: 2,
     bathrooms: 2,
+    halfBathrooms: 1,
     maxGuests: 4,
+    pools: 1,
+    totalPhotos: 28,
+    description: "Immerse yourself in artistic serenity with contemporary artworks, traditional Djerbian whitewashed arches, an outdoor patio plunge pool, and rooftop stargazing deck.",
+    proximity: [
+      { label: "12 Km From the airport", type: "airport" },
+      { label: "6 Km From the beach", type: "beach" },
+      { label: "200 m From art village center", type: "city" },
+    ],
     equipment: ["pool", "wifi", "garden"],
     specs: ["Suite de charme", "2 chambres", "2 lits", "2 salles de bain"],
-    photos: [imgHotelCard2, imgHotelCard, imgHotelCard5, imgHotelCard6, imgHotelCard1, imgHotelCard7],
+    photos: [
+      imgHotelCard2,
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&auto=format&fit=crop&q=80",
+      imgHotelCard,
+      imgHotelCard5,
+      imgHotelCard6,
+      imgHotelCard1,
+      imgHotelCard7,
+    ],
     lat: 33.8142,
     lng: 10.8525,
   },
@@ -198,6 +309,7 @@ export default function PropertyDetailPage({
   const [calendarMonth, setCalendarMonth] = useState(6); // 6 = July 2026
   const [calendarYear, setCalendarYear] = useState(2026);
   const [guestsCount, setGuestsCount] = useState(2);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -207,6 +319,7 @@ export default function PropertyDetailPage({
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("FRA");
   const [isBookSuccessModalOpen, setIsBookSuccessModalOpen] = useState(false);
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   const [isCalendarFullscreen, setIsCalendarFullscreen] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -647,195 +760,243 @@ export default function PropertyDetailPage({
       {/* ── 2. MAIN CONTAINER (FULL-WIDTH MATCHING MOCKUP) ── */}
       <main className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-8">
         
-        {/* Top Header Block: Breadcrumbs + Title + Save/Share CTAs */}
-        <div>
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3">
-            <nav className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-              <Link href="/" className="hover:text-slate-900 dark:hover:text-white no-underline text-slate-500 dark:text-slate-400 transition-colors">
-                Tunisie
-              </Link>
-              <HugeiconsIcon icon={ArrowRight01Icon} size={10} className="text-slate-400 dark:text-slate-600" />
-              <Link href="/search" className="hover:text-slate-900 dark:hover:text-white no-underline text-slate-500 dark:text-slate-400 transition-colors">
-                Djerba
-              </Link>
-              <HugeiconsIcon icon={ArrowRight01Icon} size={10} className="text-slate-400 dark:text-slate-600" />
-              <span className="text-slate-900 dark:text-white font-bold truncate max-w-[220px] sm:max-w-none">
+        {/* ── 1. TOP HEADER BLOCK: BREADCRUMBS + TITLE & SUBTITLE + ACTIONS ── */}
+        <div className="space-y-3">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 select-none overflow-x-auto no-scrollbar py-0.5">
+            <Link
+              href="/"
+              className="hover:text-slate-900 dark:hover:text-white no-underline text-slate-500 dark:text-slate-400 transition-colors shrink-0"
+            >
+              Home
+            </Link>
+            <HugeiconsIcon icon={ArrowRight01Icon} size={10} className="text-slate-400 dark:text-slate-600 shrink-0" />
+            <Link
+              href="/search"
+              className="hover:text-slate-900 dark:hover:text-white no-underline text-slate-500 dark:text-slate-400 transition-colors shrink-0"
+            >
+              Country
+            </Link>
+            <HugeiconsIcon icon={ArrowRight01Icon} size={10} className="text-slate-400 dark:text-slate-600 shrink-0" />
+            <Link
+              href={`/search?city=${encodeURIComponent(property.city || "Hammamet")}`}
+              className="hover:text-slate-900 dark:hover:text-white no-underline text-slate-500 dark:text-slate-400 transition-colors shrink-0"
+            >
+              City
+            </Link>
+            <HugeiconsIcon icon={ArrowRight01Icon} size={10} className="text-slate-400 dark:text-slate-600 shrink-0" />
+            <span className="text-[#3B68EC] dark:text-[#60a5fa] font-bold capitalize truncate">
+              {property.name?.toLowerCase() || "dar chick yahia"}
+            </span>
+          </nav>
+
+          {/* Title, Subtitle and Top Actions */}
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pt-1">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight font-['Bricolage_Grotesk',sans-serif]">
                 {property.name}
-              </span>
-            </nav>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
+                {property.tagline || "Luxury guesthouse by the sea in Hammamet"}
+              </p>
+            </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setIsShareModalOpen(true)}
-                className="px-4 py-2 rounded-full bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all"
-              >
-                <HugeiconsIcon icon={Share01Icon} size={15} className="text-slate-500 dark:text-slate-400" />
-                <span>Partager</span>
-              </button>
-
+            {/* Top Action CTAs: Heart Icon + Blue Share Pill */}
+            <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto">
               <button
                 type="button"
                 onClick={() => setIsFavorite(!isFavorite)}
-                className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition-all border-none ${
-                  isFavorite ? "bg-red-500 text-white" : "bg-[#3B68EC] hover:bg-[#254EDB] text-white"
+                aria-label="Save to favorites"
+                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95 ${
+                  isFavorite
+                    ? "text-red-500 border-red-200 dark:border-red-900/50 bg-red-50/60 dark:bg-red-950/40"
+                    : "text-slate-700 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400"
                 }`}
               >
                 <HugeiconsIcon
                   icon={FavouriteIcon}
-                  size={15}
-                  className={isFavorite ? "fill-white text-white" : "text-white"}
+                  size={19}
+                  className={isFavorite ? "fill-red-500 text-red-500" : ""}
                 />
-                <span>{isFavorite ? "Enregistré" : "Sauvegarder"}</span>
               </button>
-            </div>
-          </div>
 
-          <div className="pt-1">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight font-['Bricolage_Grotesk',sans-serif]">
-              {property.name}
-            </h1>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 dark:text-slate-400 font-semibold mt-2">
-              <div className="flex items-center gap-1 text-slate-900 dark:text-white font-extrabold">
-                <HugeiconsIcon icon={StarIcon} size={14} className="fill-amber-400 text-amber-400" />
-                <span>{property.rating}</span>
-                <span className="text-slate-500 dark:text-slate-400 font-medium underline cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors">
-                  ({property.reviewsCount} avis vérifiés)
-                </span>
-              </div>
-              <span>•</span>
-              <span className="text-slate-500 dark:text-slate-400">Superhôte Darbook</span>
-              <span>•</span>
-              <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 underline cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors">
-                <HugeiconsIcon icon={Location01Icon} size={13} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                {property.location} • 800m de la plage
-              </span>
+              <button
+                type="button"
+                onClick={() => setIsShareModalOpen(true)}
+                className="h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-[#3B68EC] hover:bg-[#254EDB] text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-xs hover:scale-105 active:scale-95 border-none"
+              >
+                <HugeiconsIcon icon={Share01Icon} size={16} />
+                <span>Share</span>
+              </button>
             </div>
           </div>
         </div>
 
-        {/* ── 3. 5-PHOTO GALLERY MOSAIC ── */}
-        <div className="relative rounded-2xl overflow-hidden shadow-md grid grid-cols-1 md:grid-cols-4 gap-2 h-[340px] sm:h-[420px] lg:h-[480px]">
-          {/* Main Hero Photo (Takes 2 cols) */}
+        {/* ── 2. 5-PHOTO GALLERY MOSAIC WITH DESIGN SYSTEM BADGES & COUNTER OVERLAY ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 rounded-2xl overflow-hidden">
+          {/* Main Large Hero Photo (Left side, spans full height) */}
           <div
             onClick={() => {
               setActivePhotoIndex(0);
               setIsGalleryOpen(true);
             }}
-            className="md:col-span-2 relative h-full cursor-pointer group overflow-hidden bg-slate-100 dark:bg-slate-800"
+            className="relative h-[280px] sm:h-[380px] md:h-[460px] lg:h-[500px] rounded-2xl overflow-hidden cursor-pointer group bg-slate-100 dark:bg-slate-800 select-none"
           >
             <img
               src={toImgSrc(property.photos[0] || imgHotelCard)}
-              alt="Main stay"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              alt="Dar Chick Yahia Main View"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
-            <div className="absolute top-4 left-4 bg-white/95 dark:bg-[#121a30]/95 backdrop-blur-xs px-3 py-1.5 rounded-full text-xs font-extrabold text-slate-900 dark:text-white shadow-sm flex items-center gap-1.5">
-              <HugeiconsIcon icon={StarIcon} size={13} className="fill-amber-400 text-amber-400" />
-              <span>Coup de cœur voyageurs</span>
+
+            {/* Top-Left Badges: Property Type (Cyan) + Booking Mode (Translucent White) */}
+            <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2 z-10">
+              <span className="px-3.5 py-1.5 rounded-full bg-[#06B6D4] text-white font-bold text-xs shadow-md backdrop-blur-xs flex items-center">
+                {property.type || "Maison d'hôte"}
+              </span>
+              <span className="px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-xs text-slate-800 dark:text-white font-bold text-xs shadow-md flex items-center gap-1.5 border border-white/20">
+                <HugeiconsIcon icon={Door01Icon} size={14} className="text-[#3B68EC] dark:text-[#60a5fa]" />
+                <span>{property.bookingMode || "By room"}</span>
+              </span>
             </div>
-            <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-xs text-white px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5">
-              <HugeiconsIcon icon={Image01Icon} size={13} className="text-white" />
-              <span>1/14 Photos</span>
+
+            {/* Bottom-Left Badge: Last Booked Activity */}
+            <div className="absolute bottom-4 left-4 bg-black/65 backdrop-blur-xs text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm border border-white/10 z-10">
+              <HugeiconsIcon icon={Clock01Icon} size={14} className="text-white" />
+              <span>{property.lastBooked || "Last booked 21 hrs ago"}</span>
             </div>
           </div>
 
-          {/* Sub Photos (2x2 grid) */}
-          <div className="hidden md:grid col-span-2 grid-cols-2 gap-2 h-full">
-            {property.photos.slice(1, 5).map((photo: any, idx: number) => (
-              <div
-                key={idx}
-                onClick={() => {
-                  setActivePhotoIndex(idx + 1);
-                  setIsGalleryOpen(true);
-                }}
-                className="relative h-full cursor-pointer group overflow-hidden bg-slate-100 dark:bg-slate-800"
-              >
-                <img
-                  src={toImgSrc(photo)}
-                  alt={`Stay detail ${idx + 1}`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            ))}
+          {/* Sub Photos: 2x2 Grid (4 Photos) */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 h-[280px] sm:h-[380px] md:h-[460px] lg:h-[500px]">
+            {property.photos.slice(1, 5).map((photo: any, idx: number) => {
+              const isLast = idx === 3;
+              const photoNum = property.totalPhotos || 31;
+              return (
+                <div
+                  key={idx}
+                  onClick={() => {
+                    setActivePhotoIndex(idx + 1);
+                    setIsGalleryOpen(true);
+                  }}
+                  className="relative h-full rounded-2xl overflow-hidden cursor-pointer group bg-slate-100 dark:bg-slate-800 select-none"
+                >
+                  <img
+                    src={toImgSrc(photo)}
+                    alt={`Property view ${idx + 2}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  {/* 4th Photo Overlay: "+31" / "31" */}
+                  {isLast && (
+                    <div className="absolute inset-0 bg-black/45 group-hover:bg-black/55 backdrop-blur-[0.5px] flex items-center justify-center transition-colors">
+                      <span className="text-white text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight drop-shadow-md">
+                        {photoNum}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-
-          {/* Show All Photos Button */}
-          <button
-            type="button"
-            onClick={() => setIsGalleryOpen(true)}
-            className="absolute bottom-4 right-4 bg-white/95 hover:bg-white dark:bg-[#121a30]/95 dark:hover:bg-[#16203a] text-slate-900 dark:text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-2 cursor-pointer transition-all hover:scale-105 active:scale-95"
-          >
-            <HugeiconsIcon icon={Image01Icon} size={16} className="text-slate-700 dark:text-slate-300" />
-            <span>Afficher toutes les photos (14)</span>
-          </button>
         </div>
 
-        {/* ── 4. HOST & SUMMARY OVERVIEW CARD (MATCHING MOCKUP) ── */}
-        <section className="bg-white dark:bg-[#0b1022] rounded-2xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-2xs transition-colors">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100 dark:border-slate-800">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight font-['Bricolage_Grotesk',sans-serif]">
-                Logement entier hébergé par Yassine & Amira
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-semibold mt-1">
-                8 voyageurs · 4 chambres · 4 lits · 3 salles de bain · 250 m²
-              </p>
-            </div>
+        {/* ── 3. PROPERTY OVERVIEW, LOCATION, PROXIMITY & SPECS CARDS ── */}
+        <section className="bg-white dark:bg-[#0b1022] rounded-2xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5 transition-colors">
+          {/* Header Row: Title & Review Rating Badge */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight font-['Bricolage_Grotesk',sans-serif]">
+              {property.overviewTitle || `${property.name}, guest house in Hammamet, Tunisia`}
+            </h2>
 
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="relative">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-                  alt="Host"
-                  className="w-12 h-12 rounded-full object-cover border-2 border-[#3B68EC]"
-                />
-                <div className="absolute -bottom-1 -right-1 bg-[#3B68EC] text-white p-0.5 rounded-full">
-                  <HugeiconsIcon icon={CheckmarkCircle01Icon} size={11} />
-                </div>
+            {/* Rating Badge Block */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <div className="size-10 rounded-[10px] bg-[#3B68EC] text-white font-extrabold text-sm sm:text-base flex items-center justify-center shadow-xs">
+                {property.score || "9.2"}
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">Yassine & Amira</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Superhôte • 4 ans d'expérience</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                  {property.scoreLabel || "Very good"}
+                </p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  {property.reviewsCount || 76} reviews
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Badges Row */}
-          <div className="flex flex-wrap items-center gap-2.5 py-6 border-b border-slate-100 dark:border-slate-800">
-            <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#3B68EC] dark:text-blue-400 font-bold text-xs flex items-center gap-1.5">
-              <HugeiconsIcon icon={BeachIcon} size={15} />
-              <span>Front de mer</span>
+          {/* Location Row with Map Link */}
+          <div className="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+            <HugeiconsIcon icon={Location01Icon} size={16} className="text-slate-500 dark:text-slate-400 shrink-0" />
+            <span>
+              {property.fullAddress || "Boulevard 7 Novembre Yasmine Hammamet Tunis, Yasmine Hammamet, Hammamet, Tunisia, 8057"}
             </span>
-            <span className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#3B68EC] dark:text-blue-400 font-bold text-xs flex items-center gap-1.5">
-              <HugeiconsIcon icon={SwimmingIcon} size={15} />
-              <span>Piscine privée au patio</span>
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center gap-1.5">
-              <HugeiconsIcon icon={Wifi01Icon} size={15} />
-              <span>Wifi fibre optique (95 Mbit/s)</span>
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center gap-1.5">
-              <HugeiconsIcon icon={SnowIcon} size={15} />
-              <span>Climatisation réversible</span>
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center gap-1.5">
-              <HugeiconsIcon icon={Restaurant01Icon} size={15} />
-              <span>Petit-déjeuner djerbien inclus</span>
-            </span>
-          </div>
-
-          {/* Editorial Description */}
-          <div className="pt-6">
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-              Niché au cœur du village artistique et historique d'Erriadh (célèbre pour le musée à ciel ouvert Djerbahood), ce Dar traditionnel de charme a été entièrement restauré dans le respect de l'art architectural djerbien. Entre voûtes en pierre, chaux blanche immaculée, patio arboré et solarium panoramique sur le toit, vous profiterez d'un havre de sérénité absolue.
-            </p>
             <button
               type="button"
-              className="mt-3 text-xs font-bold text-[#3B68EC] dark:text-[#60a5fa] hover:underline cursor-pointer border-none bg-transparent p-0 flex items-center gap-1"
+              onClick={() => setIsMapModalOpen(true)}
+              className="text-[#3B68EC] dark:text-[#60a5fa] font-bold hover:underline cursor-pointer ml-1 inline-flex items-center bg-transparent border-none p-0"
             >
-              <span>En savoir plus sur le logement</span>
-              <HugeiconsIcon icon={ArrowRight01Icon} size={12} />
+              See map
             </button>
+          </div>
+
+          {/* Proximity / Distance Badges */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="px-3.5 py-1.5 rounded-[10px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2 shadow-2xs">
+              <HugeiconsIcon icon={Airplane01Icon} size={15} className="text-slate-500 dark:text-slate-400" />
+              <span>7 Km From the airport</span>
+            </div>
+            <div className="px-3.5 py-1.5 rounded-[10px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2 shadow-2xs">
+              <HugeiconsIcon icon={BeachIcon} size={15} className="text-slate-500 dark:text-slate-400" />
+              <span>1 Km From the beach</span>
+            </div>
+            <div className="px-3.5 py-1.5 rounded-[10px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2 shadow-2xs">
+              <HugeiconsIcon icon={Building01Icon} size={15} className="text-slate-500 dark:text-slate-400" />
+              <span>1 Km From city center</span>
+            </div>
+          </div>
+
+          {/* Editorial Description with Read More toggle */}
+          <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal pt-1">
+            <p>
+              {isDescriptionExpanded
+                ? (property.description || "")
+                : `${(property.description || "").slice(0, 290)}... `}
+              <button
+                type="button"
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                className="text-[#3B68EC] dark:text-[#60a5fa] font-bold hover:underline cursor-pointer inline ml-1 bg-transparent border-none p-0"
+              >
+                {isDescriptionExpanded ? "Read less" : "Read more"}
+              </button>
+            </p>
+          </div>
+
+          {/* Key Property Specs Cards (6 Cards) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
+            {[
+              { label: "Bedrooms", val: property.bedrooms ?? 11, icon: Door01Icon },
+              { label: "Beds", val: property.beds ?? 14, icon: BedDoubleIcon },
+              { label: "Bathrooms", val: property.bathrooms ?? 3, icon: Bathtub01Icon },
+              { label: "Half Bathroom", val: property.halfBathrooms ?? 3, icon: Toilet01Icon },
+              { label: "Guests", val: property.maxGuests ?? 24, icon: UserGroupIcon },
+              { label: "Private Pool", val: property.pools ?? 3, icon: SwimmingIcon },
+            ].map((spec, sIdx) => (
+              <div
+                key={sIdx}
+                className="rounded-[16px] border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4 bg-white dark:bg-[#080d1e] shadow-2xs flex items-center gap-3 hover:border-[#3B68EC]/50 hover:shadow-xs transition-all"
+              >
+                <div className="text-[#3B68EC] dark:text-[#60a5fa] shrink-0">
+                  <HugeiconsIcon icon={spec.icon} size={24} />
+                </div>
+                <div>
+                  <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-tight">
+                    {spec.label}
+                  </p>
+                  <p className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-tight mt-0.5">
+                    {spec.val}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -1023,79 +1184,19 @@ export default function PropertyDetailPage({
               </div>
             </div>
           ) : (
-            /* Room availability view */
-            <div className="space-y-4 pt-2">
-              <div
-                onClick={() => setSelectedRoomOption("room1")}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                  selectedRoomOption === "room1"
-                    ? "border-[#3B68EC] bg-blue-50/50 dark:bg-blue-950/30 shadow-xs"
-                    : "bg-slate-50 hover:bg-slate-100/70 dark:bg-slate-800/50 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-700"
-                }`}
-              >
-                <div>
-                  <h5 className="font-bold text-sm text-slate-900 dark:text-white">Suite Royale Vue Patio</h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">2 personnes • Grand lit King size • 190 DT / nuit</p>
-                </div>
-                <button
-                  type="button"
-                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all border-none cursor-pointer ${
-                    selectedRoomOption === "room1"
-                      ? "bg-[#3B68EC] text-white shadow-xs"
-                      : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
-                  }`}
-                >
-                  {selectedRoomOption === "room1" ? "Sélectionné ✓" : "Choisir cette chambre"}
-                </button>
-              </div>
-
-              <div
-                onClick={() => setSelectedRoomOption("suite")}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                  selectedRoomOption === "suite"
-                    ? "border-[#3B68EC] bg-blue-50/50 dark:bg-blue-950/30 shadow-xs"
-                    : "bg-slate-50 hover:bg-slate-100/70 dark:bg-slate-800/50 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-700"
-                }`}
-              >
-                <div>
-                  <h5 className="font-bold text-sm text-slate-900 dark:text-white">Suite Traditionnelle Riad</h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">2 personnes • Patio privatif • 280 DT / nuit</p>
-                </div>
-                <button
-                  type="button"
-                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all border-none cursor-pointer ${
-                    selectedRoomOption === "suite"
-                      ? "bg-[#3B68EC] text-white shadow-xs"
-                      : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
-                  }`}
-                >
-                  {selectedRoomOption === "suite" ? "Sélectionné ✓" : "Choisir cette suite"}
-                </button>
-              </div>
-
-              <div
-                onClick={() => setSelectedRoomOption("entire")}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                  selectedRoomOption === "entire"
-                    ? "border-[#3B68EC] bg-blue-50/50 dark:bg-blue-950/30 shadow-xs"
-                    : "bg-slate-50 hover:bg-slate-100/70 dark:bg-slate-800/50 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-700"
-                }`}
-              >
-                <div>
-                  <h5 className="font-bold text-sm text-slate-900 dark:text-white">Logement Entier (Dar complet)</h5>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">8 personnes • 4 chambres • Piscine exclusive • {property.priceNum} DT / nuit</p>
-                </div>
-                <button
-                  type="button"
-                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all border-none cursor-pointer ${
-                    selectedRoomOption === "entire"
-                      ? "bg-[#3B68EC] text-white shadow-xs"
-                      : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
-                  }`}
-                >
-                  {selectedRoomOption === "entire" ? "Sélectionné ✓" : "Choisir le logement entier"}
-                </button>
-              </div>
+            /* ── Room availability matrix (MATCHING MOCKUP) ── */
+            <div className="pt-2">
+              <RoomCalendarMatrix
+                selectedRoomId={selectedRoomOption === "room1" ? "room-mariem" : selectedRoomOption === "suite" ? "room-zina" : "room-jannet"}
+                onSelectRoom={(rId) => {
+                  if (rId === "room-mariem") setSelectedRoomOption("room1");
+                  else if (rId === "room-zina") setSelectedRoomOption("suite");
+                  else setSelectedRoomOption("entire");
+                }}
+                onBookNow={() => {
+                  setIsBookSuccessModalOpen(true);
+                }}
+              />
             </div>
           )}
         </section>
@@ -1624,67 +1725,18 @@ export default function PropertyDetailPage({
           </button>
         </section>
 
-        {/* ── 10. INTERACTIVE MAP & LOCATION BLOCK ── */}
-        <section className="bg-white dark:bg-[#0b1022] rounded-2xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-6 transition-colors">
-          <div>
-            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white font-['Bricolage_Grotesk',sans-serif]">
-              Emplacement & Environs
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-              {property.location} • Erriadh, Djerba
-            </p>
-          </div>
-
-          <div className="w-full h-[360px] rounded-2xl overflow-hidden shadow-inner border border-slate-200 dark:border-slate-800">
-            <MapView
-              properties={[
-                {
-                  id: property.id,
-                  name: property.name,
-                  price: property.price,
-                  rating: property.rating,
-                  photo: toImgSrc(property.photos[0]),
-                  location: property.location,
-                  lat: property.lat,
-                  lng: property.lng,
-                },
-              ]}
-              hoveredId={property.id}
-              onHover={() => {}}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-center text-xs">
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center">
-              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-sm">
-                <HugeiconsIcon icon={PaintBoardIcon} size={16} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                <span>Djerbahood</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">2 min à pied</p>
-            </div>
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center">
-              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-sm">
-                <HugeiconsIcon icon={Building01Icon} size={16} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                <span>La Ghriba</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">5 min en voiture</p>
-            </div>
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center">
-              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-sm">
-                <HugeiconsIcon icon={BeachIcon} size={16} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                <span>Plage Sidi Mahrez</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">10 min en voiture</p>
-            </div>
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center">
-              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-sm">
-                <HugeiconsIcon icon={Airplane01Icon} size={16} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                <span>Aéroport Djerba</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">15 min en taxi</p>
-            </div>
-          </div>
-        </section>
+        {/* ── 10. INTERACTIVE MAP & LOCATION BLOCK (MATCHING MOCKUP) ── */}
+        <PropertyLocationSection
+          property={{
+            id: property.id,
+            name: property.name,
+            location: property.location,
+            fullAddress: property.fullAddress,
+            lat: property.lat,
+            lng: property.lng,
+            photos: property.photos,
+          }}
+        />
 
         {/* ── 11. FREQUENTLY ASKED QUESTIONS (ACCORDION) ── */}
         <section className="bg-white dark:bg-[#0b1022] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-6 transition-colors">
@@ -1986,7 +2038,7 @@ export default function PropertyDetailPage({
                       href="#"
                       onClick={(e) => e.preventDefault()}
                       aria-label={item.label}
-                      className="size-8 rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
+                      className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 aspect-square rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
                     >
                       <HugeiconsIcon icon={item.icon} size={16} />
                     </a>
@@ -2411,132 +2463,28 @@ export default function PropertyDetailPage({
                     </div>
                   </div>
                 ) : (
-                  /* Expanded Room Availability Grid */
-                  <div className="w-full space-y-3">
-                    <div className="bg-white dark:bg-[#0b1022] rounded-xl p-3.5 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-2xs">
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white font-['Bricolage_Grotesk',sans-serif] mb-0.5">
-                        Chambres & Suites Disponibles
-                      </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                        Sélectionnez la chambre idéale pour votre séjour du {formatDateLabel(checkInDate)} au {formatDateLabel(checkOutDate)} ({nightsCount} nuits).
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[
-                        {
-                          id: "room1",
-                          title: "Suite Royale Vue Patio & Piscine",
-                          desc: "Grande suite de maître avec lit King Size, salon privatif djerbien et vue directe sur le patio fleuri.",
-                          capacity: "2 adultes + 1 enfant",
-                          bed: "1 Grand lit King Size (180x200)",
-                          price: 190,
-                          badge: "Plus populaire",
-                          amenities: ["Climatisation", "Wi-Fi Haut Débit", "Petit-déjeuner inclus", "Salle de bain en marbre"],
-                        },
-                        {
-                          id: "room2",
-                          title: "Chambre Traditionnelle Jasmin",
-                          desc: "Chambre authentique aux voûtes traditionnelles djerbiennes, lumineuse et calme avec accès direct au jardin.",
-                          capacity: "2 adultes",
-                          bed: "2 lits simples ou 1 grand lit",
-                          price: 130,
-                          badge: "Meilleur tarif",
-                          amenities: ["Climatisation", "Wi-Fi Haut Débit", "Petit-déjeuner inclus", "Douche à l'italienne"],
-                        },
-                        {
-                          id: "room3",
-                          title: "Suite Familiale Sidi Mahrez",
-                          desc: "Deux chambres communicantes idéales pour les familles ou groupes avec coin salon et terrasse privée.",
-                          capacity: "4 adultes + 1 bébé",
-                          bed: "1 lit King Size + 2 lits simples",
-                          price: 260,
-                          badge: "Idéal Familles",
-                          amenities: ["Climatisation", "Wi-Fi Haut Débit", "Petit-déjeuner inclus", "2 Salles de bain", "Terrasse privée"],
-                        },
-                        {
-                          id: "room4",
-                          title: "Menzel Traditionnel Exclusif (Logement Entier)",
-                          desc: "Privatisation intégrale du domaine avec 4 suites, piscine privée, patio et service de conciergerie dédié.",
-                          capacity: "10 voyageurs max",
-                          bed: "4 suites privées avec salles de bain",
-                          price: 650,
-                          badge: "Exclusivité",
-                          amenities: ["Piscine 100% privée", "Chef privé sur demande", "Ménage quotidien", "Navette aéroport"],
-                        },
-                      ].map((room) => {
-                        const isSelected = selectedRoomOption === room.id;
-                        return (
-                          <div
-                            key={room.id}
-                            onClick={() => setSelectedRoomOption(room.id)}
-                            className={`bg-white dark:bg-[#0b1022] rounded-xl p-4 sm:p-5 border transition-all cursor-pointer flex flex-col justify-between space-y-4 ${
-                              isSelected
-                                ? "border-[#3B68EC] ring-1 ring-[#3B68EC]/30 shadow-xs"
-                                : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-                            }`}
-                          >
-                            <div className="space-y-2.5">
-                              <div className="flex items-center justify-between">
-                                <span className="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/50 text-[#3B68EC] dark:text-blue-400 text-[11px] font-bold">
-                                  {room.badge}
-                                </span>
-                                <div className="text-right">
-                                  <span className="text-base font-bold text-slate-900 dark:text-white">{room.price} DT</span>
-                                  <span className="text-xs text-slate-400 font-medium"> / nuit</span>
-                                </div>
-                              </div>
-
-                              <h4 className="text-sm font-bold text-slate-900 dark:text-white font-['Bricolage_Grotesk',sans-serif]">
-                                {room.title}
-                              </h4>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
-                                {room.desc}
-                              </p>
-
-                              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1 text-xs text-slate-600 dark:text-slate-400 font-medium">
-                                <div className="flex items-center gap-1.5">
-                                  <HugeiconsIcon icon={UserGroupIcon} size={13} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                                  <span>{room.capacity}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                  <HugeiconsIcon icon={BedDoubleIcon} size={13} className="text-[#3B68EC] dark:text-[#60a5fa]" />
-                                  <span>{room.bed}</span>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-wrap gap-1 pt-1">
-                                {room.amenities.map((amenity) => (
-                                  <span
-                                    key={amenity}
-                                    className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-semibold"
-                                  >
-                                    ✓ {amenity}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-
-                            <button
-                              type="button"
-                              className={`w-full py-2 rounded-lg font-bold text-xs transition-all border-none cursor-pointer flex items-center justify-center gap-1.5 ${
-                                isSelected
-                                  ? "bg-[#3B68EC] text-white shadow-xs"
-                                  : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
-                              }`}
-                            >
-                              {isSelected ? (
-                                <>
-                                  <HugeiconsIcon icon={Tick01Icon} size={13} />
-                                  <span>Option sélectionnée</span>
-                                </>
-                              ) : (
-                                <span>Choisir cette chambre</span>
-                              )}
-                            </button>
-                          </div>
-                        );
-                      })}
+                  /* ── Expanded Room Availability Matrix (MATCHING MOCKUP) ── */
+                  <div className="w-full space-y-4">
+                    <div className="bg-white dark:bg-[#0b1022] rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-2xs">
+                      <RoomCalendarMatrix
+                        selectedRoomId={
+                          selectedRoomOption === "room1"
+                            ? "room-mariem"
+                            : selectedRoomOption === "suite"
+                            ? "room-zina"
+                            : "room-jannet"
+                        }
+                        showBottomBookingAction={false}
+                        onSelectRoom={(rId) => {
+                          if (rId === "room-mariem") setSelectedRoomOption("room1");
+                          else if (rId === "room-zina") setSelectedRoomOption("suite");
+                          else setSelectedRoomOption("entire");
+                        }}
+                        onBookNow={() => {
+                          setIsCalendarFullscreen(false);
+                          setIsBookSuccessModalOpen(true);
+                        }}
+                      />
                     </div>
                   </div>
                 )}
@@ -2690,36 +2638,74 @@ export default function PropertyDetailPage({
               className="bg-white dark:bg-[#0b1022] rounded-2xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-100 dark:border-slate-800 text-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50/50 dark:ring-emerald-950/20">
                 <HugeiconsIcon icon={CheckmarkCircle01Icon} size={36} className="text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-1 font-['Bricolage_Grotesk',sans-serif]">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold mb-2">
+                <HugeiconsIcon icon={Tick01Icon} size={13} />
+                <span>Réservation confirmée</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-1 font-['Bricolage_Grotesk',sans-serif]">
                 Demande de réservation envoyée !
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-6">
-                Votre demande pour <strong>{property.name}</strong> du {formatDateLabel(checkInDate)} au {formatDateLabel(checkOutDate)} ({grandTotal} DT) a bien été transmise aux hôtes.
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-5">
+                Votre demande pour <strong>{property.name}</strong> a bien été enregistrée. Un e-mail récapitulatif vous a été envoyé.
               </p>
-              <div className="p-4 bg-blue-50/50 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/40 text-left text-xs mb-6 space-y-1.5">
+
+              <div className="p-4 bg-slate-50 dark:bg-[#121a30] rounded-2xl border border-slate-200/90 dark:border-slate-800 text-left text-xs mb-6 space-y-2.5">
+                <div className="flex justify-between items-center pb-2 border-b border-slate-200/60 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400">N° Référence :</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                    DAR-2026-89412
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500 dark:text-slate-400">Option choisie :</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {selectedRoomOption === "room1"
+                      ? "Room Mariem (Suite Royale)"
+                      : selectedRoomOption === "suite"
+                      ? "Room ZINA (Suite Riad)"
+                      : "Logement Entier"}
+                  </span>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">Dates :</span>
-                  <span className="font-bold text-slate-900 dark:text-white">{formatDateLabel(checkInDate)} - {formatDateLabel(checkOutDate)} (4 nuits)</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {formatDateLabel(checkInDate)} - {formatDateLabel(checkOutDate)} ({nightsCount} nuits)
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">Voyageurs :</span>
                   <span className="font-bold text-slate-900 dark:text-white">{guestsCount} adultes</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500 dark:text-slate-400">Total :</span>
-                  <span className="font-extrabold text-[#3B68EC] dark:text-[#60a5fa]">{grandTotal} DT</span>
+                <div className="flex justify-between items-baseline pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                  <span className="text-slate-600 dark:text-slate-300 font-bold">Total TTC :</span>
+                  <span className="text-base font-extrabold text-[#3B68EC] dark:text-[#60a5fa]">
+                    {grandTotal} DT <span className="text-xs font-normal text-slate-400">({(grandTotal * 0.3).toFixed(0)} €)</span>
+                  </span>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsBookSuccessModalOpen(false)}
-                className="w-full py-3.5 rounded-xl bg-[#3B68EC] hover:bg-[#254EDB] text-white font-bold text-xs shadow-md border-none cursor-pointer"
-              >
-                Fermer
-              </button>
+
+              <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setIsBookSuccessModalOpen(false)}
+                  className="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs transition-colors border-none cursor-pointer"
+                >
+                  Continuer la visite
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsBookSuccessModalOpen(false);
+                    router.push("/favorites");
+                  }}
+                  className="w-full py-3 rounded-xl bg-[#3B68EC] hover:bg-[#254EDB] text-white font-bold text-xs shadow-md border-none cursor-pointer transition-all hover:scale-102 active:scale-98"
+                >
+                  Voir mes réservations
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -2743,6 +2729,21 @@ export default function PropertyDetailPage({
           Réserver
         </button>
       </div>
+
+      {/* Property Interactive Map Popup Modal */}
+      <PropertyMapModal
+        isOpen={isMapModalOpen}
+        onClose={() => setIsMapModalOpen(false)}
+        property={{
+          id: property.id,
+          name: property.name || "Rosa Beach Thalasso and Spa",
+          location: property.location || "Monastir, Tunisia",
+          fullAddress: property.fullAddress || "Rue de L'Aeroport Skanes Monastir, Monastir, Tunisia",
+          lat: property.lat || 35.7643,
+          lng: property.lng || 10.7538,
+          stars: 4,
+        }}
+      />
 
       {/* Global Modals & Full Page Mobile Menu */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />

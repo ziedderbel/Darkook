@@ -755,11 +755,11 @@ function SearchResultsContent() {
         <AnimatePresence>
           {isSearchExpanded && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full px-4 sm:px-6 lg:px-8 pb-5 pt-1 flex justify-center overflow-visible border-b border-gray-100 dark:border-slate-800"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="w-full px-4 sm:px-6 lg:px-8 pb-5 pt-2 flex justify-center overflow-visible border-b border-gray-100 dark:border-slate-800"
             >
               <NavbarSearchWidget
                 isExpanded={true}

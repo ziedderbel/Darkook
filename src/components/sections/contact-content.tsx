@@ -887,7 +887,7 @@ export default function ContactContent() {
                       href="#"
                       onClick={(e) => e.preventDefault()}
                       aria-label={item.label}
-                      className="size-8 rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
+                      className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 aspect-square rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
                     >
                       <HugeiconsIcon icon={item.icon} size={16} />
                     </a>

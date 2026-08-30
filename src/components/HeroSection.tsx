@@ -516,12 +516,17 @@ function Navbar() {
   const [selectedLang, setSelectedLang] = useState("FRA");
   const [selectedCurrency, setSelectedCurrency] = useState("EUR");
   const [isSticky, setIsSticky] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       // Trigger sticky navbar when user scrolls down past 160px
       if (typeof window !== "undefined") {
-        setIsSticky(window.scrollY > 160);
+        const sticky = window.scrollY > 160;
+        setIsSticky(sticky);
+        if (!sticky) {
+          setIsSearchExpanded(false);
+        }
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -563,65 +568,112 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* 2. Floating Sticky Navbar Following User on Scroll with Optimized Search Widget */}
+      {/* 2. Floating Sticky Navbar Following User on Scroll with 2-Row Smooth Search Expansion */}
       <AnimatePresence>
         {isSticky && (
-          <motion.header
-            initial={{ y: -80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -80, opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="fixed top-0 inset-x-0 z-[100] bg-white/95 dark:bg-[#070b18]/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800 shadow-md transition-colors"
-          >
-            <div className="max-w-[1280px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
-              {/* Brand Logo */}
-              <StickyBrandLogo />
+          <>
+            {/* Click-outside backdrop when expanded */}
+            {isSearchExpanded && (
+              <div
+                onClick={() => setIsSearchExpanded(false)}
+                className="fixed inset-0 bg-black/25 backdrop-blur-2xs z-[90] animate-in fade-in duration-200"
+              />
+            )}
+            <motion.header
+              initial={{ y: -80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -80, opacity: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className={`fixed top-0 inset-x-0 z-[100] bg-white/95 dark:bg-[#070b18]/95 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800 transition-all duration-200 ${
+                isSearchExpanded ? "shadow-2xl" : "shadow-md"
+              }`}
+            >
+              {/* Row 1: Logo + Compact Search Pill + Right Actions */}
+              <div className="max-w-[1280px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
+                {/* Brand Logo */}
+                <StickyBrandLogo />
 
-              {/* Center: Optimized Compact Search Widget - Always visible on all screens */}
-              <div className="flex-1 max-w-[580px] mx-1 sm:mx-3 flex justify-center min-w-0">
-                <NavbarSearchWidget
-                  initialLocation="Choose destination"
-                  initialCheckIn="2026-03-21"
-                  initialCheckOut="2026-03-28"
-                  initialGuests="2 guests"
-                  onSearch={({ location, checkIn, checkOut, guests }) => {
-                    router.push(
-                      `/search?location=${encodeURIComponent(location)}&checkIn=${encodeURIComponent(
-                        checkIn
-                      )}&checkOut=${encodeURIComponent(checkOut)}&guests=${encodeURIComponent(guests)}`
-                    );
-                  }}
-                />
+                {/* Center: Compact Search Widget (Visible only when NOT expanded) */}
+                {!isSearchExpanded && (
+                  <div className="flex-1 max-w-[580px] mx-1 sm:mx-3 flex justify-center min-w-0">
+                    <NavbarSearchWidget
+                      isExpanded={false}
+                      onExpandedChange={setIsSearchExpanded}
+                      initialLocation="Choose destination"
+                      initialCheckIn="2026-03-21"
+                      initialCheckOut="2026-03-28"
+                      initialGuests="2 guests"
+                      onSearch={({ location, checkIn, checkOut, guests }) => {
+                        setIsSearchExpanded(false);
+                        router.push(
+                          `/search?location=${encodeURIComponent(location)}&checkIn=${encodeURIComponent(
+                            checkIn
+                          )}&checkOut=${encodeURIComponent(checkOut)}&guests=${encodeURIComponent(guests)}`
+                        );
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Right Actions */}
+                <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                  <DarkModeToggle />
+                  <div className="hidden lg:flex items-center gap-2">
+                    <LanguageSelector
+                      selectedLang={selectedLang}
+                      selectedCurrency={selectedCurrency}
+                      onSelectLang={setSelectedLang}
+                      onSelectCurrency={setSelectedCurrency}
+                    />
+                  </div>
+                  <FavoritesButton />
+                  <div className="hidden sm:block">
+                    <SignInButton onClick={() => setIsAuthModalOpen(true)} />
+                  </div>
+
+                  {/* Mobile Menu Trigger */}
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    aria-label="Open menu"
+                    className="lg:hidden h-[38px] w-[38px] sm:h-[40px] sm:w-[40px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all duration-200 rounded-full flex items-center justify-center cursor-pointer border-none text-[#556080] dark:text-slate-300 hover:text-[#547fee]"
+                  >
+                    <HugeiconsIcon icon={Menu01Icon} size={18} />
+                  </button>
+                </div>
               </div>
 
-              {/* Right Actions */}
-              <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-                <DarkModeToggle />
-                <div className="hidden lg:flex items-center gap-2">
-                  <LanguageSelector
-                    selectedLang={selectedLang}
-                    selectedCurrency={selectedCurrency}
-                    onSelectLang={setSelectedLang}
-                    onSelectCurrency={setSelectedCurrency}
-                  />
-                </div>
-                <FavoritesButton />
-                <div className="hidden sm:block">
-                  <SignInButton onClick={() => setIsAuthModalOpen(true)} />
-                </div>
-
-                {/* Mobile Menu Trigger */}
-                <button
-                  type="button"
-                  onClick={() => setIsMobileMenuOpen(true)}
-                  aria-label="Open menu"
-                  className="lg:hidden h-[38px] w-[38px] sm:h-[40px] sm:w-[40px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all duration-200 rounded-full flex items-center justify-center cursor-pointer border-none text-[#556080] dark:text-slate-300 hover:text-[#547fee]"
-                >
-                  <HugeiconsIcon icon={Menu01Icon} size={18} />
-                </button>
-              </div>
-            </div>
-          </motion.header>
+              {/* Row 2: Full-Width Expanded Search Bar with Plenty of Room for Dropdowns */}
+              <AnimatePresence>
+                {isSearchExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pb-5 pt-2 flex justify-center overflow-visible"
+                  >
+                    <NavbarSearchWidget
+                      isExpanded={true}
+                      onExpandedChange={setIsSearchExpanded}
+                      initialLocation="Choose destination"
+                      initialCheckIn="2026-03-21"
+                      initialCheckOut="2026-03-28"
+                      initialGuests="2 guests"
+                      onSearch={({ location, checkIn, checkOut, guests }) => {
+                        setIsSearchExpanded(false);
+                        router.push(
+                          `/search?location=${encodeURIComponent(location)}&checkIn=${encodeURIComponent(
+                            checkIn
+                          )}&checkOut=${encodeURIComponent(checkOut)}&guests=${encodeURIComponent(guests)}`
+                        );
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.header>
+          </>
         )}
       </AnimatePresence>
 

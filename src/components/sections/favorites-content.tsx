@@ -823,20 +823,37 @@ export default function FavoritesContent() {
       ? favorites
       : favorites.filter((f) => f.city === activeCityTab);
 
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+
   return (
     <main className="min-h-screen bg-[#F8FAFC] dark:bg-[#070b18] text-slate-900 dark:text-white flex flex-col font-sans transition-colors duration-300">
       
+      {/* Click-outside backdrop when search is expanded */}
+      {isSearchExpanded && (
+        <div
+          onClick={() => setIsSearchExpanded(false)}
+          className="fixed inset-0 bg-black/25 backdrop-blur-2xs z-40 animate-in fade-in duration-200"
+        />
+      )}
+
       {/* ── 1. Top Navbar ── */}
-      <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#0b1022]/95 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
+      <header className={`sticky top-0 z-50 bg-white/95 dark:bg-[#0b1022]/95 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 transition-all duration-200 ${
+        isSearchExpanded ? "shadow-2xl" : "shadow-xs"
+      }`}>
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 h-[68px] sm:h-[76px] flex items-center justify-between gap-3 sm:gap-4">
           
           {/* Left: Logo */}
           <Logo />
 
-          {/* Middle: Interactive Morphing Search Widget */}
-          <div className="hidden md:flex flex-1 justify-center max-w-[540px] lg:max-w-[620px] px-2">
-            <NavbarSearchWidget />
-          </div>
+          {/* Middle: Compact Search Pill when NOT expanded */}
+          {!isSearchExpanded && (
+            <div className="hidden md:flex flex-1 justify-center max-w-[540px] lg:max-w-[620px] px-2">
+              <NavbarSearchWidget
+                isExpanded={false}
+                onExpandedChange={setIsSearchExpanded}
+              />
+            </div>
+          )}
 
           {/* Right: Actions */}
           <div className="hidden lg:flex items-center gap-2.5">
@@ -872,6 +889,24 @@ export default function FavoritesContent() {
             </button>
           </div>
         </div>
+
+        {/* Row 2: Full-Width Expanded Search Bar */}
+        <AnimatePresence>
+          {isSearchExpanded && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pb-5 pt-2 flex justify-center overflow-visible"
+            >
+              <NavbarSearchWidget
+                isExpanded={true}
+                onExpandedChange={setIsSearchExpanded}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* ── 2. Breadcrumbs ── */}
@@ -1121,7 +1156,7 @@ export default function FavoritesContent() {
                       href="#"
                       onClick={(e) => e.preventDefault()}
                       aria-label={item.label}
-                      className="size-8 rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
+                      className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 aspect-square rounded-full bg-white text-[#101438] flex items-center justify-center hover:scale-110 transition-transform shadow-xs no-underline"
                     >
                       <HugeiconsIcon icon={item.icon} size={16} />
                     </a>

@@ -351,13 +351,15 @@ export default function NavbarSearchWidget({
             /* ── 1. COMPACT NAVBAR PILL (Single-row resting state) ── */
             <motion.div
               key="compact-search-pill"
-              layoutId="search-widget-morph"
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
               onClick={() => {
                 setIsExpanded(true);
                 setActiveTab("location");
               }}
               className="flex items-center bg-white dark:bg-[#121a30] hover:bg-slate-50 dark:hover:bg-[#16203a] border border-slate-200/90 dark:border-slate-800 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 cursor-pointer shadow-2xs hover:shadow-md transition-all gap-2 sm:gap-3 select-none min-w-0 max-w-full"
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              transition={{ duration: 0.18 }}
             >
               {/* Location */}
               <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white min-w-0 shrink">
@@ -388,21 +390,21 @@ export default function NavbarSearchWidget({
               </div>
 
               {/* Search Button Circle */}
-              <motion.div
-                layoutId="search-submit-icon-circle"
+              <div
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#3B68EC] text-white flex items-center justify-center shrink-0 ml-0.5 shadow-xs hover:bg-[#254EDB] transition-colors"
-                transition={{ type: "spring", stiffness: 350, damping: 26 }}
               >
                 <HugeiconsIcon icon={Search01Icon} size={14} className="shrink-0" />
-              </motion.div>
+              </div>
             </motion.div>
           ) : (
             /* ── 2. LARGER EXPANDED SEARCH BAR (Exact Airbnb Structure with Sliding Active Pill) ── */
             <motion.div
               key="expanded-search-bar"
-              layoutId="search-widget-morph"
+              initial={{ opacity: 0, y: -6, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.98 }}
               className="bg-[#F1F5F9] dark:bg-[#0e162b] border border-slate-200/90 dark:border-slate-800 rounded-full shadow-2xl p-2 sm:p-2.5 flex items-center max-w-[960px] xl:max-w-[1020px] w-full select-none relative"
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              transition={{ duration: 0.18 }}
             >
               {/* ── Segment 1: Where to ? / Destination ── */}
               <div
@@ -1196,15 +1198,13 @@ export default function NavbarSearchWidget({
               </div>
 
               {/* ── Segment 5: Prominent Large Circular Blue Search Button ── */}
-              <motion.button
-                layoutId="search-submit-icon-circle"
+              <button
                 type="button"
                 onClick={handleSearchSubmit}
-                className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#3B68EC] hover:bg-[#254EDB] text-white flex items-center justify-center shadow-lg cursor-pointer shrink-0 transition-transform active:scale-95 border-none ml-1 relative z-10"
-                transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#3B68EC] hover:bg-[#254EDB] text-white flex items-center justify-center shadow-lg cursor-pointer shrink-0 transition-all hover:scale-105 active:scale-95 border-none ml-1 relative z-10"
               >
                 <HugeiconsIcon icon={Search01Icon} size={22} />
-              </motion.button>
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
